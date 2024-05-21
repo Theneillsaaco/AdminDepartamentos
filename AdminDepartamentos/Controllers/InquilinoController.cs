@@ -1,10 +1,12 @@
 ﻿using AdminDepartamentos.Domain.Context;
 using AdminDepartamentos.Domain.Entities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdminDepartamentos.Controllers
 {
+    [EnableCors("NewPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class InquilinoController : ControllerBase
@@ -66,7 +68,7 @@ namespace AdminDepartamentos.Controllers
 
             try
             {
-                var dbInquilino = await dbContext.Inquilinos.FirstOrDefaultAsync(x => x.IdInquilino == id);
+                var dbInquilino = await dbContext.Inquilinos.SingleOrDefaultAsync(x => x.IdInquilino == id);
 
                 if (dbInquilino is not null)
                 {
@@ -162,7 +164,7 @@ namespace AdminDepartamentos.Controllers
 
             try
             {
-                var dbInquilino = dbContext.Inquilinos.FirstOrDefault(x => x.IdInquilino == id);
+                var dbInquilino = dbContext.Inquilinos.SingleOrDefault(x => x.IdInquilino == id);
 
                 if (dbInquilino is not null)
                 {
@@ -203,7 +205,7 @@ namespace AdminDepartamentos.Controllers
 
             try
             {
-                var dbInquilino = await dbContext.Inquilinos.FirstOrDefaultAsync(x => x.IdInquilino == id);
+                var dbInquilino = await dbContext.Inquilinos.SingleOrDefaultAsync(x => x.IdInquilino == id);
 
                 if (dbInquilino is not null)
                 {
