@@ -35,82 +35,49 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
         return await base.GetById(id);
     }
 
-    public async Task<InquilinoPagoModel> Save(InquilinoPagoModel model)
+    public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)
     {
-        ArgumentNullException.ThrowIfNull(model, "El modelo no puede ser null.");
-        ArgumentNullException.ThrowIfNull(model.Inquilino, "El Iqnuilino no puede ser null.");
-        ArgumentNullException.ThrowIfNull(model.Pago, "El pago no puede ser null.");
-        
-        // Comenzar una transaccion para asegurar la atomicidad
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        ArgumentNullException.ThrowIfNull(inquilinoDto, "El Inquilino no puede ser null.");
+        ArgumentNullException.ThrowIfNull(pagoDto, "El pago no puede ser null.");
 
-        try
+        using (var transaction = await _context.Database.BeginTransactionAsync())
         {
-            // Agregar el inquilino
-            await _context.Inquilinos.AddAsync(model.Inquilino);
-            await _context.SaveChangesAsync();
-            
-            // Asignar el id del Inquilino al pago
-            model.Pago.IdInquilino = model.Inquilino.IdInquilino;
-            
-            // Agregar el pago
-            var idPago = await AddPagoAsync(model.Pago);
+            try
+            {
+                if (await base.Exists(cd => cd.Cedula == inquilinoDto.Cedula))
+                    throw new InquilinoException("El inquilino ya Existe.");
 
-            model.Pago.IdPago = idPago;
+                var newInquilino = inquilinoDto.ConvertEntityInquilinoToInquilinoDto();
+                
+                _context.Inquilinos.Add(newInquilino);
+                await _context.SaveChangesAsync();
 
-            await transaction.CommitAsync();
+                var newPago = new Pago
+                {
+                    IdInquilino = newInquilino.IdInquilino,
+                    Monto = pagoDto.Monto,
+                    NumDeposito =  pagoDto.NumDeposito
+                };
+                
+                _context.Pagos.Add(newPago);
+                await _context.SaveChangesAsync();
+                
+                await transaction.CommitAsync();
 
-            return model;
+                return (true, "Inquilino y pago creados exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return (false, $"Ocurrio un error al crear el inquilino y el pago. Error: {ex.Message}");
+            }
         }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-    
-    public async Task<int> AddPagoAsync(Pago pago)
-    {
-        // Insertar el pago
-        _context.Pagos.Add(pago);
-        await _context.SaveChangesAsync();
-
-        // Recuperar el ID insertado (asumiendo que IdPago es la clave primaria)
-        var insertedPago = await _context.Pagos
-            .OrderByDescending(p => p.IdPago)
-            .FirstOrDefaultAsync(p => p.FechaPago == pago.FechaPago && p.IdInquilino == pago.IdInquilino);
-
-        return insertedPago?.IdPago ?? 0;
-    }
-
-    public async Task<Inquilino> GetByNumDepartamento(int numDepart)
-    {
-        ArgumentNullException.ThrowIfNull(numDepart, "El Id no puede ser null.");
-
-        if (!await base.Exists(cd => cd.NumDepartamento == numDepart))
-            throw new InquilinoException("El inquilino no existe.");
-
-        return await _context.FindAsync<Inquilino>(GetIdByNumDepartamento(numDepart));
-    }
-    
-    private async Task<int> GetIdByNumDepartamento(int numDepart)
-    {
-        var inquilino = await _context.Inquilinos.FirstOrDefaultAsync(i => i.NumDepartamento == numDepart);
-        if (inquilino == null)
-        {
-            throw new InquilinoException("No se encontró numDepart asociado al número de departamento.");
-        }
-        
-        return inquilino.IdInquilino;
     }
     
     public override async Task Update(Inquilino entity)
     {
         ArgumentNullException.ThrowIfNull(entity, "El Inquilino no puede ser null.");
-
-        if (!await base.Exists(cd => cd.IdInquilino != entity.IdInquilino))
-            throw new InquilinoException("El inquilino no Existe.");
-
+        
         await base.Update(entity);
     }
     

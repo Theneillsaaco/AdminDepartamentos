@@ -8,8 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DepartContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DepartConnection")));
 
-builder.Services.AddInquilinoDependency();
-builder.Services.AddPagoDependency();
+builder.Services.AddRepositoryDependency();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

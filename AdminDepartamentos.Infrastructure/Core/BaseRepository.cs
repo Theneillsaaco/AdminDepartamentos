@@ -30,18 +30,6 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: c
         return await _entities.FindAsync(id);
     }
 
-    public virtual async Task Save(TEntity entity)
-    {
-        _entities.Add(entity);
-        await _context.SaveChangesAsync();
-    }
-
-    public virtual async Task Save(List<TEntity> entities)
-    {
-        _entities.AddRange(entities);
-        await _context.SaveChangesAsync();
-    }
-    
     public virtual async Task Update(TEntity entity)
     {
         _entities.Update(entity);

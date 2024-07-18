@@ -28,7 +28,7 @@ namespace AdminDepartamentos.API.Controllers
             {
                 var inquilinos = await _inquilinoRepository.GetInquilinos();
 
-                var inquilinoViewModels = inquilinos.Select(inq => inq.ConvertToInquilinoModel()).ToList();
+                var inquilinoViewModels = inquilinos.Select(inq => inq.ConvertInquilinoViewModelToInquilinoModel()).ToList();
 
                 responseApi.Success = true;
                 responseApi.Data = inquilinoViewModels;
@@ -37,7 +37,7 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-                StatusCode(500);
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
             
             return Ok(responseApi);
@@ -61,6 +61,7 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
 
             return Ok(responseApi);
@@ -73,36 +74,24 @@ namespace AdminDepartamentos.API.Controllers
         {
             var responseApi = new ResponseAPI<InquilinoSaveModel>();
 
-            if (!ModelState.IsValid)
+            if (inquilinoSaveModel.InquilinoDto is null || inquilinoSaveModel.PagoDto is null)
             {
                 responseApi.Success = false;
-                responseApi.Message = "Modelo no válido";
+                responseApi.Message = "Datos invalidos.";
                 return BadRequest(ModelState);
             }
             
-            try
-            {
-                var inquilinoPago = inquilinoSaveModel.ConvertToInquilinoPagoModel();
-                
-                var result = await _inquilinoRepository.Save(inquilinoPago);
+            var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
 
-                await _inquilinoRepository.Save(result);
-
-                responseApi.Success = true;
-                responseApi.Message = "Inquilino y pago guardados con éxito";
-            }
-            catch (Exception ex)
-            {
-                responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-            }
-
+            responseApi.Success = result.Success;
+            responseApi.Message = result.Message;
+            
             return Ok(responseApi);
         }
 
         // PUT api/<InquilinoController>/5
         [HttpPut]
-        [Route("Update/{id}")]
+        [Route("Update{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel inquilinoUpdateModel)
         {
             var responseApi = new ResponseAPI<InquilinoUpdateModel>();
@@ -114,10 +103,11 @@ namespace AdminDepartamentos.API.Controllers
                     responseApi.Success = false;
                     responseApi.Message = $"Inquilino with Id {id} not found.";
 
-                    return Ok(responseApi);
+                    return NotFound(responseApi);
                 }
-
-                var inquilino = inquilinoUpdateModel.ConvertToEntityInquilino();
+                
+                var inquilino = inquilinoUpdateModel.ConvertEntityInquilinoToInquilinoUpdateModel();
+                inquilino.IdInquilino = id;
 
                 await _inquilinoRepository.Update(inquilino);
 
@@ -127,15 +117,17 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
-
+            
             return Ok(responseApi);
         }
+
 
         // DELETE api/<InquilinoController>/5
         [HttpPut]
         [Route("Delete{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> MarkDelete(int id)
         {
             var responseApi = new ResponseAPI<InquilinoDeletedModel>();
 
@@ -149,6 +141,7 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
 
             return Ok(responseApi);

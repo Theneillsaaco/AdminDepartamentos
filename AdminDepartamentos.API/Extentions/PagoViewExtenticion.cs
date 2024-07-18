@@ -22,10 +22,7 @@ public static class PagoViewExtenticion
     {
         return new Pago
         {
-            // Inquilino
             IdInquilino = pagoUpdateModel.IdInquilino,
-            
-            // Pago
             NumDeposito = pagoUpdateModel.NumDeposito,
             Monto = pagoUpdateModel.Monto,
             FechaPago = pagoUpdateModel.FechaPago

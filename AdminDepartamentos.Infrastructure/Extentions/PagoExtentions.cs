@@ -15,7 +15,6 @@ public static class PagoExtentions
     {
         PagoInquilinoModel pagoInquilinoModel = new PagoInquilinoModel()
         {
-            //Pago
             IdPago = pago.IdPago,
             FechaPago = pago.FechaPago,
             NumDeposito = pago.NumDeposito,

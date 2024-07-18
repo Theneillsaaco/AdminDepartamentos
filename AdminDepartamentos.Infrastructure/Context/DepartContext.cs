@@ -1,6 +1,5 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace AdminDepartament.Infrastructure.Context
 {
@@ -17,16 +16,12 @@ namespace AdminDepartament.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Pago>()
-                .HasOne(p => p.IdInquilinoNavigation)
-                .WithMany(i => i.Pagos)
-                .HasForeignKey(p => p.IdInquilino)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Specify the column type for Monto to avoid precision issues
-            modelBuilder.Entity<Pago>()
-                .Property(p => p.Monto)
-                .HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Inquilino>()
+                .HasMany(i => i.Pagos)
+                .WithOne(p => p.Inquilino)
+                .HasForeignKey(p => p.IdInquilino);
+            
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

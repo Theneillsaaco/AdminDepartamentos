@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdminDepartamentos.Domain.Entities;
 
 public partial class Inquilino
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdInquilino { get; set; }
 
     [Required]
@@ -22,8 +24,9 @@ public partial class Inquilino
     [Required]
     public string NumTelefono { get; set; }
 
-    public DateTime CreationDate { get; set; }
+    public DateTime CreationDate { get; set; } = DateTime.Now;
 
+    [Column(TypeName = "datetime2")]
     public DateTime? ModifyDate { get; set; }
 
     public int CreationUser { get; set; }
@@ -32,5 +35,5 @@ public partial class Inquilino
     
     public DateTime? DeletedDate { get; set; }
 
-    public virtual ICollection<Pago> Pagos { get; set; } = new List<Pago>();
+    public virtual ICollection<Pago> Pagos { get; set; }
 }

@@ -1,14 +1,11 @@
-﻿using AdminDepartamentos.API.Models.InquilinoModels.Core;
+﻿using AdminDepartamentos.Domain.Entities;
+using AdminDepartamentos.Domain.Models;
 
 namespace AdminDepartamentos.API.Models.InquilinoModels;
 
-public class InquilinoSaveModel : InquilinoBaseViewModel
+public class InquilinoSaveModel
 {
-    public string Cedula { get; set; }
+    public InquilinoDto InquilinoDto { get; set; }
     
-    public string NumTelefono { get; set; }
-    
-    public int? NumDeposito { get; set; }
-    
-    public decimal Monto { get; set; }
+    public PagoDto PagoDto { get; set; }
 }

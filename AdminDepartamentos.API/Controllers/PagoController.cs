@@ -105,12 +105,14 @@ namespace AdminDepartamentos.API.Controllers
                     responseApi.Success = false;
                     responseApi.Message = $"Pago with Id {id} not found.";
 
-                    return Ok(responseApi);
+                    return BadRequest(responseApi);
                 }
 
                 var pago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
 
                 await _pagoRepository.Update(pago);
+
+                responseApi.Success = true;
             }
             catch (Exception ex)
             {

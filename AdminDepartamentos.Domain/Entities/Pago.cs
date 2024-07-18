@@ -24,5 +24,6 @@ public partial class Pago
 
     public bool Deleted { get; set; }
 
-    public virtual Inquilino IdInquilinoNavigation { get; set; }
+    [ForeignKey("IdInquilino")]
+    public Inquilino Inquilino { get; set; }
 }
