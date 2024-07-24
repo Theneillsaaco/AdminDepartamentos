@@ -1,9 +1,11 @@
 ﻿using AdminDepartamentos.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdminDepartament.Infrastructure.Context
 {
-    public partial class DepartContext : DbContext
+    public partial class DepartContext : IdentityDbContext<IdentityUser>
     {
         public DepartContext(DbContextOptions<DepartContext> options) : base(options) { }
 
@@ -14,14 +16,14 @@ namespace AdminDepartament.Infrastructure.Context
 
         #endregion
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Inquilino>()
+            builder.Entity<Inquilino>()
                 .HasMany(i => i.Pagos)
                 .WithOne(p => p.Inquilino)
                 .HasForeignKey(p => p.IdInquilino);
             
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
         }
     }
 }

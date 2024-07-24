@@ -25,7 +25,8 @@ public static class InquilinoViewExtenticion
             LastName = inquilinoUpdate.LastName,
             Cedula = inquilinoUpdate.Cedula,
             NumDepartamento = inquilinoUpdate.NumDepartamento,
-            NumTelefono = inquilinoUpdate.NumTelefono
+            NumTelefono = inquilinoUpdate.NumTelefono,
+            ModifyDate = DateTime.Now
         };
     }
 }

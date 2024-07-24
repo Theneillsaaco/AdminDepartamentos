@@ -2,10 +2,12 @@ using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InquilinoModels;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDepartamentos.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class InquilinoController : ControllerBase

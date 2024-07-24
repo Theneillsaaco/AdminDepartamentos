@@ -1,13 +1,13 @@
-using System.Reflection.Metadata.Ecma335;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.PagoModels;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdminDepartamentos.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PagoController : ControllerBase
