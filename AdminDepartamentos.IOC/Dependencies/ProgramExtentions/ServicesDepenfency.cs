@@ -15,12 +15,24 @@ public static class ServicesDepenfency
     /// <summary>
     /// DbContext config
     /// </summary>
-    /// <param name="services"></param>
-    /// <param name="configuration"></param>
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<DepartContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DataBase")));
+    }
+
+    /// <summary>
+    /// Authentication config
+    /// </summary>
+    public static void ConfigureAuthentication(this IServiceCollection services)
+    {
+        services.AddAuthentication(options =>
+                    {
+                        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                    }).AddCookie(IdentityConstants.ApplicationScheme)
+                      .AddBearerToken(IdentityConstants.BearerScheme);
     }
     
     public static void ConfigureIdentity(this IServiceCollection services)
@@ -37,7 +49,6 @@ public static class ServicesDepenfency
     /// <summary>
     /// Swagger Confing
     /// </summary>
-    /// <param name="services"></param>
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>

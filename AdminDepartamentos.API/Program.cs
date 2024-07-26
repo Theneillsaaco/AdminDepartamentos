@@ -9,14 +9,7 @@ builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.AddRepositoryDependency();
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    }).AddCookie(IdentityConstants.ApplicationScheme)
-                .AddBearerToken(IdentityConstants.BearerScheme);
+builder.Services.ConfigureAuthentication();
 
 builder.Services.AddControllers();
 
