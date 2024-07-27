@@ -1,5 +1,6 @@
 ﻿using AdminDepartament.Infrastructure.Context;
 using AdminDepartament.Infrastructure.Core;
+using AdminDepartament.Infrastructure.Exceptions;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
@@ -23,8 +24,17 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
     }
     
     #endregion
-    
 
+    public override async Task<Pago> GetById(int id)
+    {
+        ArgumentNullException.ThrowIfNull(id, "El id no puede ser null");
+
+        if (!await base.Exists(cd => cd.IdPago == id))
+            throw new PagoException("El inquilino no puede ser null");
+        
+        return await base.GetById(id);
+    }
+    
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
         var pago = _context.Pagos
@@ -38,16 +48,15 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
         return await pago;
     }
 
-    public async Task<List<PagoInquilinoModel>> GetPagoByInquilino(int idInquilino)
+    public async Task<List<PagoInquilinoModel>> GetPagoByInquilino()
     {
         var pago = _context.Pagos
-                .Where(co => co.Deleted == false 
-                         && co.IdInquilino == idInquilino)
-                .Join(_context.Inquilinos, 
+            .Where(co => co.Deleted == false)
+            .Join(_context.Inquilinos,
                 co => co.IdInquilino, inq => inq.IdInquilino,
                 (co, inq) => co.ConvertPagoEntityToPagoInquilinoModel(inq))
-                .ToListAsync();
-
+            .ToListAsync();
+        
         return await pago;
     }
 }

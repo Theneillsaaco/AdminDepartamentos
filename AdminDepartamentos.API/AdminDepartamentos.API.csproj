@@ -16,8 +16,4 @@
     <ProjectReference Include="..\AdminDepartamentos.IOC\AdminDepartamentos.IOC.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\PagoModels\Core\" />
-  </ItemGroup>
-
 </Project>

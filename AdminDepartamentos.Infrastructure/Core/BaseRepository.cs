@@ -14,17 +14,12 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: c
     
     protected BaseRepository(DbContext context)
     {
-        this._context = context;
-        this._entities = this._context.Set<TEntity>();
+        _context = context;
+        _entities = _context.Set<TEntity>();
     }
 
     #endregion
     
-    public virtual async Task<List<TEntity>> GetAll(Expression<Func<TEntity, bool>> filter)
-    {
-        return await _entities.Where(filter).ToListAsync();
-    }
-
     public virtual async Task<TEntity> GetById(int id)
     {
         return await _entities.FindAsync(id);

@@ -8,5 +8,5 @@ public interface IPagoRepository : IBaseRepository<Pago>
 {
     Task<List<PagoInquilinoModel>> GetPago();
 
-    Task<List<PagoInquilinoModel>> GetPagoByInquilino(int idInquilino);
+    Task<List<PagoInquilinoModel>> GetPagoByInquilino();
 }

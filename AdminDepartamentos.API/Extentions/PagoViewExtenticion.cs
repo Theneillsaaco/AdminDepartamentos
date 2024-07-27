@@ -17,6 +17,36 @@ public static class PagoViewExtenticion
             Retrasado = pagoInquilinoModel.Retrasado
         };
     }
+    
+    public static PagoGetByInquilinoModel ConvertToPagoGetByInquilinoModel(this PagoInquilinoModel pagoInquilinoModel)
+    {
+        return new PagoGetByInquilinoModel
+        {
+            //Pago
+            IdPago = pagoInquilinoModel.IdPago,
+            NumDeposito = pagoInquilinoModel.NumDeposito,
+            FechaPago = pagoInquilinoModel.FechaPago,
+            Retrasado = pagoInquilinoModel.Retrasado,
+            
+            //Inquilino
+            IdInquilino = pagoInquilinoModel.IdInquilino,
+            InquilinoFirstName = pagoInquilinoModel.InquilinoFirstName,
+            InquilinoLastName = pagoInquilinoModel.InquilinoLastName
+        };
+    }
+    
+    public static PagoGetModel ConvertToPagoGetModel(this Pago pago)
+    {
+        return new PagoGetModel
+        {
+            IdPago = pago.IdPago,
+            IdInquilino = pago.IdInquilino,
+            NumDeposito = pago.NumDeposito,
+            FechaPago = pago.FechaPago,
+            Retrasado = pago.Retrasado,
+            Deleted = pago.Deleted
+        };
+    }
 
     public static Pago ConverToPagoEntityToPagoUpdateModel(this PagoUpdateModel pagoUpdateModel)
     {

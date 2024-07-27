@@ -44,20 +44,21 @@ namespace AdminDepartamentos.API.Controllers
             return Ok(responseApi);
         }
 
+        // GET api/<PagoController>/5
         [HttpGet]
-        [Route("GetPagoByInquilino{id}")]
-        public async Task<IActionResult> GetPagoByInquilino(int id)
+        [Route("GetById")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var responseApi = new ResponseAPI<List<PagoViewModel>>();
+            var responseApi = new ResponseAPI<PagoGetModel>();
 
             try
             {
-                var pago = await _pagoRepository.GetPagoByInquilino(id);
+                var pago = await _pagoRepository.GetById(id);
 
-                var pagoViewModels = pago.Select(pa => pa.ConvertToPagoModel()).ToList();
-
+                var pagoGetModel = pago.ConvertToPagoGetModel();
+                
                 responseApi.Success = true;
-                responseApi.Data = pagoViewModels;
+                responseApi.Data = pagoGetModel;
             }
             catch (Exception ex)
             {
@@ -68,19 +69,20 @@ namespace AdminDepartamentos.API.Controllers
             return Ok(responseApi);
         }
         
-        // GET api/<PagoController>/5
         [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetById(int id)
+        [Route("GetPagoByInquilino")]
+        public async Task<IActionResult> GetPagoByInquilino()
         {
-            var responseApi = new ResponseAPI<Pago>();
+            var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
 
             try
             {
-                var pago = _pagoRepository.GetById(id);
+                var pago = await _pagoRepository.GetPagoByInquilino();
+
+                var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
 
                 responseApi.Success = true;
-                responseApi.Data = await pago;
+                responseApi.Data = pagoGetModel;
             }
             catch (Exception ex)
             {
