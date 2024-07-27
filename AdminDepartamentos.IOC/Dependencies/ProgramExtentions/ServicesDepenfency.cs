@@ -1,6 +1,4 @@
-﻿using System.Text;
-using AdminDepartament.Infrastructure.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AdminDepartament.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
