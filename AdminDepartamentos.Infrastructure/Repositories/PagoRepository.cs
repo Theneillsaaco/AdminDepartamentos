@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AdminDepartament.Infrastructure.Repositories;
 
 /// <summary>
-/// Clase Predeterminada de Pago; Y recupera la info de Inquilino(Es nesesario para funcionar).
+/// Clase Predeterminada de Pago;
+/// Y recupera la info de Inquilino(Es nesesario para funcionar).
 /// </summary>
 public class PagoRepository : BaseRepository<Pago>, IPagoRepository
 {
@@ -45,5 +46,17 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
             .ToListAsync();
         
         return await pago;
+    }
+
+    public async Task MarkRetrasado(int id)
+    {
+        var pago = new Pago();
+
+        if (!await base.Exists(cd => cd.IdPago == pago.IdPago))
+            throw new InquilinoException("El Pago no Existe.");
+
+        pago.Retrasado = false;
+
+        await Update(pago);
     }
 }

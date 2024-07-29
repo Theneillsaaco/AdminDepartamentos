@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 namespace AdminDepartament.Infrastructure.Repositories;
 
 /// <summary>
-/// Clase Predeterminada de Inquilino; GetAll, GetById, Save, ...
+/// Clase Predeterminada de Inquilino;
+/// GetAll, GetById, Save, ...
 /// </summary>
 public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoRepository
 {
