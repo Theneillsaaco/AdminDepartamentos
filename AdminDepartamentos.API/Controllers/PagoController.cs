@@ -18,22 +18,22 @@ namespace AdminDepartamentos.API.Controllers
         {
             _pagoRepository = pagoRepository;
         }
-        
+ 
         // GET: api/<PagoController>
         [HttpGet]
         [Route("GetPago")]
         public async Task<IActionResult> GetPago()
         {
-            var responseApi = new ResponseAPI<List<PagoViewModel>>();
+            var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
 
             try
             {
                 var pago = await _pagoRepository.GetPago();
 
-                var pagoViewModels = pago.Select(pa => pa.ConvertToPagoModel()).ToList();
+                var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
 
                 responseApi.Success = true;
-                responseApi.Data = pagoViewModels;
+                responseApi.Data = pagoGetModel;
             }
             catch (Exception ex)
             {
@@ -46,7 +46,7 @@ namespace AdminDepartamentos.API.Controllers
 
         // GET api/<PagoController>/5
         [HttpGet]
-        [Route("GetById")]
+        [Route("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var responseApi = new ResponseAPI<PagoGetModel>();
@@ -57,30 +57,6 @@ namespace AdminDepartamentos.API.Controllers
 
                 var pagoGetModel = pago.ConvertToPagoGetModel();
                 
-                responseApi.Success = true;
-                responseApi.Data = pagoGetModel;
-            }
-            catch (Exception ex)
-            {
-                responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-            }
-
-            return Ok(responseApi);
-        }
-        
-        [HttpGet]
-        [Route("GetPagoByInquilino")]
-        public async Task<IActionResult> GetPagoByInquilino()
-        {
-            var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
-
-            try
-            {
-                var pago = await _pagoRepository.GetPagoByInquilino();
-
-                var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
-
                 responseApi.Success = true;
                 responseApi.Data = pagoGetModel;
             }

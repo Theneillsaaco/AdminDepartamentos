@@ -7,6 +7,4 @@ namespace AdminDepartamentos.Domain.Interfaces;
 public interface IPagoRepository : IBaseRepository<Pago>
 {
     Task<List<PagoInquilinoModel>> GetPago();
-
-    Task<List<PagoInquilinoModel>> GetPagoByInquilino();
 }

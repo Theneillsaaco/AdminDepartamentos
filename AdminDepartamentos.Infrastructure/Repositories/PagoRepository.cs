@@ -34,21 +34,8 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
         
         return await base.GetById(id);
     }
-    
+
     public async Task<List<PagoInquilinoModel>> GetPago()
-    {
-        var pago = _context.Pagos
-                .Where(co => co.Deleted == false)
-                .Join(_context.Inquilinos,
-                co => co.IdInquilino, 
-                inq => inq.IdInquilino,
-                (co, inq) => co.ConvertPagoEntityToPagoInquilinoModel(inq))
-                .ToListAsync();
-
-        return await pago;
-    }
-
-    public async Task<List<PagoInquilinoModel>> GetPagoByInquilino()
     {
         var pago = _context.Pagos
             .Where(co => co.Deleted == false)
