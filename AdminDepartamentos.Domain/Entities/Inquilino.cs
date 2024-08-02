@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdminDepartamentos.Domain.Entities;
@@ -29,8 +30,10 @@ public partial class Inquilino
     [Column(TypeName = "datetime2")]
     public DateTime? ModifyDate { get; set; }
 
+    [DefaultValue(1)]
     public int CreationUser { get; set; }
 
+    [DefaultValue(0)]
     public bool Deleted { get; set; }
     
     public DateTime? DeletedDate { get; set; }

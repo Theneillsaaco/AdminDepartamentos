@@ -57,7 +57,8 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
                 {
                     IdInquilino = newInquilino.IdInquilino,
                     Monto = pagoDto.Monto,
-                    NumDeposito =  pagoDto.NumDeposito
+                    NumDeposito =  pagoDto.NumDeposito,
+                    FechaPagoInDays = pagoDto.FechaPagoInDays
                 };
                 
                 _context.Pagos.Add(newPago);

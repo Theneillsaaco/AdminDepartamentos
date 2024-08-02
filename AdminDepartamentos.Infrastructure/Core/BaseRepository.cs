@@ -30,6 +30,12 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: c
         _entities.Update(entity);
         await _context.SaveChangesAsync();
     }
+    
+    public virtual async Task Update(List<TEntity> entity)
+    {
+        _entities.UpdateRange(entity);
+        await _context.SaveChangesAsync();
+    }
 
     public virtual async Task<bool> Exists(Expression<Func<TEntity, bool>> filter)
     {

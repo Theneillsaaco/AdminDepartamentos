@@ -39,6 +39,7 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
 
             return Ok(responseApi);
@@ -83,11 +84,17 @@ namespace AdminDepartamentos.API.Controllers
                     responseApi.Success = false;
                     responseApi.Message = $"Pago with Id {id} not found.";
 
-                    return BadRequest(responseApi);
+                    return NotFound(responseApi);
                 }
-
+                
+                var getPago = await _pagoRepository.GetById(id);
+                
+                _pagoRepository.DetachEntity(getPago);
+                
                 var pago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
-
+                pago.IdPago = id;
+                pago.IdInquilino = getPago.IdInquilino;
+                
                 await _pagoRepository.Update(pago);
 
                 responseApi.Success = true;
@@ -96,6 +103,29 @@ namespace AdminDepartamentos.API.Controllers
             {
                 responseApi.Success = false;
                 responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
+            }
+            
+            return Ok(responseApi);
+        }
+
+        [HttpPut]
+        [Route("Retrasado/{id}")]
+        public async Task<IActionResult> MarkRetrasado(int id)
+        {
+            var responseApi = new ResponseAPI<PagoDeletedModel>();
+
+            try
+            {
+                var pago = _pagoRepository.MarkRetrasado(id);
+
+                responseApi.Success = true;
+            }
+            catch (Exception ex)
+            {
+                responseApi.Success = false;
+                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
             }
 
             return Ok(responseApi);

@@ -14,7 +14,7 @@
 
         public decimal Monto { get; set; }
 
-        public DateOnly? FechaPago { get; set; }
+        public int? FechaPagoInDays { get; set; }
 
         public bool Retrasado { get; set; }
     }

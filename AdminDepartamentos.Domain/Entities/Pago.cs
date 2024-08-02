@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdminDepartamentos.Domain.Entities;
@@ -18,10 +19,12 @@ public partial class Pago
     [Column(TypeName = "decimal(18,2)")]
     public decimal Monto { get; set; }
 
-    public DateOnly? FechaPago { get; set; }
+    public int? FechaPagoInDays { get; set; }
 
+    [DefaultValue(1)]
     public bool Retrasado { get; set; }
 
+    [DefaultValue(0)]
     public bool Deleted { get; set; }
 
     [ForeignKey("IdInquilino")]

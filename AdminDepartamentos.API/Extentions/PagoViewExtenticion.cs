@@ -6,18 +6,6 @@ namespace AdminDepartamentos.API.Extentions;
 
 public static class PagoViewExtenticion
 {
-    public static PagoViewModel ConvertToPagoModel(this PagoInquilinoModel pagoInquilinoModel)
-    {
-        return new PagoViewModel
-        {
-            IdPago = pagoInquilinoModel.IdPago,
-            IdInquilino = pagoInquilinoModel.IdInquilino,
-            NumDeposito = pagoInquilinoModel.NumDeposito,
-            FechaPago = pagoInquilinoModel.FechaPago,
-            Retrasado = pagoInquilinoModel.Retrasado
-        };
-    }
-    
     public static PagoGetByInquilinoModel ConvertToPagoGetByInquilinoModel(this PagoInquilinoModel pagoInquilinoModel)
     {
         return new PagoGetByInquilinoModel
@@ -25,7 +13,7 @@ public static class PagoViewExtenticion
             //Pago
             IdPago = pagoInquilinoModel.IdPago,
             NumDeposito = pagoInquilinoModel.NumDeposito,
-            FechaPago = pagoInquilinoModel.FechaPago,
+            FechaPagoInDays = pagoInquilinoModel.FechaPagoInDays,
             Retrasado = pagoInquilinoModel.Retrasado,
             
             //Inquilino
@@ -42,7 +30,7 @@ public static class PagoViewExtenticion
             IdPago = pago.IdPago,
             IdInquilino = pago.IdInquilino,
             NumDeposito = pago.NumDeposito,
-            FechaPago = pago.FechaPago,
+            FechaPagoInDays = pago.FechaPagoInDays,
             Retrasado = pago.Retrasado,
             Deleted = pago.Deleted
         };
@@ -52,10 +40,21 @@ public static class PagoViewExtenticion
     {
         return new Pago
         {
-            IdInquilino = pagoUpdateModel.IdInquilino,
             NumDeposito = pagoUpdateModel.NumDeposito,
             Monto = pagoUpdateModel.Monto,
-            FechaPago = pagoUpdateModel.FechaPago
+            FechaPagoInDays = pagoUpdateModel.FechaPagoInDays
+        };
+    }
+    
+    public static Pago ConvertToPagoEntity(this PagoInquilinoModel pagoInquilinoModel)
+    {
+        return new Pago
+        {
+            IdPago = pagoInquilinoModel.IdPago,
+            IdInquilino = pagoInquilinoModel.IdInquilino,
+            NumDeposito = pagoInquilinoModel.NumDeposito,
+            FechaPagoInDays = pagoInquilinoModel.FechaPagoInDays,
+            Retrasado = pagoInquilinoModel.Retrasado
         };
     }
 }

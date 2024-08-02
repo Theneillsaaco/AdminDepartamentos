@@ -38,16 +38,21 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
 
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
-        var pago = _context.Pagos
+        var pago = await _context.Pagos
             .Where(co => co.Deleted == false)
             .Join(_context.Inquilinos,
                 co => co.IdInquilino, inq => inq.IdInquilino,
                 (co, inq) => co.ConvertPagoEntityToPagoInquilinoModel(inq))
             .ToListAsync();
         
-        return await pago;
+        return pago;
     }
-
+    
+    public void DetachEntity(Pago entity)
+    {
+        _context.Entry(entity).State = EntityState.Detached;
+    }
+    
     public async Task MarkRetrasado(int id)
     {
         var pago = new Pago();
@@ -58,5 +63,24 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
         pago.Retrasado = false;
 
         await Update(pago);
+    }
+    
+    public void CheckRetraso(Pago pago)
+    {
+        int? pagoFechaPagoInDays = pago.FechaPagoInDays;
+
+        if (!pagoFechaPagoInDays.HasValue)
+            throw new InvalidOperationException("FechaPagoInDays must have a value.");
+        
+        DateTime currentDate = DateTime.Now;
+        
+        if (currentDate.Month == 2 && currentDate.Day == 29 && pagoFechaPagoInDays == 30)
+        {
+            pago.Retrasado = true;
+        }
+        else if (currentDate.Day == pagoFechaPagoInDays)
+        {
+            pago.Retrasado = true;
+        }
     }
 }

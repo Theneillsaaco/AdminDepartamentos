@@ -8,5 +8,7 @@ public interface IBaseRepository<TEntity> where TEntity : class
 
     Task Update(TEntity entity);
     
+    Task Update(List<TEntity> entity);
+    
     Task<bool> Exists(Expression<Func<TEntity, bool>> filter);
 }

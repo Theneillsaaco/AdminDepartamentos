@@ -12,11 +12,11 @@ public static class PagoExtentions
     /// <param name="inquilino">Inquilino.</param>
     /// <returns></returns>
     public static PagoInquilinoModel ConvertPagoEntityToPagoInquilinoModel(this Pago pago, Inquilino inquilino)
-    {
-        PagoInquilinoModel pagoInquilinoModel = new PagoInquilinoModel()
+    { 
+        return new PagoInquilinoModel
         {
             IdPago = pago.IdPago,
-            FechaPago = pago.FechaPago,
+            FechaPagoInDays = pago.FechaPagoInDays,
             NumDeposito = pago.NumDeposito,
             Monto = pago.Monto,
             Retrasado = pago.Retrasado,
@@ -26,7 +26,5 @@ public static class PagoExtentions
             InquilinoFirstName = inquilino.FirstName,
             InquilinoLastName = inquilino.LastName
         };
-
-        return pagoInquilinoModel;
     }
 }

@@ -1,4 +1,5 @@
 using AdminDepartamentos.API.Extentions.ProgramExtentions;
+using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.IOC.Dependencies;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.AddRepositoryDependency();
+
+builder.Services.AddHostedService<CheckRetrasosService>();
 
 builder.Services.ConfigureAuthentication();
 
@@ -33,4 +36,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+    throw;
+}

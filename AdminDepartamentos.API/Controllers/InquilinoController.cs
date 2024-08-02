@@ -93,7 +93,7 @@ namespace AdminDepartamentos.API.Controllers
 
         // PUT api/<InquilinoController>/5
         [HttpPut]
-        [Route("Update{id}")]
+        [Route("Update/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel inquilinoUpdateModel)
         {
             var responseApi = new ResponseAPI<InquilinoUpdateModel>();
@@ -128,7 +128,7 @@ namespace AdminDepartamentos.API.Controllers
 
         // DELETE api/<InquilinoController>/5
         [HttpPut]
-        [Route("Delete{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> MarkDelete(int id)
         {
             var responseApi = new ResponseAPI<InquilinoDeletedModel>();
