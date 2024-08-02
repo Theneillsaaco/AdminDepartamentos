@@ -5,130 +5,129 @@ using AdminDepartamentos.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdminDepartamentos.API.Controllers
+namespace AdminDepartamentos.API.Controllers;
+
+[Authorize]
+[Route("api/[controller]")]
+[ApiController]
+public class PagoController : ControllerBase
 {
-    [Authorize]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PagoController : ControllerBase
+    private readonly IPagoRepository _pagoRepository;
+
+    public PagoController(IPagoRepository pagoRepository)
     {
-        private readonly IPagoRepository _pagoRepository;
+        _pagoRepository = pagoRepository;
+    }
 
-        public PagoController(IPagoRepository pagoRepository)
+    // GET: api/<PagoController>
+    [HttpGet]
+    [Route("GetPago")]
+    public async Task<IActionResult> GetPago()
+    {
+        var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
+
+        try
         {
-            _pagoRepository = pagoRepository;
+            var pago = await _pagoRepository.GetPago();
+
+            var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
+
+            responseApi.Success = true;
+            responseApi.Data = pagoGetModel;
         }
- 
-        // GET: api/<PagoController>
-        [HttpGet]
-        [Route("GetPago")]
-        public async Task<IActionResult> GetPago()
+        catch (Exception ex)
         {
-            var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
+            responseApi.Success = false;
+            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
+        }
 
-            try
-            {
-                var pago = await _pagoRepository.GetPago();
+        return Ok(responseApi);
+    }
 
-                var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
+    // GET api/<PagoController>/5
+    [HttpGet]
+    [Route("GetById/{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var responseApi = new ResponseAPI<PagoGetModel>();
 
-                responseApi.Success = true;
-                responseApi.Data = pagoGetModel;
-            }
-            catch (Exception ex)
+        try
+        {
+            var pago = await _pagoRepository.GetById(id);
+
+            var pagoGetModel = pago.ConvertToPagoGetModel();
+
+            responseApi.Success = true;
+            responseApi.Data = pagoGetModel;
+        }
+        catch (Exception ex)
+        {
+            responseApi.Success = false;
+            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+        }
+
+        return Ok(responseApi);
+    }
+
+    // PUT api/<PagoController>/5
+    [HttpPut]
+    [Route("Update/{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] PagoUpdateModel pagoUpdateModel)
+    {
+        var responseApi = new ResponseAPI<PagoUpdateModel>();
+
+        try
+        {
+            if (!await _pagoRepository.Exists(cd => cd.IdPago == id))
             {
                 responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
+                responseApi.Message = $"Pago with Id {id} not found.";
+
+                return NotFound(responseApi);
             }
 
-            return Ok(responseApi);
-        }
+            var getPago = await _pagoRepository.GetById(id);
 
-        // GET api/<PagoController>/5
-        [HttpGet]
-        [Route("GetById/{id}")]
-        public async Task<IActionResult> GetById(int id)
+            _pagoRepository.DetachEntity(getPago);
+
+            var pago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
+            pago.IdPago = id;
+            pago.IdInquilino = getPago.IdInquilino;
+
+            await _pagoRepository.Update(pago);
+
+            responseApi.Success = true;
+        }
+        catch (Exception ex)
         {
-            var responseApi = new ResponseAPI<PagoGetModel>();
-
-            try
-            {
-                var pago = await _pagoRepository.GetById(id);
-
-                var pagoGetModel = pago.ConvertToPagoGetModel();
-                
-                responseApi.Success = true;
-                responseApi.Data = pagoGetModel;
-            }
-            catch (Exception ex)
-            {
-                responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-            }
-
-            return Ok(responseApi);
+            responseApi.Success = false;
+            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
-        // PUT api/<PagoController>/5
-        [HttpPut]
-        [Route("Update/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] PagoUpdateModel pagoUpdateModel)
+
+        return Ok(responseApi);
+    }
+
+    [HttpPut]
+    [Route("Retrasado/{id}")]
+    public async Task<IActionResult> MarkRetrasado(int id)
+    {
+        var responseApi = new ResponseAPI<PagoDeletedModel>();
+
+        try
         {
-            var responseApi = new ResponseAPI<PagoUpdateModel>();
+            var pago = _pagoRepository.MarkRetrasado(id);
 
-            try
-            {
-                if (!await _pagoRepository.Exists(cd => cd.IdPago == id))
-                {
-                    responseApi.Success = false;
-                    responseApi.Message = $"Pago with Id {id} not found.";
-
-                    return NotFound(responseApi);
-                }
-                
-                var getPago = await _pagoRepository.GetById(id);
-                
-                _pagoRepository.DetachEntity(getPago);
-                
-                var pago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
-                pago.IdPago = id;
-                pago.IdInquilino = getPago.IdInquilino;
-                
-                await _pagoRepository.Update(pago);
-
-                responseApi.Success = true;
-            }
-            catch (Exception ex)
-            {
-                responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
-            }
-            
-            return Ok(responseApi);
+            responseApi.Success = true;
         }
-
-        [HttpPut]
-        [Route("Retrasado/{id}")]
-        public async Task<IActionResult> MarkRetrasado(int id)
+        catch (Exception ex)
         {
-            var responseApi = new ResponseAPI<PagoDeletedModel>();
-
-            try
-            {
-                var pago = _pagoRepository.MarkRetrasado(id);
-
-                responseApi.Success = true;
-            }
-            catch (Exception ex)
-            {
-                responseApi.Success = false;
-                responseApi.Message = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
-            }
-
-            return Ok(responseApi);
+            responseApi.Success = false;
+            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
+
+        return Ok(responseApi);
     }
 }

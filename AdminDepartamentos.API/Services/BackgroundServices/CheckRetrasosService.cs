@@ -14,23 +14,21 @@ public class CheckRetrasosService(IServiceScopeFactory scopeFactory) : Backgroun
             {
                 var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
                 var pagos = await pagoRepository.GetPago();
-                
+
                 List<Pago> pagosUpdate = [];
-                
-                foreach (var pago in pagos.
-                             Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
+
+                foreach (var pago in pagos.Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
                 {
                     try
                     {
                         pagoRepository.CheckRetraso(pago);
-                        
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error checking retraso for pago: {ex.Message}");
                         continue;
                     }
-                    
+
                     pagosUpdate.Add(pago);
                 }
 
@@ -41,9 +39,9 @@ public class CheckRetrasosService(IServiceScopeFactory scopeFactory) : Backgroun
                     await updateRepo.Update(pagosUpdate);
                 }
             }
-            
+
             Console.WriteLine("Ejecutando");
-            
+
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
