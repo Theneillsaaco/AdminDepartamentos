@@ -25,23 +25,24 @@ public static class ServicesDepenfency
     public static void ConfigureAuthentication(this IServiceCollection services)
     {
         services.AddAuthentication(options =>
-                    {
-                        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-                        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-                        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-                    }).AddCookie(IdentityConstants.ApplicationScheme)
-                      .AddBearerToken(IdentityConstants.BearerScheme);
+        {
+            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        })
+        .AddCookie(IdentityConstants.ApplicationScheme)
+        .AddBearerToken(IdentityConstants.BearerScheme);
     }
     
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
-            {
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
-            })
-            .AddEntityFrameworkStores<DepartContext>()
-            .AddApiEndpoints();
+        {
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+        })
+        .AddEntityFrameworkStores<DepartContext>()
+        .AddApiEndpoints();
     }
 
     /// <summary>
@@ -51,7 +52,7 @@ public static class ServicesDepenfency
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.1"});
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.3"});
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
