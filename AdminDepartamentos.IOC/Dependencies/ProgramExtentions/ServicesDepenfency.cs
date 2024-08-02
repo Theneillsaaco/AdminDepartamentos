@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace AdminDepartamentos.API.Extentions.ProgramExtentions;
@@ -11,7 +10,7 @@ namespace AdminDepartamentos.API.Extentions.ProgramExtentions;
 public static class ServicesDepenfency
 {
     /// <summary>
-    /// DbContext config
+    ///     DbContext config
     /// </summary>
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -20,7 +19,7 @@ public static class ServicesDepenfency
     }
 
     /// <summary>
-    /// Authentication config
+    ///     Authentication config
     /// </summary>
     public static void ConfigureAuthentication(this IServiceCollection services)
     {
@@ -33,7 +32,7 @@ public static class ServicesDepenfency
         .AddCookie(IdentityConstants.ApplicationScheme)
         .AddBearerToken(IdentityConstants.BearerScheme);
     }
-    
+
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
@@ -46,13 +45,13 @@ public static class ServicesDepenfency
     }
 
     /// <summary>
-    /// Swagger Confing
+    ///     Swagger Confing
     /// </summary>
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.3"});
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.3" });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

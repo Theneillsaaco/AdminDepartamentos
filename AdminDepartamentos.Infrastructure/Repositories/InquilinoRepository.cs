@@ -10,26 +10,15 @@ using Microsoft.EntityFrameworkCore;
 namespace AdminDepartament.Infrastructure.Repositories;
 
 /// <summary>
-/// Clase Predeterminada de Inquilino;
-/// GetAll, GetById, Save, ...
+///     Clase Predeterminada de Inquilino;
+///     GetAll, GetById, Save, ...
 /// </summary>
 public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoRepository
 {
-    #region context
-    
-    private readonly DepartContext _context;
-    
-        public InquilinoRepository(DepartContext context) : base(context)
-        {
-            _context = context;
-        }
-    
-    #endregion
-
     public override async Task<Inquilino> GetById(int id)
     {
         ArgumentNullException.ThrowIfNull(id, "El Id no puede ser null.");
-        
+
         if (!await base.Exists(cd => cd.IdInquilino == id))
             throw new InquilinoException("El inquilino no existe.");
 
@@ -49,7 +38,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
                     throw new InquilinoException("El inquilino ya Existe.");
 
                 var newInquilino = inquilinoDto.ConvertEntityInquilinoToInquilinoDto();
-                
+
                 _context.Inquilinos.Add(newInquilino);
                 await _context.SaveChangesAsync();
 
@@ -57,13 +46,13 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
                 {
                     IdInquilino = newInquilino.IdInquilino,
                     Monto = pagoDto.Monto,
-                    NumDeposito =  pagoDto.NumDeposito,
+                    NumDeposito = pagoDto.NumDeposito,
                     FechaPagoInDays = pagoDto.FechaPagoInDays
                 };
-                
+
                 _context.Pagos.Add(newPago);
                 await _context.SaveChangesAsync();
-                
+
                 await transaction.CommitAsync();
 
                 return (true, "Inquilino y pago creados exitosamente.");
@@ -75,14 +64,14 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
             }
         }
     }
-    
+
     public override async Task Update(Inquilino entity)
     {
         ArgumentNullException.ThrowIfNull(entity, "El Inquilino no puede ser null.");
-        
+
         await base.Update(entity);
     }
-    
+
     public async Task<List<InquilinoModel>> GetInquilinos()
     {
         var inquilino = _context.Inquilinos
@@ -97,7 +86,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     {
         var inquilino = new Inquilino();
         var pago = new Pago();
-        
+
         if (!await base.Exists(cd => cd.IdInquilino == inquilino.IdInquilino))
             throw new InquilinoException("El inquilino no Existe.");
 
@@ -108,4 +97,15 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
         await Update(inquilino);
     }
+
+    #region context
+
+    private readonly DepartContext _context;
+
+    public InquilinoRepository(DepartContext context) : base(context)
+    {
+        _context = context;
+    }
+
+    #endregion
 }

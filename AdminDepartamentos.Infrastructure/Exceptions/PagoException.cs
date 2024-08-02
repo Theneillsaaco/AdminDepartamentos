@@ -1,10 +1,9 @@
-﻿namespace AdminDepartament.Infrastructure.Exceptions
+﻿namespace AdminDepartament.Infrastructure.Exceptions;
+
+public class PagoException : Exception
 {
-    public class PagoException : Exception
+    public PagoException(string message) : base(message)
     {
-        public PagoException(string message) : base(message)
-        {
-            // x logica para guardar el error
-        }
+        // x logica para guardar el error
     }
 }

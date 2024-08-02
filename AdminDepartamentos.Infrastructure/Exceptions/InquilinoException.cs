@@ -1,10 +1,9 @@
-﻿namespace AdminDepartament.Infrastructure.Exceptions
+﻿namespace AdminDepartament.Infrastructure.Exceptions;
+
+public class InquilinoException : Exception
 {
-    public class InquilinoException : Exception
+    public InquilinoException(string message) : base(message)
     {
-        public InquilinoException(string message) : base(message)
-        {
-            // x logica para guardar el error.
-        }
+        // x logica para guardar el error.
     }
 }

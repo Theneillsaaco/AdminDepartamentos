@@ -7,12 +7,12 @@ public static class InquilinoExtentions
 {
     public static InquilinoModel ConvertInquilinoEntityToInquilinoModel(this Inquilino inquilino)
     {
-        return new InquilinoModel 
+        return new InquilinoModel
         {
             IdInquilino = inquilino.IdInquilino,
             FirstName = inquilino.FirstName,
             LastName = inquilino.LastName,
-            NumDepartamento = inquilino.NumDepartamento,
+            NumDepartamento = inquilino.NumDepartamento
         };
     }
 
@@ -24,17 +24,16 @@ public static class InquilinoExtentions
             LastName = inquilinoDto.LastName,
             Cedula = inquilinoDto.Cedula,
             NumDepartamento = inquilinoDto.NumDepartamento,
-            NumTelefono = inquilinoDto.NumTelefono,
+            NumTelefono = inquilinoDto.NumTelefono
         };
     }
-    
+
     public static Pago ConvertEntityInquilinoToPagoDto(this PagoDto pagoDto, int IdInquilino)
     {
         return new Pago
         {
             Monto = pagoDto.Monto,
-            NumDeposito =  pagoDto.NumDeposito
+            NumDeposito = pagoDto.NumDeposito
         };
     }
 }
-

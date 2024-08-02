@@ -4,22 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdminDepartament.Infrastructure.Core;
 
-
-public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: class
+public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
-    #region Context
-
-    private readonly DbContext _context;
-    private DbSet<TEntity> _entities;
-    
-    protected BaseRepository(DbContext context)
-    {
-        _context = context;
-        _entities = _context.Set<TEntity>();
-    }
-
-    #endregion
-    
     public virtual async Task<TEntity> GetById(int id)
     {
         return await _entities.FindAsync(id);
@@ -30,7 +16,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: c
         _entities.Update(entity);
         await _context.SaveChangesAsync();
     }
-    
+
     public virtual async Task Update(List<TEntity> entity)
     {
         _entities.UpdateRange(entity);
@@ -41,4 +27,17 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity: c
     {
         return await _entities.AnyAsync(filter);
     }
+
+    #region Context
+
+    private readonly DbContext _context;
+    private readonly DbSet<TEntity> _entities;
+
+    protected BaseRepository(DbContext context)
+    {
+        _context = context;
+        _entities = _context.Set<TEntity>();
+    }
+
+    #endregion
 }
