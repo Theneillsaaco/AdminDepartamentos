@@ -2,7 +2,7 @@
 using AdminDepartamentos.Domain.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartament.Infrastructure.Core;
+namespace AdminDepartamentos.Infrastructure.Core;
 
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
@@ -17,9 +17,9 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
         await _context.SaveChangesAsync();
     }
 
-    public virtual async Task Update(List<TEntity> entity)
+    public async Task Update(List<TEntity> entities)
     {
-        _entities.UpdateRange(entity);
+        _entities.UpdateRange(entities);
         await _context.SaveChangesAsync();
     }
 

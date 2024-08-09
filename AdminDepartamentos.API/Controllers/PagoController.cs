@@ -113,11 +113,11 @@ public class PagoController : ControllerBase
     [Route("Retrasado/{id}")]
     public async Task<IActionResult> MarkRetrasado(int id)
     {
-        var responseApi = new ResponseAPI<PagoDeletedModel>();
+        var responseApi = new ResponseAPI<PagoRetrasadoModel>();
 
         try
         {
-            var pago = _pagoRepository.MarkRetrasado(id);
+            await _pagoRepository.MarkRetrasado(id);
 
             responseApi.Success = true;
         }

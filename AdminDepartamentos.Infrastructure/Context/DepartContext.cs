@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartament.Infrastructure.Context;
+namespace AdminDepartamentos.Infrastructure.Context;
 
 public class DepartContext : IdentityDbContext<IdentityUser>
 {

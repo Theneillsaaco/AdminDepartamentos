@@ -1,13 +1,13 @@
-﻿using AdminDepartament.Infrastructure.Context;
-using AdminDepartament.Infrastructure.Core;
-using AdminDepartament.Infrastructure.Exceptions;
-using AdminDepartament.Infrastructure.Extentions;
+﻿using AdminDepartamentos.Infrastructure.Extentions;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Core;
+using AdminDepartamentos.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartament.Infrastructure.Repositories;
+namespace AdminDepartamentos.Infrastructure.Repositories;
 
 /// <summary>
 ///     Clase Predeterminada de Pago;
@@ -27,14 +27,12 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
 
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
-        var pago = await _context.Pagos
-            .Where(co => co.Deleted == false)
+        return await _context.Pagos
+            .Where(pa => pa.Deleted == false)
             .Join(_context.Inquilinos,
-                co => co.IdInquilino, inq => inq.IdInquilino,
-                (co, inq) => co.ConvertPagoEntityToPagoInquilinoModel(inq))
+                pa => pa.IdInquilino, inq => inq.IdInquilino,
+                (pa, inq) => pa.ConvertPagoEntityToPagoInquilinoModel(inq))
             .ToListAsync();
-
-        return pago;
     }
 
     public void DetachEntity(Pago entity)
@@ -44,13 +42,14 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
 
     public async Task MarkRetrasado(int id)
     {
-        var pago = new Pago();
+        var pago = await _context.Pagos.FirstOrDefaultAsync(pa => pa.IdPago == id);
 
-        if (!await base.Exists(cd => cd.IdPago == pago.IdPago))
-            throw new InquilinoException("El Pago no Existe.");
+        if (pago == null)
+            throw new PagoException("El Pago no Existe.");
 
         pago.Retrasado = false;
-
+        pago.Email = false;
+        
         await Update(pago);
     }
 
@@ -63,9 +62,18 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
 
         var currentDate = DateTime.Now;
 
-        if (currentDate.Month == 2 && currentDate.Day == 29 && pagoFechaPagoInDays == 30)
+        if ((currentDate.Month == 2 && currentDate.Day == 29 && pagoFechaPagoInDays == 30) ||
+            (currentDate.Day == pagoFechaPagoInDays))
             pago.Retrasado = true;
-        else if (currentDate.Day == pagoFechaPagoInDays) pago.Retrasado = true;
+        
+    }
+
+    public async Task<List<Pago>> GetRetrasosWithoutEmail()
+    {
+        return await _context.Pagos
+            .Where(pa => pa.Retrasado == true && pa.Email == false && pa.Deleted == false)
+            .Include(pa => pa.Inquilino)
+            .ToListAsync();
     }
 
     #region Context

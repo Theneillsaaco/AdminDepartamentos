@@ -1,4 +1,4 @@
-﻿using AdminDepartament.Infrastructure.Repositories;
+﻿using AdminDepartamentos.Infrastructure.Repositories;
 using AdminDepartamentos.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 

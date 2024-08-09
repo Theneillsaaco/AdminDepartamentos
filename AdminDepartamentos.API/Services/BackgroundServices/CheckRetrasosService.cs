@@ -40,9 +40,9 @@ public class CheckRetrasosService(IServiceScopeFactory scopeFactory) : Backgroun
                 }
             }
 
-            Console.WriteLine("Ejecutando");
+            Console.WriteLine("Ejecutando CheckRetrasosService");
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
         }
     }
 }

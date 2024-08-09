@@ -136,7 +136,7 @@ public class InquilinoController : ControllerBase
 
         try
         {
-            var inquilino = _inquilinoRepository.MarkDeleted(id);
+            await _inquilinoRepository.MarkDeleted(id);
 
             responseApi.Success = true;
         }

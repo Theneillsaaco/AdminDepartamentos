@@ -32,6 +32,7 @@ public static class PagoViewExtenticion
             NumDeposito = pago.NumDeposito,
             FechaPagoInDays = pago.FechaPagoInDays,
             Retrasado = pago.Retrasado,
+            Email = pago.Email,
             Deleted = pago.Deleted
         };
     }
@@ -55,6 +56,38 @@ public static class PagoViewExtenticion
             NumDeposito = pagoInquilinoModel.NumDeposito,
             FechaPagoInDays = pagoInquilinoModel.FechaPagoInDays,
             Retrasado = pagoInquilinoModel.Retrasado
+        };
+    }
+    
+    public static Pago ConvertToPagoEntity(this PagoWithoutEmail pagoWithoutEmail)
+    {
+        return new Pago
+        {
+            IdPago = pagoWithoutEmail.IdPago,
+            IdInquilino = pagoWithoutEmail.IdInquilino,
+            Email = pagoWithoutEmail.Email,
+            Retrasado = pagoWithoutEmail.Retrasado,
+            Inquilino = new Inquilino
+            {   
+                FirstName = pagoWithoutEmail.InquilinoFirstName,
+                LastName = pagoWithoutEmail.InquilinoLastName
+            }
+        };
+    }
+    
+    public static PagoWithoutEmail ConvertPagoEntityToPagoWithoutEmail(this Pago pago)
+    {
+        return new PagoWithoutEmail
+        {
+            IdPago = pago.IdPago,
+            Retrasado = pago.Retrasado,
+            Deleted = pago.Deleted,
+            Email = pago.Email,
+            
+            // Inquilino
+            IdInquilino = pago.IdInquilino,
+            InquilinoFirstName = pago.Inquilino.FirstName,
+            InquilinoLastName = pago.Inquilino.LastName
         };
     }
 }

@@ -16,4 +16,6 @@ public interface IPagoRepository : IBaseRepository<Pago>
     Task MarkRetrasado(int id);
 
     void CheckRetraso(Pago pago);
+
+    Task<List<Pago>> GetRetrasosWithoutEmail();
 }

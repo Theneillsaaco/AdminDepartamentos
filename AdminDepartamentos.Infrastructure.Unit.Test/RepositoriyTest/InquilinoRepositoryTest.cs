@@ -1,6 +1,6 @@
-﻿using AdminDepartament.Infrastructure.Context;
-using AdminDepartament.Infrastructure.Exceptions;
-using AdminDepartament.Infrastructure.Repositories;
+﻿using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Exceptions;
+using AdminDepartamentos.Infrastructure.Repositories;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;

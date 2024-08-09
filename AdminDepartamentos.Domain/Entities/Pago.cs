@@ -21,11 +21,13 @@ public partial class Pago
 
     public int? FechaPagoInDays { get; set; }
 
-    [DefaultValue(1)]
+    [DefaultValue(true)]
     public bool Retrasado { get; set; }
 
-    [DefaultValue(0)]
+    [DefaultValue(false)]
     public bool Deleted { get; set; }
+    
+    public bool Email { get; set; }
 
     [ForeignKey("IdInquilino")]
     public Inquilino Inquilino { get; set; }

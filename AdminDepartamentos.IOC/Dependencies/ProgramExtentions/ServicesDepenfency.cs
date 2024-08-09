@@ -1,4 +1,4 @@
-﻿using AdminDepartament.Infrastructure.Context;
+﻿using AdminDepartamentos.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -51,7 +51,7 @@ public static class ServicesDepenfency
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.3" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.5" });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

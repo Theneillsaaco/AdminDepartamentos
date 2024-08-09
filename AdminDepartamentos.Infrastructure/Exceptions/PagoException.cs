@@ -1,4 +1,4 @@
-﻿namespace AdminDepartament.Infrastructure.Exceptions;
+﻿namespace AdminDepartamentos.Infrastructure.Exceptions;
 
 public class PagoException : Exception
 {

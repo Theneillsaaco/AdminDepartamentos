@@ -1,7 +1,7 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
 
-namespace AdminDepartament.Infrastructure.Extentions;
+namespace AdminDepartamentos.Infrastructure.Extentions;
 
 public static class PagoExtentions
 {

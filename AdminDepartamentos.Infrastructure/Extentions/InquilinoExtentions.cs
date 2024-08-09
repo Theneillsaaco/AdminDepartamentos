@@ -1,7 +1,7 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
 
-namespace AdminDepartament.Infrastructure.Extentions;
+namespace AdminDepartamentos.Infrastructure.Extentions;
 
 public static class InquilinoExtentions
 {
@@ -25,15 +25,6 @@ public static class InquilinoExtentions
             Cedula = inquilinoDto.Cedula,
             NumDepartamento = inquilinoDto.NumDepartamento,
             NumTelefono = inquilinoDto.NumTelefono
-        };
-    }
-
-    public static Pago ConvertEntityInquilinoToPagoDto(this PagoDto pagoDto, int IdInquilino)
-    {
-        return new Pago
-        {
-            Monto = pagoDto.Monto,
-            NumDeposito = pagoDto.NumDeposito
         };
     }
 }

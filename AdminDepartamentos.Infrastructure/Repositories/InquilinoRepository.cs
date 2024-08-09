@@ -1,13 +1,13 @@
-﻿using AdminDepartament.Infrastructure.Context;
-using AdminDepartament.Infrastructure.Core;
-using AdminDepartament.Infrastructure.Exceptions;
-using AdminDepartament.Infrastructure.Extentions;
+﻿using AdminDepartamentos.Infrastructure.Extentions;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Core;
+using AdminDepartamentos.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartament.Infrastructure.Repositories;
+namespace AdminDepartamentos.Infrastructure.Repositories;
 
 /// <summary>
 ///     Clase Predeterminada de Inquilino;
@@ -74,28 +74,30 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
     public async Task<List<InquilinoModel>> GetInquilinos()
     {
-        var inquilino = _context.Inquilinos
+        return await _context.Inquilinos
             .Where(inq => inq.Deleted == false)
             .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
             .ToListAsync();
-
-        return await inquilino;
     }
 
     public async Task MarkDeleted(int id)
     {
-        var inquilino = new Inquilino();
-        var pago = new Pago();
+        var inquilino = await _context.Inquilinos.FirstOrDefaultAsync(i => i.IdInquilino == id);
 
-        if (!await base.Exists(cd => cd.IdInquilino == inquilino.IdInquilino))
+        if (inquilino == null)
             throw new InquilinoException("El inquilino no Existe.");
-
+        
         inquilino.Deleted = true;
         inquilino.DeletedDate = DateTime.Now;
         inquilino.ModifyDate = DateTime.Now;
-        pago.Deleted = true;
-
-        await Update(inquilino);
+        
+        var pagos = await _context.Pagos.Where(p => p.IdInquilino == id).ToListAsync();
+        foreach (var pago in pagos)
+        {
+            pago.Deleted = true;
+        }
+        
+        await _context.SaveChangesAsync();
     }
 
     #region context
