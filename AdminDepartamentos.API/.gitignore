@@ -1,0 +1,3 @@
+﻿# Ignore archivos de configuracion
+appsettings.json
+appsettings.Development.json
