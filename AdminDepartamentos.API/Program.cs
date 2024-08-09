@@ -1,11 +1,9 @@
-using System.Configuration;
-using AdminDepartamentos.API.Extentions.ProgramExtentions;
 using AdminDepartamentos.API.Models;
-using AdminDepartamentos.API.Services;
 using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.API.Services.Emails;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
+using AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +14,7 @@ builder.Services.ConfigureIdentity();
 builder.Services.AddRepositoryDependency();
 
 builder.Services.AddHostedService<CheckRetrasosService>();
+
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 builder.Services.AddHostedService<EmailServices>();

@@ -1,158 +1,121 @@
 ﻿<!-- EmailBody.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AdminDepart</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <style type="text/css">
-        /* CLIENT-SPECIFIC STYLES */
-        .body {
-            word-wrap: normal;
-            word-spacing: normal;
-        }
-        #message * {
-            all: revert;
-        }
-        span.MsoHyperlinkFollowed {
-            color: inherit !important;
-            mso-style-priority: 99 !important;
-        }
-        /* RESET STYLES */
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminDepart</title>
+    <style>
         body {
             margin: 0;
             padding: 0;
             background-color: #ffffff;
+            font-family: 'Trebuchet MS', Arial, sans-serif;
         }
         table {
             border-collapse: collapse;
-            mso-table-lspace: 0;
-            mso-table-rspace: 0;
+            width: 100%;
         }
-        h1 {
-            margin: 0.67em 0;
-            font-size: 2em;
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
         }
-        h2 {
-            margin: 0.83em 0;
-            font-size: 1.5em;
+        .header {
+            background-color: #5c2c94;
+            padding: 40px;
+            text-align: center;
+            color: #ffffff;
+            user-select: none;
         }
-        html[dir] h3, h3 {
-            margin: 1em 0;
-            font-size: 1.17em;
+        .header img {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 20px;
+            user-select: none;
         }
-        /* BLUE LINKS */
-        #root [x-apple-data-detectors=true],
-        a[x-apple-data-detectors=true] {
-            color: inherit !important;
-            text-decoration: inherit !important;
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            user-select: none;
         }
-        [x-apple-data-detectors-type="calendar-event"] {
-            color: inherit !important;
-            -webkit-text-decoration-color: inherit !important;
+        .content {
+            padding: 30px;
+            background-color: #ffffff;
+            text-align: center;
+            border-bottom: 2px solid #5c2c94;
         }
-        u + .body a {
-            color: inherit;
-            text-decoration: none;
-            font-size: inherit;
-            font-weight: inherit;
-            line-height: inherit;
+        .content img {
+            width: 125px;
+            height: 120px;
+            margin-bottom: 20px;
+            user-select: none;
         }
-        /* EMAIL STYLES */
-        h1, h2, h3, h4, p, a {
-            font-family: 'Trebuchet MS', Arial, sans-serif;
+        .content h2 {
+            font-size: 30px;
+            color: #028383;
+            margin: 0 0 20px;
+            user-select: none;
         }
-        p {
+        .content p {
             font-size: 16px;
-            font-weight: 400;
-            line-height: 24px;
-            color: #0a080b;
+            color: #777777;
+            margin-bottom: 30px;
+            user-select: none;
         }
-        /* MOBILE STYLES */
-        @media screen and (max-width: 480px) {
-            .mobile-hide {
-                display: none !important;
-            }
-            .mobile-center {
-                text-align: center !important;
-            }
-            .w100p {
-                width: 100% !important;
-            }
+        .tenant-list {
+            background-color: #d7f1ff;
+            padding: 20px;
+            text-align: left;
+            font-size: 16px;
+            color: #333333;
+            border-radius: 8px;
         }
-        /* ANDROID CENTER FIX */
-        div[style*="margin: 16px 0"] {
-            margin: 0 !important;
+        .tenant-list p {
+            margin: 0 0 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            color: #555555;
+            user-select: none;
+        }
+        @media (max-width: 480px) {
+            .header h1, .content h2 {
+                font-size: 22px;
+            }
+            .tenant-list {
+                padding: 15px;
+            }
+            .tenant-list p {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
-<body class="body" style="margin: 0 !important; padding: 0 !important; background-color: #ffffff;">
-<div role="article" aria-roledescription="email" aria-label="Email from Your Company" xml:lang="en" lang="en">
-    <div class="litmus-builder-preview-text" style="display:none;">
-        &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+<body>
+<div class="container">
+    <div class="header">
+        <img src="cid:BlazorStrap.png" alt="Logo">
+        <h1>Administración Departamento</h1>
     </div>
-
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" role="presentation">
-        <tr>
-            <td align="center">
-        
-                <tr>
-                    <td valign="top" style="font-size:0; padding: 35px; background-color: #5c2c94;">
-                        <table class="w100p" role="presentation" style="width:600px;">
-                            <tr>
-                                <td class="mobile-center">
-                                    <img class="dark-img" src="cid:BlazorStrap.png" width="90" height="90" style="text-align:center; font-weight:bold; font-size:24px; line-height:28px; text-decoration: none; padding: 0;" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center" valign="middle" class="mobile-center">
-                                    <p style="color: #ffffff; text-align: center; font-weight: bold; font-size: 24px; line-height: 28px; margin: 0;">
-                                        Administracion Departamento
-                                    </p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" style="padding: 35px 35px 20px 35px;">
-                        <table class="w100p" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:600px;">
-                            <tr>
-                                <td align="center" style="padding-top: 25px;">
-                                    <img src="cid:grey_check.png" width="125" height="120" style="display: block; border: 0px;" /><br>
-                                    <h2 style="font-size: 30px; font-weight: normal; line-height: 36px; color: #028383; margin: 0;">
-                                        Pagos Retrasados
-                                    </h2>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="center" style="padding: 30px 0;">
-                                    <p style="color: #777777;">
-                                        Estos son los inquilinos con pagos retrasados:
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="left">
-                                    <table cellspacing="0" cellpadding="0" border="0" width="100%" role="presentation">
-                                        <tr>
-                                            <td width="100%" align="left" style="background-color: #d7f1ff; padding: 10px;">
-                                                <p style="font-weight: 800;">Lista de inquilinos:</p>
-                                                <div id="inquilinosRetrasados">
-                                                    <!-- Aquí se insertará la lista de inquilinos con pagos retrasados -->
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </td>
-        </tr>
-    </table>
+    <div class="content">
+        <img src="cid:grey_check.png" alt="Pagos Retrasados">
+        <h2>Pagos Retrasados</h2>
+        <p>Estos son los inquilinos con pagos retrasados:</p>
+        <div class="tenant-list" id="inquilinosRetrasados">
+            <!-- Aquí se insertará la lista de inquilinos con pagos retrasados -->
+        </div>
+    </div>
+    <div class="footer">
+        Este correo es generado automáticamente. Por favor, no responda a este mensaje.
+    </div>
 </div>
 </body>
 </html>
