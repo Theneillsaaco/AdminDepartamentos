@@ -41,10 +41,14 @@ public class EmailServices : BackgroundService
                         try
                         {
                             pago.ConvertPagoEntityToPagoWithoutEmail();
-                            
-                            inquilinosConRetraso.Append("<div style='border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px;'>")
-                                                .Append($"<p>Inquilino: {pago.Inquilino.FirstName} {pago.Inquilino.LastName} - Pago Id: {pago.IdPago}</p>")
-                                                .Append("</div>");
+
+                            inquilinosConRetraso.Append($@"
+                                <div style='padding-bottom: 10px; margin-bottom: 10px;'>
+                                    <p style='border-bottom: 1px solid #ccc; margin: 0; padding-bottom: 10px;'>
+                                        Inquilino: {pago.Inquilino.FirstName} {pago.Inquilino.LastName} - Pago Id: {pago.IdPago}
+                                    </p>
+                                </div>
+                            ");
 
                             pago.Email = true;
                         }
