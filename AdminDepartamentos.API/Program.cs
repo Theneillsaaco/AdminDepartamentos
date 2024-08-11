@@ -1,3 +1,4 @@
+using AdminDepartamentos.API.Middleware;
 using AdminDepartamentos.API.Models;
 using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.API.Services.Emails;
@@ -42,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<RegisterAuthorizationMiddleware>();
 app.MapIdentityApi<IdentityUser>();
 
 app.UseOutputCache();
@@ -51,12 +53,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-try
-{
-    app.Run();
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"An error occurred: {ex.Message}");
-    throw;
-}
+app.Run();
