@@ -60,10 +60,17 @@ public class InquilinoController : ControllerBase
 
         try
         {
-            var inquilino = _inquilinoRepository.GetById(id);
-
+            var inquilino = await _inquilinoRepository.GetById(id);
+            
+            if (inquilino is null)
+            {
+                responseApi.Success = false;
+                responseApi.Message = $"Inquilino with Id {id} not found.";
+                return NotFound(responseApi);
+            }
+            
             responseApi.Success = true;
-            responseApi.Data = await inquilino;
+            responseApi.Data = inquilino;
         }
         catch (Exception ex)
         {
@@ -90,8 +97,7 @@ public class InquilinoController : ControllerBase
         }
 
         var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
-
-        await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+        await ClearCacheAsync();
         
         responseApi.Success = result.Success;
         responseApi.Message = result.Message;
@@ -120,8 +126,7 @@ public class InquilinoController : ControllerBase
             inquilino.IdInquilino = id;
 
             await _inquilinoRepository.Update(inquilino);
-
-            await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+            await ClearCacheAsync();
             
             responseApi.Success = true;
         }
@@ -137,7 +142,7 @@ public class InquilinoController : ControllerBase
 
 
     // DELETE api/<InquilinoController>/5
-    [HttpPut]
+    [HttpPatch]
     [Route("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
@@ -145,10 +150,15 @@ public class InquilinoController : ControllerBase
 
         try
         {
-            await _inquilinoRepository.MarkDeleted(id);
+            if (!await _inquilinoRepository.Exists(cd => cd.IdInquilino == id))
+            {
+                responseApi.Success = false;
+                responseApi.Message = $"Inquilino with Id {id} not found.";
+                return NotFound(responseApi);
+            }
             
-            await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
-            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            await _inquilinoRepository.MarkDeleted(id);
+            await ClearCacheAsync();
             
             responseApi.Success = true;
         }
@@ -160,5 +170,11 @@ public class InquilinoController : ControllerBase
         }
 
         return Ok(responseApi);
+    }
+
+    private async Task ClearCacheAsync()
+    {
+        await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+        await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
 }

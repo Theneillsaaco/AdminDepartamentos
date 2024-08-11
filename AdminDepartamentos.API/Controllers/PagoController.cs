@@ -97,7 +97,7 @@ public class PagoController : ControllerBase
             updatedPago.IdInquilino = pago.IdInquilino;
 
             await _pagoRepository.Update(pago);
-            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            await ClearCacheAsync();
             
             responseApi.Success = true;
         }
@@ -131,7 +131,7 @@ public class PagoController : ControllerBase
             pago.Email = false;
 
             await _pagoRepository.Update(pago);
-            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            await ClearCacheAsync();
             
             responseApi.Success = true;
         }
@@ -143,5 +143,10 @@ public class PagoController : ControllerBase
         }
 
         return Ok(responseApi);
+    }
+    
+    private async Task ClearCacheAsync()
+    {
+        await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
 }

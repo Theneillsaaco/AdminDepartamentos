@@ -17,7 +17,8 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 {
     public override async Task<Inquilino> GetById(int id)
     {
-        ArgumentNullException.ThrowIfNull(id, "El Id no puede ser null.");
+        if (id <= 0)
+            throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
 
         if (!await base.Exists(cd => cd.IdInquilino == id))
             throw new InquilinoException("El inquilino no existe.");
@@ -27,10 +28,10 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
     public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)
     {
-        ArgumentNullException.ThrowIfNull(inquilinoDto, "El Inquilino no puede ser null.");
-        ArgumentNullException.ThrowIfNull(pagoDto, "El pago no puede ser null.");
+        if (inquilinoDto is null) throw new ArgumentNullException(nameof(inquilinoDto), "El Inquilino no puede ser null.");
+        if (pagoDto is null) throw new ArgumentNullException(nameof(pagoDto), "El Pago no puede ser null.");
 
-        using (var transaction = await _context.Database.BeginTransactionAsync())
+        using var transaction = await _context.Database.BeginTransactionAsync();
         {
             try
             {
@@ -39,7 +40,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
                 var newInquilino = inquilinoDto.ConvertEntityInquilinoToInquilinoDto();
 
-                _context.Inquilinos.Add(newInquilino);
+                await _context.Inquilinos.AddAsync(newInquilino);
                 await _context.SaveChangesAsync();
 
                 var newPago = new Pago
@@ -50,7 +51,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
                     FechaPagoInDays = pagoDto.FechaPagoInDays
                 };
 
-                _context.Pagos.Add(newPago);
+                await _context.Pagos.AddAsync(newPago);
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
@@ -67,7 +68,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
     public override async Task Update(Inquilino entity)
     {
-        ArgumentNullException.ThrowIfNull(entity, "El Inquilino no puede ser null.");
+        if (entity == null) throw new ArgumentNullException(nameof(entity), "El Inquilino no puede ser null.");
 
         await base.Update(entity);
     }
@@ -75,7 +76,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     public async Task<List<InquilinoModel>> GetInquilinos()
     {
         return await _context.Inquilinos
-            .Where(inq => inq.Deleted == false)
+            .Where(inq => !inq.Deleted)
             .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
             .ToListAsync();
     }
@@ -84,14 +85,14 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     {
         var inquilino = await _context.Inquilinos.FirstOrDefaultAsync(i => i.IdInquilino == id);
 
-        if (inquilino == null)
+        if (inquilino is null)
             throw new InquilinoException("El inquilino no Existe.");
         
         inquilino.Deleted = true;
         inquilino.DeletedDate = DateTime.Now;
         inquilino.ModifyDate = DateTime.Now;
         
-        var pagos = await _context.Pagos.Where(p => p.IdInquilino == id).ToListAsync();
+        var pagos = await _context.Pagos.Where(pa => pa.IdInquilino == id).ToListAsync();
         foreach (var pago in pagos)
         {
             pago.Deleted = true;
