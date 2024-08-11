@@ -27,6 +27,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 
+builder.Services.AddOutputCache(option =>
+{
+    option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
+    option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,6 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapIdentityApi<IdentityUser>();
+
+app.UseOutputCache();
 
 app.UseAuthentication();
 app.UseAuthorization();

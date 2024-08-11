@@ -19,15 +19,17 @@ public partial class Pago
     [Column(TypeName = "decimal(18,2)")]
     public decimal Monto { get; set; }
 
-    public int? FechaPagoInDays { get; set; }
+    [Required]
+    public int FechaPagoInDays { get; set; }
 
     [DefaultValue(true)]
     public bool Retrasado { get; set; }
+    
+    [DefaultValue(true)]
+    public bool Email { get; set; }
 
     [DefaultValue(false)]
     public bool Deleted { get; set; }
-    
-    public bool Email { get; set; }
 
     [ForeignKey("IdInquilino")]
     public Inquilino Inquilino { get; set; }

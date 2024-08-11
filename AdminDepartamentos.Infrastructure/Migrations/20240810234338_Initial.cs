@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AdminDepartamentos.Infrastructure.Migrations
+namespace AdminDepartament.Infrastucture.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -187,8 +187,9 @@ namespace AdminDepartamentos.Infrastructure.Migrations
                     IdInquilino = table.Column<int>(type: "int", nullable: false),
                     NumDeposito = table.Column<int>(type: "int", nullable: false),
                     Monto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    FechaPagoInDays = table.Column<int>(type: "int", nullable: true),
+                    FechaPagoInDays = table.Column<int>(type: "int", nullable: false),
                     Retrasado = table.Column<bool>(type: "bit", nullable: false),
+                    Email = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>

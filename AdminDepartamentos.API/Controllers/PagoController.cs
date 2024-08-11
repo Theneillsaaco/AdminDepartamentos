@@ -4,6 +4,8 @@ using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace AdminDepartamentos.API.Controllers;
 
@@ -13,27 +15,28 @@ namespace AdminDepartamentos.API.Controllers;
 public class PagoController : ControllerBase
 {
     private readonly IPagoRepository _pagoRepository;
+    private readonly IOutputCacheStore _outputCacheStore;
 
-    public PagoController(IPagoRepository pagoRepository)
+    public PagoController(IPagoRepository pagoRepository, IOutputCacheStore outputCacheStore)
     {
         _pagoRepository = pagoRepository;
+        _outputCacheStore = outputCacheStore;
     }
 
     // GET: api/<PagoController>
     [HttpGet]
     [Route("GetPago")]
+    [OutputCache(PolicyName = "PagosCache")]
     public async Task<IActionResult> GetPago()
     {
         var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
 
         try
         {
-            var pago = await _pagoRepository.GetPago();
-
-            var pagoGetModel = pago.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
+            var pagos = await _pagoRepository.GetPago();
 
             responseApi.Success = true;
-            responseApi.Data = pagoGetModel;
+            responseApi.Data = pagos.Select(pa => pa.ConvertToPagoGetByInquilinoModel()).ToList();
         }
         catch (Exception ex)
         {
@@ -48,6 +51,7 @@ public class PagoController : ControllerBase
     // GET api/<PagoController>/5
     [HttpGet]
     [Route("GetById/{id}")]
+    [OutputCache(PolicyName = "PagosCache")]
     public async Task<IActionResult> GetById(int id)
     {
         var responseApi = new ResponseAPI<PagoGetModel>();
@@ -55,11 +59,9 @@ public class PagoController : ControllerBase
         try
         {
             var pago = await _pagoRepository.GetById(id);
-
-            var pagoGetModel = pago.ConvertToPagoGetModel();
-
+            
             responseApi.Success = true;
-            responseApi.Data = pagoGetModel;
+            responseApi.Data = pago.ConvertToPagoGetModel();
         }
         catch (Exception ex)
         {
@@ -79,7 +81,7 @@ public class PagoController : ControllerBase
 
         try
         {
-            if (!await _pagoRepository.Exists(cd => cd.IdPago == id))
+            if (!await _pagoRepository.Exists(pa => pa.IdPago == id))
             {
                 responseApi.Success = false;
                 responseApi.Message = $"Pago with Id {id} not found.";
@@ -87,16 +89,16 @@ public class PagoController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var getPago = await _pagoRepository.GetById(id);
+            var pago = await _pagoRepository.GetById(id);
+            _pagoRepository.DetachEntity(pago);
 
-            _pagoRepository.DetachEntity(getPago);
-
-            var pago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
-            pago.IdPago = id;
-            pago.IdInquilino = getPago.IdInquilino;
+            var updatedPago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
+            updatedPago.IdPago = id;
+            updatedPago.IdInquilino = pago.IdInquilino;
 
             await _pagoRepository.Update(pago);
-
+            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            
             responseApi.Success = true;
         }
         catch (Exception ex)
@@ -109,16 +111,28 @@ public class PagoController : ControllerBase
         return Ok(responseApi);
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("Retrasado/{id}")]
     public async Task<IActionResult> MarkRetrasado(int id)
     {
-        var responseApi = new ResponseAPI<PagoRetrasadoModel>();
+        var responseApi = new ResponseAPI<object>();
 
         try
         {
-            await _pagoRepository.MarkRetrasado(id);
+            var pago = await _pagoRepository.GetById(id);
+            if (pago is null)
+            {
+                responseApi.Success = false;
+                responseApi.Message = "Pago not found.";
+                return NotFound(responseApi);
+            }
 
+            pago.Retrasado = false;
+            pago.Email = false;
+
+            await _pagoRepository.Update(pago);
+            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            
             responseApi.Success = true;
         }
         catch (Exception ex)

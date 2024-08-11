@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AdminDepartamentos.Infrastructure.Migrations
+namespace AdminDepartament.Infrastucture.Migrations
 {
     [DbContext(typeof(DepartContext))]
-    [Migration("20240802214207_Initial")]
+    [Migration("20240810234338_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -83,7 +83,10 @@ namespace AdminDepartamentos.Infrastructure.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FechaPagoInDays")
+                    b.Property<bool>("Email")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("FechaPagoInDays")
                         .HasColumnType("int");
 
                     b.Property<int>("IdInquilino")

@@ -4,6 +4,7 @@ using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace AdminDepartamentos.API.Controllers;
 
@@ -13,15 +14,18 @@ namespace AdminDepartamentos.API.Controllers;
 public class InquilinoController : ControllerBase
 {
     private readonly IInquilinoRepository _inquilinoRepository;
+    private readonly IOutputCacheStore _outputCacheStore;
 
-    public InquilinoController(IInquilinoRepository inquilinoRepository)
+    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore)
     {
         _inquilinoRepository = inquilinoRepository;
+        _outputCacheStore = outputCacheStore;
     }
 
     // GET: api/<InquilinoController>
     [HttpGet]
     [Route("GetAll")]
+    [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetAll()
     {
         var responseApi = new ResponseAPI<List<InquilinoViewModel>>();
@@ -49,6 +53,7 @@ public class InquilinoController : ControllerBase
     // GET api/<InquilinoController>/5
     [HttpGet]
     [Route("GetById/{id}")]
+    [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetById(int id)
     {
         var responseApi = new ResponseAPI<Inquilino>();
@@ -86,6 +91,8 @@ public class InquilinoController : ControllerBase
 
         var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
 
+        await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+        
         responseApi.Success = result.Success;
         responseApi.Message = result.Message;
 
@@ -114,6 +121,8 @@ public class InquilinoController : ControllerBase
 
             await _inquilinoRepository.Update(inquilino);
 
+            await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+            
             responseApi.Success = true;
         }
         catch (Exception ex)
@@ -137,7 +146,10 @@ public class InquilinoController : ControllerBase
         try
         {
             await _inquilinoRepository.MarkDeleted(id);
-
+            
+            await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
+            await _outputCacheStore.EvictByTagAsync("PagosCache", default);
+            
             responseApi.Success = true;
         }
         catch (Exception ex)

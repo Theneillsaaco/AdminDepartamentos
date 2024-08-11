@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AdminDepartamentos.Infrastructure.Migrations
+namespace AdminDepartament.Infrastucture.Migrations
 {
     [DbContext(typeof(DepartContext))]
     partial class DepartContextModelSnapshot : ModelSnapshot
@@ -83,7 +83,7 @@ namespace AdminDepartamentos.Infrastructure.Migrations
                     b.Property<bool>("Email")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FechaPagoInDays")
+                    b.Property<int>("FechaPagoInDays")
                         .HasColumnType("int");
 
                     b.Property<int>("IdInquilino")

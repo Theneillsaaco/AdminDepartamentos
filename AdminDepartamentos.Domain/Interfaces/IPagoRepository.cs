@@ -12,8 +12,6 @@ public interface IPagoRepository : IBaseRepository<Pago>
     /// Desatachar la entidad existente para evitar conflictos de seguimiento
     /// </summary>
     void DetachEntity(Pago entity);
-    
-    Task MarkRetrasado(int id);
 
     void CheckRetraso(Pago pago);
 

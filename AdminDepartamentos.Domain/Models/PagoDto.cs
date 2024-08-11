@@ -6,5 +6,5 @@ public class PagoDto
     
     public decimal Monto { get; set; }
     
-    public int? FechaPagoInDays { get; set; }
+    public int FechaPagoInDays { get; set; }
 }
