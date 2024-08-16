@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.API", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.Infrastructure.Unit.Test", "AdminDepartamentos.Infrastructure.Unit.Test\AdminDepartamentos.Infrastructure.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

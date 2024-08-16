@@ -48,12 +48,14 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
         if ((currentDate.Month == 2 && currentDate.Day == 29 && pago.FechaPagoInDays == 30) ||
             (currentDate.Day == pago.FechaPagoInDays))
             pago.Retrasado = true;
+        else
+            pago.Retrasado = false;
     }
 
     public async Task<List<Pago>> GetRetrasosWithoutEmail()
     {
         return await _context.Pagos
-            .Where(pa => pa.Retrasado && !pa.Email && !pa.Deleted)
+            .Where(pa => !pa.Retrasado && !pa.Email && !pa.Deleted)
             .Include(pa => pa.Inquilino)
             .ToListAsync();
     }

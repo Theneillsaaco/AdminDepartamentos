@@ -42,6 +42,11 @@ public class EmailServices : BackgroundService
                         {
                             pago.ConvertPagoEntityToPagoWithoutEmail();
 
+                            pago.Email = true;
+
+                            await pagoRepository.Update(pago);
+                            await scope.ServiceProvider.GetRequiredService<DepartContext>().SaveChangesAsync(stoppingToken);
+
                             inquilinosConRetraso.Append($@"
                                 <div style='padding-bottom: 10px; margin-bottom: 10px;'>
                                     <p style='border-bottom: 1px solid #ccc; margin: 0; padding-bottom: 10px;'>
@@ -49,16 +54,12 @@ public class EmailServices : BackgroundService
                                     </p>
                                 </div>
                             ");
-
-                            pago.Email = true;
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error checking retraso for pago: {ex.Message}");
                             continue;
                         }
-                        
-                        pagosUpdate.Add(pago);
                     }
 
                     string emailTemplate;
@@ -80,9 +81,6 @@ public class EmailServices : BackgroundService
                     try
                     {
                         emailSender.SendEmail(emailDto);
-                        
-                        await pagoRepository.Update(pagosUpdate);
-                        await scope.ServiceProvider.GetRequiredService<DepartContext>().SaveChangesAsync(stoppingToken);
                     }
                     catch (Exception ex)
                     {
@@ -94,7 +92,7 @@ public class EmailServices : BackgroundService
 
             Console.WriteLine("Ejecutando EmailService");
 
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
 }
