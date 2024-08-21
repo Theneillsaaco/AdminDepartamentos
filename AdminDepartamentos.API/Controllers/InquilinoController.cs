@@ -13,15 +13,6 @@ namespace AdminDepartamentos.API.Controllers;
 [ApiController]
 public class InquilinoController : ControllerBase
 {
-    private readonly IInquilinoRepository _inquilinoRepository;
-    private readonly IOutputCacheStore _outputCacheStore;
-
-    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore)
-    {
-        _inquilinoRepository = inquilinoRepository;
-        _outputCacheStore = outputCacheStore;
-    }
-
     // GET: api/<InquilinoController>
     [HttpGet]
     [Route("GetAll")]
@@ -142,11 +133,11 @@ public class InquilinoController : ControllerBase
 
 
     // DELETE api/<InquilinoController>/5
-    [HttpPatch]
+    [HttpDelete]
     [Route("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
-        var responseApi = new ResponseAPI<InquilinoDeletedModel>();
+        var responseApi = new ResponseAPI<int>();
 
         try
         {
@@ -177,4 +168,17 @@ public class InquilinoController : ControllerBase
         await _outputCacheStore.EvictByTagAsync("InquilinosCache", default);
         await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
+
+    #region Context
+
+    private readonly IInquilinoRepository _inquilinoRepository;
+    private readonly IOutputCacheStore _outputCacheStore;
+
+    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore)
+    {
+        _inquilinoRepository = inquilinoRepository;
+        _outputCacheStore = outputCacheStore;
+    }
+
+    #endregion
 }

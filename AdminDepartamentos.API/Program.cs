@@ -14,6 +14,16 @@ builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.AddRepositoryDependency();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NewPolicy", app =>
+    {
+        app.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddHostedService<CheckRetrasosService>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -28,11 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 
-builder.Services.AddOutputCache(option =>
-{
-    option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
-    option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
-});
+builder.Services.ConfigureOutputCache();
 
 var app = builder.Build();
 
@@ -47,6 +53,8 @@ app.UseMiddleware<RegisterAuthorizationMiddleware>();
 app.MapIdentityApi<IdentityUser>();
 
 app.UseOutputCache();
+
+app.UseCors("NewPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

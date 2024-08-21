@@ -45,6 +45,15 @@ public static class ServicesDepenfency
         .AddApiEndpoints();
     }
 
+    public static void ConfigureOutputCache(this IServiceCollection services)
+    {
+        services.AddOutputCache(option =>
+        {
+            option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
+            option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
+        });
+    }
+    
     /// <summary>
     ///     Swagger Confing
     /// </summary>

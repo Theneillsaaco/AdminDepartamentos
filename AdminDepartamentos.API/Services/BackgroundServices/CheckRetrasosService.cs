@@ -16,21 +16,19 @@ public class CheckRetrasosService(IServiceScopeFactory scopeFactory) : Backgroun
                 var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
                 var pagos = await pagoRepository.GetPago();
 
-                List<Pago> pagosUpdate = new List<Pago>();
+                List<Pago> pagosUpdate = [];
 
                 foreach (var pago in pagos.Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
                 {
                     try
                     {
-                        // Check and mark Retrasado only if conditions are correct
+                        bool estadoOriginalRetrasado = pago.Retrasado;
+                        
                         pagoRepository.CheckRetraso(pago);
 
-                        // Only update if the 'Retrasado' status changed to true
-                        if (pago.Retrasado)
-                        {
-                            pagosUpdate.Add(pago);
-                            Console.WriteLine($"Marked Pago ID {pago.IdPago} as retrasado.");
-                        }
+                        if (pago.Retrasado == estadoOriginalRetrasado) continue;
+                        pagosUpdate.Add(pago);
+                        Console.WriteLine($"Marked Pago ID {pago.IdPago} as retrasado.");
                     }
                     catch (Exception ex)
                     {
@@ -50,7 +48,7 @@ public class CheckRetrasosService(IServiceScopeFactory scopeFactory) : Backgroun
 
             Console.WriteLine("Ejecutando CheckRetrasosService");
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
         }
     }
 }
