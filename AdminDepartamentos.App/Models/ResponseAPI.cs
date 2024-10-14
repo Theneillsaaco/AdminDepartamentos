@@ -1,4 +1,4 @@
-﻿namespace AdminDepartamentos.API.Core;
+﻿namespace AdminDepartamentos.App.Models;
 
 public class ResponseAPI<T>
 {

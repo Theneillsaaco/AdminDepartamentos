@@ -1,3 +1,4 @@
+using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InquilinoModels;
 using AdminDepartamentos.Domain.Entities;

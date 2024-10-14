@@ -1,63 +1,56 @@
-using AdminDepartamentos.API.Middleware;
 using AdminDepartamentos.API.Models;
 using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.API.Services.Emails;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
 using AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
-builder.Services.AddRepositoryDependency();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("NewPolicy", app =>
-    {
-        app.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
-
-builder.Services.AddHostedService<CheckRetrasosService>();
-
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
-builder.Services.AddHostedService<EmailServices>();
-
-builder.Services.ConfigureAuthentication();
-
-builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureSwagger();
-
 builder.Services.ConfigureOutputCache();
 
-var app = builder.Build();
+// Add repository and other dependencies.
+builder.Services.AddRepositoryDependency();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+
+// Register hosted services.
+builder.Services.AddHostedService<CheckRetrasosService>();
+builder.Services.AddHostedService<EmailServices>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// Tests.
+var serviceProvider = builder.Services.BuildServiceProvider();
+var logger = serviceProvider.GetService<ILogger<Program>>();
+logger.LogInformation("Services registered successfully");
 
 // Configure the HTTP request pipeline.
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<RegisterAuthorizationMiddleware>();
-app.MapIdentityApi<IdentityUser>();
-
-app.UseOutputCache();
-
-app.UseCors("NewPolicy");
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:54321")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials());
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.MapControllers();
 

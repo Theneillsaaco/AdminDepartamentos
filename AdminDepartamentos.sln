@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.Infrastr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.IOC", "AdminDepartamentos.IOC\AdminDepartamentos.IOC.csproj", "{E5F61C0D-7C4E-48C6-AEDB-133F1C1C8B5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.API", "AdminDepartamentos.API\AdminDepartamentos.API.csproj", "{5A6F2B02-06B4-483D-892B-403E6C428E4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.API", "AdminDepartamentos.API\AdminDepartamentos.API.csproj", "{5A6F2B02-06B4-483D-892B-403E6C428E4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.Infrastructure.Unit.Test", "AdminDepartamentos.Infrastructure.Unit.Test\AdminDepartamentos.Infrastructure.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.Infrastructure.Unit.Test", "AdminDepartamentos.Infrastructure.Unit.Test\AdminDepartamentos.Infrastructure.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{338C3EA5-9F97-4F1F-B78C-76553AC97379}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2141CAA-DD80-4BE1-B44D-F3B51483ADBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338C3EA5-9F97-4F1F-B78C-76553AC97379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338C3EA5-9F97-4F1F-B78C-76553AC97379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338C3EA5-9F97-4F1F-B78C-76553AC97379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{338C3EA5-9F97-4F1F-B78C-76553AC97379}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

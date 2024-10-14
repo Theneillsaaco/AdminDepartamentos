@@ -1,9 +1,11 @@
-﻿using AdminDepartamentos.Infrastructure.Context;
-using AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
+﻿using System.Text;
+using AdminDepartamentos.Infrastructure.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
@@ -19,32 +21,47 @@ public static class ServicesDepenfency
             options.UseSqlServer(configuration.GetConnectionString("DataBase")));
     }
 
-    /// <summary>
-    ///     Authentication config
-    /// </summary>
-    public static void ConfigureAuthentication(this IServiceCollection services)
-    {
-        services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        })
-        .AddCookie(IdentityConstants.ApplicationScheme)
-        .AddBearerToken(IdentityConstants.BearerScheme);
-    }
-
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
-        {
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
-        })
-        .AddEntityFrameworkStores<DepartContext>()
-        .AddApiEndpoints();
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+            })
+            .AddSignInManager<SignInManager<IdentityUser>>()
+            .AddEntityFrameworkStores<DepartContext>()
+            .AddDefaultTokenProviders();
     }
+    
+    /// <summary>
+    ///     Authentication config
+    /// </summary>
+    public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
 
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true, 
+                    ValidateAudience = false,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+    }
+    
     public static void ConfigureOutputCache(this IServiceCollection services)
     {
         services.AddOutputCache(option =>
@@ -62,14 +79,17 @@ public static class ServicesDepenfency
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.8" });
+
+            // Configuración para JWT Authentication en Swagger
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,
-                Description = "Por favor, ingrese el token JWT con el prefijo 'Bearer' en el campo",
+                Description = "Por favor ingrese 'Bearer' seguido de un espacio y el token JWT",
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -79,12 +99,14 @@ public static class ServicesDepenfency
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        }
+                        },
+                        Scheme = "Bearer",  // Cambiado de 'oauth2' a 'Bearer'
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
                     },
-                    new string[] { }
+                    new List<string>()
                 }
             });
-            c.SchemaFilter<SchemaFilter>();
-        });
+        }); 
     }
 }

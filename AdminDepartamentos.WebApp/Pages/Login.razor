@@ -1,0 +1,18 @@
+﻿@page "/login"
+
+@using AdminDepartamentos.WebApp.Models
+
+@inject AuthService AuthService
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <!-- Campos de formulario -->    
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task HandleLogin()
+    {
+        await AuthService.Login(loginModel);
+    }
+}

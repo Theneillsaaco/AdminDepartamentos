@@ -1,0 +1,12 @@
+﻿@inject TokenAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<button @onclick="Logouts">Cerrar Sesión</button>
+
+@code {
+    private async Task Logouts()
+    {
+        await AuthStateProvider.MarkUserAsLoggedOut();
+        Navigation.NavigateTo("/login");
+    }
+}

@@ -92,7 +92,7 @@ public class EmailServices : BackgroundService
 
             Console.WriteLine("Ejecutando EmailService");
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
     }
 }

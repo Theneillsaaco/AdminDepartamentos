@@ -1,0 +1,73 @@
+﻿@page "/pagos"
+@using AdminDepartamentos.App.Models
+
+@inject PagoService PagoService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+
+<h3>Pagos</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (pagoGetModel is null)
+{
+    <p>Cargando pagos...</p>
+}
+else if (pagoGetModel.Count is 0)
+{
+    <p>No se encontraron pagos.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Id Pago</th>
+            <th>Id Inquilino</th>
+            <th>Retrasado</th>
+            <th>Número de Depósito</th>
+            <th>Días Hasta Pago</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var pago in pagoGetModel)
+            {
+                <tr>
+                    <td>@pago.InquilinoFirstName @pago.InquilinoLastName</td>
+                    <td>@pago.IdPago</td>
+                    <td>@pago.IdInquilino</td>
+                    <td>@pago.Retrasado</td>
+                    <td>@pago.NumDeposito</td>
+                    <td>@pago.FechaPagoInDays</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private List<PagoGetModel> pagoGetModel;
+    private string errorMessage;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsAuthenticated())
+        {
+            Navigation.NavigateTo("/login");
+        }
+
+        await LoadPagos();
+    }
+
+    private async Task LoadPagos()
+    {
+        var response = await PagoService.GetPagos();
+        if (response.Success)
+            pagoGetModel = response.Data;
+        else
+            errorMessage = response.Message;
+    }
+}

@@ -1,3 +1,4 @@
+using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.PagoModels;
 using AdminDepartamentos.Domain.Entities;
@@ -14,15 +15,6 @@ namespace AdminDepartamentos.API.Controllers;
 [ApiController]
 public class PagoController : ControllerBase
 {
-    private readonly IPagoRepository _pagoRepository;
-    private readonly IOutputCacheStore _outputCacheStore;
-
-    public PagoController(IPagoRepository pagoRepository, IOutputCacheStore outputCacheStore)
-    {
-        _pagoRepository = pagoRepository;
-        _outputCacheStore = outputCacheStore;
-    }
-
     // GET: api/<PagoController>
     [HttpGet]
     [Route("GetPago")]
@@ -149,4 +141,17 @@ public class PagoController : ControllerBase
     {
         await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
+
+    #region Context
+
+    private readonly IPagoRepository _pagoRepository;
+    private readonly IOutputCacheStore _outputCacheStore;
+
+    public PagoController(IPagoRepository pagoRepository, IOutputCacheStore outputCacheStore)
+    {
+        _pagoRepository = pagoRepository;
+        _outputCacheStore = outputCacheStore;
+    }
+
+    #endregion
 }
