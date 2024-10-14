@@ -4,6 +4,7 @@
 @inject PagoService PagoService
 @inject NavigationManager Navigation
 @inject AuthService AuthService
+@inject SweetAlertService Swal
 
 <h3>Pagos</h3>
 
@@ -26,11 +27,10 @@ else
         <thead>
         <tr>
             <th>Nombre</th>
-            <th>Id Pago</th>
-            <th>Id Inquilino</th>
             <th>Retrasado</th>
             <th>Número de Depósito</th>
             <th>Días Hasta Pago</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -38,11 +38,14 @@ else
             {
                 <tr>
                     <td>@pago.InquilinoFirstName @pago.InquilinoLastName</td>
-                    <td>@pago.IdPago</td>
-                    <td>@pago.IdInquilino</td>
                     <td>@pago.Retrasado</td>
                     <td>@pago.NumDeposito</td>
                     <td>@pago.FechaPagoInDays</td>
+                    <td>
+                        <button class="btn btn-warning" @onclick="() => MarkRetrasado(pago.IdPago)">
+                            <Icon Name="IconName.Calendar2CheckFill"></Icon>
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -69,5 +72,32 @@ else
             pagoGetModel = response.Data;
         else
             errorMessage = response.Message;
+    }
+
+    private async Task MarkRetrasado(int id)
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Estas Seguro?",
+            Text = "Esta accion marcara el pago como pago.",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si, confirmar",
+            CancelButtonText = "Cancelar"
+        });
+
+        if (result.IsConfirmed)
+        {
+            var response = await PagoService.MarkRetrasado(id);
+            if (response.Success)
+            {
+                await Swal.FireAsync("Exito!", "El pago ha sido marcado como pago.", SweetAlertIcon.Success);
+                await LoadPagos();
+            }
+            else
+            {
+                await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+            }
+        }
     }
 }

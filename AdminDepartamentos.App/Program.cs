@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using AdminDepartamentos.App;
 using AdminDepartamentos.App.Services;
 using Blazored.LocalStorage;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -14,6 +15,7 @@ builder.Services.AddScoped(sp => new HttpClient{ BaseAddress = new Uri("http://l
 // Dependencies
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddSweetAlert2();
 
 // Authorizacion Dependencies
 builder.Services.AddScoped<AuthService>();
