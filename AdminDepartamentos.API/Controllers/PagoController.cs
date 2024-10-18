@@ -77,7 +77,6 @@ public class PagoController : ControllerBase
             {
                 responseApi.Success = false;
                 responseApi.Message = $"Pago with Id {id} not found.";
-
                 return NotFound(responseApi);
             }
 
@@ -88,7 +87,7 @@ public class PagoController : ControllerBase
             updatedPago.IdPago = id;
             updatedPago.IdInquilino = pago.IdInquilino;
 
-            await _pagoRepository.Update(pago);
+            await _pagoRepository.Update(updatedPago);
             await ClearCacheAsync();
             
             responseApi.Success = true;
