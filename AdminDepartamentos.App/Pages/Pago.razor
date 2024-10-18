@@ -1,0 +1,93 @@
+﻿@page "/pago/{id:int}"
+
+@using AdminDepartamentos.App.Models
+
+@inject PagoService PagoService
+@inject NavigationManager Navigation
+@inject SweetAlertService Swal
+
+<h3>Edit</h3>
+
+@if (pagoGetByIdModel == null)
+{
+    <p>Cargando informacion del pago...</p>
+}
+else
+{
+    <EditForm Model="pagoGetByIdModel" OnValidSubmit="UpdatePago">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        
+        <div class="form-group">
+            <label for="numDeposito">Numero de Deposito</label>
+            <InputNumber id="numDeposito" class="form-control" @bind-Value="pagoGetByIdModel.NumDeposito"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="fechaPagoInDays">Días Hasta Pago</label>
+            <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="pagoGetByIdModel.FechaPagoInDays" />
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" @onclick="Regresar">Cancelar</button>
+        </div>
+    </EditForm>
+}
+@code {
+    [Parameter] public int Id { get; set; }
+    private PagoGetByIdModel pagoGetByIdModel;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPago();
+    }
+
+    private async Task CargarPago()
+    {
+        var response = await PagoService.GetPagoById(Id);
+        if (response.Success)
+            pagoGetByIdModel = response.Data;
+        else
+        {
+            await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+            Navigation.NavigateTo("/pagos");
+        }
+    }
+
+    private async Task UpdatePago()
+    {
+        var updateModel = new PagoUpdateModel
+        {
+            NumDeposito = pagoGetByIdModel.NumDeposito,
+            FechaPagoInDays = pagoGetByIdModel.FechaPagoInDays
+        };
+
+        var response = await PagoService.UpdatePago(Id, updateModel);
+        if (response.Success)
+        {
+            await Swal.FireAsync("¡Éxito!", "El pago ha sido actualizado correctamente.", SweetAlertIcon.Success);
+            Navigation.NavigateTo("/pagos");
+        }
+        else
+        {
+            await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+        }
+    }
+
+    private async Task Regresar()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Estas Seguro?",
+            Text = "Si vuelves el progreso no se guardara",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si, confirmar",
+            CancelButtonText = "Cancelar"
+        });
+        
+        if (result.IsConfirmed)
+            Navigation.NavigateTo("/pagos");
+    }
+}

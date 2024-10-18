@@ -19,7 +19,7 @@
 }
 else if (pagoGetModel.Count is 0)
 {
-    <p>No se encontraron pagos.</p>
+    <p>Parece que no nadie aqui :(</p>
 }
 else
 {
@@ -44,6 +44,9 @@ else
                     <td>
                         <button class="btn btn-warning" @onclick="() => MarkRetrasado(pago.IdPago)">
                             <Icon Name="IconName.Calendar2CheckFill"></Icon>
+                        </button>
+                        <button class="btn btn-primary" @onclick="() => EditPago(pago.IdPago)">
+                            <Icon Name="IconName.Search"></Icon>
                         </button>
                     </td>
                 </tr>
@@ -73,7 +76,12 @@ else
         else
             errorMessage = response.Message;
     }
-
+    
+    private void EditPago(int idPago)
+    {
+        Navigation.NavigateTo($"/pago/{idPago}");
+    }
+    
     private async Task MarkRetrasado(int id)
     {
         var result = await Swal.FireAsync(new SweetAlertOptions
