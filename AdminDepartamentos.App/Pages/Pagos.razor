@@ -29,36 +29,33 @@ else if (pagoGetModel.Count is 0)
 }
 else
 {
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Retrasado</th>
-            <th>Número de Depósito</th>
-            <th>Días Hasta Pago</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach (var pago in pagoGetModel)
-            {
-                <tr>
-                    <td>@pago.InquilinoFirstName @pago.InquilinoLastName</td>
-                    <td>@(pago.Retrasado ? "Si" : "No")</td>
-                    <td>@pago.NumDeposito</td>
-                    <td>@pago.FechaPagoInDays</td>
-                    <td>
-                        <button class="btn btn-warning" @onclick="() => MarkRetrasado(pago.IdPago)">
-                            <Icon Name="IconName.Calendar2CheckFill"></Icon>
+    <div class="row row-cols-1 row-clos-md-2 g-4">
+        @foreach (var pago in pagoGetModel)
+        {
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@pago.InquilinoFirstName @pago.InquilinoLastName</h5>
+                        <p class="card-text">
+                            <strong>Numero de Deposito:</strong> @pago.NumDeposito
+                            <strong>Dias Hasta Pago:</strong> @pago.FechaPagoInDays
+                        </p>
+                        <span class="badge @(pago.Retrasado ? "bg-danger" : "bg-success")">
+                            @(pago.Retrasado ? "Retrasado" : "Al Dia")
+                        </span>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <button class="btn btn-warning btn-sm" @onclick="() => MarkRetrasado(pago.IdPago)">
+                            <Icon Name="IconName.Calendar2CheckFill"></Icon> Marcar como Pago
                         </button>
-                        <button class="btn btn-primary" @onclick="() => EditPago(pago.IdPago)">
+                        <button class="btn btn-primary btn-sm" @onclick="() => EditPago(pago.IdPago)">
                             <Icon Name="IconName.Search"></Icon>
                         </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 @code {
     private List<PagoGetModel> pagoGetModel;

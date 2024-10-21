@@ -7,16 +7,23 @@
 @inject AuthService AuthService
 @inject SweetAlertService Swal
 
-<h3>Detalles</h3>
+<h3 class="text-center mt-4 mb-4">Detalles</h3>
 
-@if (_pagoGetByIdModel == null)
+@if (_pagoGetByIdModel is null)
 {
-    <p>Cargando informacion del pago...</p>
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando informacion del pago...</p>
+    </div>
 }
 else
 {
-    <div class="card md-4">
-        <div class="card-header">Detalles del Pago</div>
+    <div class="card md-4 shadow-sm">
+        <div class="card-header">
+            <strong>Detalles del Pago</strong>
+        </div>
         <div class="card-body">
             <p><strong>Moto:</strong> @_pagoGetByIdModel.Monto.ToString("C")</p>
             <p><strong>Numero de Deposito:</strong> @_pagoGetByIdModel.NumDeposito</p>
@@ -24,30 +31,39 @@ else
             <p><strong>Retrasado:</strong> @(_pagoGetByIdModel.Retrasado ? "Si" : "No")</p>
         </div>
     </div>
-    <EditForm Model="_pagoUpdateModel" OnValidSubmit="UpdatePago">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        
-        <div class="form-group">
-            <label for="numDeposito">Numero de Deposito</label>
-            <InputNumber id="numDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
+    
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <strong>Editar Pago</strong>
         </div>
-        
-        <div class="form-group">
-            <label for="Monto">Monto</label>
-            <InputNumber id="Monto" class="form-control" @bind-Value="_pagoUpdateModel.Monto" />
+        <div class="card-body">
+            <EditForm Model="_pagoUpdateModel" OnValidSubmit="UpdatePago">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group mb-3">
+                    <label for="numDeposito">Numero de Deposito</label>
+                    <InputNumber id="numDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="Monto">Monto</label>
+                    <InputNumber id="Monto" class="form-control" @bind-Value="_pagoUpdateModel.Monto" />
+                </div>
+
+                <div class="form-groupmb-3">
+                    <label for="fechaPagoInDays">Días Hasta Pago</label>
+                    <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="_pagoUpdateModel.FechaPagoInDays" />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" @onclick="Regresar">Cancelar</button>
+                </div>
+            </EditForm>
         </div>
-        
-        <div class="form-group">
-            <label for="fechaPagoInDays">Días Hasta Pago</label>
-            <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="_pagoUpdateModel.FechaPagoInDays" />
-        </div>
-        
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-            <button type="button" class="btn btn-secondary" @onclick="Regresar">Cancelar</button>
-        </div>
-    </EditForm>
+    </div>
+   
 }
 @code {
     [Parameter] public int Id { get; set; }
