@@ -37,10 +37,10 @@ else
                     <div class="card-body">
                         <h5 class="card-title">@pago.InquilinoFirstName @pago.InquilinoLastName</h5>
                         <p class="card-text">
-                            <strong>Numero de Deposito:</strong> @pago.NumDeposito
-                            <strong>Dias Hasta Pago:</strong> @pago.FechaPagoInDays
+                            <strong inert>Numero de Deposito:</strong> @pago.NumDeposito
+                            <strong inert>Dias Hasta Pago:</strong> @pago.FechaPagoInDays
                         </p>
-                        <span class="badge @(pago.Retrasado ? "bg-danger" : "bg-success")">
+                        <span class="badge @(pago.Retrasado ? "bg-danger" : "bg-success")" inert>
                             @(pago.Retrasado ? "Retrasado" : "Al Dia")
                         </span>
                     </div>
@@ -49,7 +49,7 @@ else
                             <Icon Name="IconName.Calendar2CheckFill"></Icon> Marcar como Pago
                         </button>
                         <button class="btn btn-primary btn-sm" @onclick="() => EditPago(pago.IdPago)">
-                            <Icon Name="IconName.Search"></Icon>
+                            <Icon Name="IconName.Search"></Icon> Detalles
                         </button>
                     </div>
                 </div>

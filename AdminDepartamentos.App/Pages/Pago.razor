@@ -7,7 +7,7 @@
 @inject AuthService AuthService
 @inject SweetAlertService Swal
 
-<h3 class="text-center mt-4 mb-4">Detalles</h3>
+<h3 class="text-center mt-4 mb-4" inert>Detalles</h3>
 
 @if (_pagoGetByIdModel is null)
 {
@@ -22,19 +22,19 @@ else
 {
     <div class="card md-4 shadow-sm">
         <div class="card-header">
-            <strong>Detalles del Pago</strong>
+            <strong inert>Detalles del Pago</strong>
         </div>
         <div class="card-body">
-            <p><strong>Moto:</strong> @_pagoGetByIdModel.Monto.ToString("C")</p>
-            <p><strong>Numero de Deposito:</strong> @_pagoGetByIdModel.NumDeposito</p>
-            <p><strong>Dias del Pago:</strong> @_pagoGetByIdModel.FechaPagoInDays</p>
-            <p><strong>Retrasado:</strong> @(_pagoGetByIdModel.Retrasado ? "Si" : "No")</p>
+            <p><strong inert>Moto:</strong> @_pagoGetByIdModel.Monto.ToString("C")</p>
+            <p><strong inert>Numero de Deposito:</strong> @_pagoGetByIdModel.NumDeposito</p>
+            <p><strong inert>Dias del Pago:</strong> @_pagoGetByIdModel.FechaPagoInDays</p>
+            <p><strong inert>Retrasado:</strong> @(_pagoGetByIdModel.Retrasado ? "Si" : "No")</p>
         </div>
     </div>
     
     <div class="card shadow-sm">
         <div class="card-header">
-            <strong>Editar Pago</strong>
+            <strong inert>Editar Pago</strong>
         </div>
         <div class="card-body">
             <EditForm Model="_pagoUpdateModel" OnValidSubmit="UpdatePago">
@@ -42,17 +42,17 @@ else
                 <ValidationSummary />
 
                 <div class="form-group mb-3">
-                    <label for="numDeposito">Numero de Deposito</label>
+                    <label for="numDeposito" inert>Numero de Deposito</label>
                     <InputNumber id="numDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="Monto">Monto</label>
+                    <label for="Monto" inert>Monto</label>
                     <InputNumber id="Monto" class="form-control" @bind-Value="_pagoUpdateModel.Monto" />
                 </div>
 
                 <div class="form-groupmb-3">
-                    <label for="fechaPagoInDays">Días Hasta Pago</label>
+                    <label for="fechaPagoInDays" inert>Días Hasta Pago</label>
                     <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="_pagoUpdateModel.FechaPagoInDays" />
                 </div>
 
