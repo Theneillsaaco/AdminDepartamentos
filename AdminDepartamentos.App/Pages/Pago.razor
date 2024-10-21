@@ -4,28 +4,43 @@
 
 @inject PagoService PagoService
 @inject NavigationManager Navigation
+@inject AuthService AuthService
 @inject SweetAlertService Swal
 
-<h3>Edit</h3>
+<h3>Detalles</h3>
 
-@if (pagoGetByIdModel == null)
+@if (_pagoGetByIdModel == null)
 {
     <p>Cargando informacion del pago...</p>
 }
 else
 {
-    <EditForm Model="pagoGetByIdModel" OnValidSubmit="UpdatePago">
-        <DataAnnotationsValidator/>
-        <ValidationSummary/>
+    <div class="card md-4">
+        <div class="card-header">Detalles del Pago</div>
+        <div class="card-body">
+            <p><strong>Moto:</strong> @_pagoGetByIdModel.Monto.ToString("C")</p>
+            <p><strong>Numero de Deposito:</strong> @_pagoGetByIdModel.NumDeposito</p>
+            <p><strong>Dias del Pago:</strong> @_pagoGetByIdModel.FechaPagoInDays</p>
+            <p><strong>Retrasado:</strong> @(_pagoGetByIdModel.Retrasado ? "Si" : "No")</p>
+        </div>
+    </div>
+    <EditForm Model="_pagoUpdateModel" OnValidSubmit="UpdatePago">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
         
         <div class="form-group">
             <label for="numDeposito">Numero de Deposito</label>
-            <InputNumber id="numDeposito" class="form-control" @bind-Value="pagoGetByIdModel.NumDeposito"/>
+            <InputNumber id="numDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
+        </div>
+        
+        <div class="form-group">
+            <label for="Monto">Monto</label>
+            <InputNumber id="Monto" class="form-control" @bind-Value="_pagoUpdateModel.Monto" />
         </div>
         
         <div class="form-group">
             <label for="fechaPagoInDays">Días Hasta Pago</label>
-            <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="pagoGetByIdModel.FechaPagoInDays" />
+            <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="_pagoUpdateModel.FechaPagoInDays" />
         </div>
         
         <div class="form-group">
@@ -36,18 +51,30 @@ else
 }
 @code {
     [Parameter] public int Id { get; set; }
-    private PagoGetByIdModel pagoGetByIdModel;
+    private PagoGetByIdModel _pagoGetByIdModel;
+    private PagoUpdateModel _pagoUpdateModel = new PagoUpdateModel();
 
     protected override async Task OnInitializedAsync()
     {
+        if (!await AuthService.IsAuthenticated())
+        {
+            Navigation.NavigateTo("/login");
+        }
+        
         await CargarPago();
     }
 
     private async Task CargarPago()
     {
         var response = await PagoService.GetPagoById(Id);
-        if (response.Success)
-            pagoGetByIdModel = response.Data;
+        if (response is { Success: true, Data: not null })
+        {
+            _pagoGetByIdModel = response.Data;
+            
+            _pagoUpdateModel.NumDeposito = _pagoGetByIdModel.NumDeposito;
+            _pagoUpdateModel.FechaPagoInDays = _pagoGetByIdModel.FechaPagoInDays;
+            _pagoUpdateModel.Monto = _pagoGetByIdModel.Monto;
+        }
         else
         {
             await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
@@ -57,13 +84,7 @@ else
 
     private async Task UpdatePago()
     {
-        var updateModel = new PagoUpdateModel
-        {
-            NumDeposito = pagoGetByIdModel.NumDeposito,
-            FechaPagoInDays = pagoGetByIdModel.FechaPagoInDays
-        };
-
-        var response = await PagoService.UpdatePago(Id, updateModel);
+        var response = await PagoService.UpdatePago(Id, _pagoUpdateModel);
         if (response.Success)
         {
             await Swal.FireAsync("¡Éxito!", "El pago ha sido actualizado correctamente.", SweetAlertIcon.Success);

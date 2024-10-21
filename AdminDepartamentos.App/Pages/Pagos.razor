@@ -1,4 +1,5 @@
 ﻿@page "/pagos"
+
 @using AdminDepartamentos.App.Models
 
 @inject PagoService PagoService
@@ -6,20 +7,25 @@
 @inject AuthService AuthService
 @inject SweetAlertService Swal
 
-<h3>Pagos</h3>
+<h3 class="text-center mt-4 mb-4">Pagos</h3>
 
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">@errorMessage</div>
+    <div class="alert alert-danger text-center">@errorMessage</div>
 }
 
 @if (pagoGetModel is null)
 {
-    <p>Cargando pagos...</p>
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cardango pagos...</p>
+    </div>
 }
 else if (pagoGetModel.Count is 0)
 {
-    <p>Parece que no nadie aqui :(</p>
+    <p class="text-center text-muted">Parece que no nadie aqui :(</p>
 }
 else
 {
@@ -38,7 +44,7 @@ else
             {
                 <tr>
                     <td>@pago.InquilinoFirstName @pago.InquilinoLastName</td>
-                    <td>@pago.Retrasado</td>
+                    <td>@(pago.Retrasado ? "Si" : "No")</td>
                     <td>@pago.NumDeposito</td>
                     <td>@pago.FechaPagoInDays</td>
                     <td>

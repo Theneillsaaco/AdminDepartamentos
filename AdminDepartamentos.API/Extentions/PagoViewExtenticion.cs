@@ -32,6 +32,7 @@ public static class PagoViewExtenticion
             NumDeposito = pago.NumDeposito,
             FechaPagoInDays = pago.FechaPagoInDays,
             Retrasado = pago.Retrasado,
+            Monto = pago.Monto,
             Email = pago.Email,
             Deleted = pago.Deleted
         };
