@@ -7,26 +7,16 @@ namespace AdminDepartamentos.App.Services;
 
 public class PagoService
 {
-    private async Task SetAuthorizationHeaderAsync()
-    {
-        var token = await _localStorageService.GetItemAsync<string>("authToken");
-
-        if (!string.IsNullOrEmpty(token))
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    }
-
     public async Task<ResponseAPI<List<PagoGetModel>>> GetPagos()
     {
         await SetAuthorizationHeaderAsync();
-        var response = await _httpClient.GetFromJsonAsync<ResponseAPI<List<PagoGetModel>>>("api/Pago/GetPago");
-        return response;
+        return await _httpClient.GetFromJsonAsync<ResponseAPI<List<PagoGetModel>>>("api/Pago/GetPago");
     }
 
     public async Task<ResponseAPI<PagoGetByIdModel>> GetPagoById(int id)
     {
         await SetAuthorizationHeaderAsync();
-        var response = await _httpClient.GetFromJsonAsync<ResponseAPI<PagoGetByIdModel>>($"api/Pago/GetById/{id}");
-        return response;
+        return await _httpClient.GetFromJsonAsync<ResponseAPI<PagoGetByIdModel>>($"api/Pago/GetById/{id}");
     }
 
     public async Task<ResponseAPI<PagoUpdateModel>> UpdatePago(int id, PagoUpdateModel pagoUpdateModel)
@@ -43,7 +33,15 @@ public class PagoService
         return await response.Content.ReadFromJsonAsync<ResponseAPI<object>>();
     }
     
-    #region Context
+    private async Task SetAuthorizationHeaderAsync()
+    {
+        var token = await _localStorageService.GetItemAsync<string>("authToken");
+
+        if (!string.IsNullOrEmpty(token))
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+    
+    #region Fields
     
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorageService;
