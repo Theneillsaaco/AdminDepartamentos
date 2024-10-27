@@ -25,5 +25,6 @@ builder.Services.AddAuthorizationCore();
 
 // Services
 builder.Services.AddScoped<PagoService>();
+builder.Services.AddScoped<InquilinoService>();
 
 await builder.Build().RunAsync();
