@@ -11,6 +11,111 @@ namespace AdminDepartamentos.API.Services.BackgroundServices;
 
 public class EmailServices : BackgroundService
 {
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                Console.WriteLine("Email service running.");
+                await ProcessDelayedPaymentsAsync(stoppingToken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en EmailService: {ex.Message}");
+            }
+            
+            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+        }
+    }
+    
+    private async Task ProcessDelayedPaymentsAsync(CancellationToken stoppingToken)
+    {
+        using var scope = _scopeFactory.CreateScope();
+
+        var emailSender = scope.ServiceProvider.GetRequiredService<IEmailService>();
+        var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
+        var pagos = await pagoRepository.GetRetrasosWithoutEmail();
+
+        if (!pagos.Any())
+            return;
+        
+        var retrasoHtml = await GenerateDelayedPaymentsHtml(pagos, pagoRepository, scope, stoppingToken);
+
+        if (!string.IsNullOrEmpty(retrasoHtml))
+        {
+            string emailContent = await LoadEmailTemplate(retrasoHtml, stoppingToken);
+            await SendEmail(emailSender, emailContent);
+        }
+    }
+
+    private async Task<string> GenerateDelayedPaymentsHtml(IEnumerable<Pago> pagos, IPagoRepository pagoRepository,
+        IServiceScope scope, CancellationToken stoppingToken)
+    {
+        var retrasoHtml = new StringBuilder();
+        var dbContext = scope.ServiceProvider.GetRequiredService<DepartContext>();
+
+        foreach (var pago in pagos)
+        {
+            try
+            {
+                pago.ConvertPagoEntityToPagoWithoutEmail();
+                pago.Email = true;
+                
+                await pagoRepository.Update(pago);
+                await dbContext.SaveChangesAsync(stoppingToken);
+                
+                retrasoHtml.Append($@"
+                     <div class='tenant-item'>
+                        <strong>Inquilino:</strong> {pago.Inquilino.FirstName} {pago.Inquilino.LastName} <br>
+                        <strong>Pago Id:</strong> {pago.IdPago}
+                    </div>
+                ");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing pago (Id: {pago.IdPago}): {ex.Message}");
+            }
+        }
+        
+        return retrasoHtml.ToString();
+    }
+
+    private async Task<string> LoadEmailTemplate(string retrasoHtml, CancellationToken stoppingToken)
+    {
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Services", "Emails", "EmailTemplate.html");
+
+        if (!File.Exists(templatePath))
+            throw new FileNotFoundException($"No se encontró la plantilla de correo: {templatePath}");
+
+        using var reader = new StreamReader(templatePath);
+        var emailTemplate = await reader.ReadToEndAsync(stoppingToken);
+        
+        return emailTemplate.Replace("<!-- Aquí se insertará la lista de inquilinos con pagos retrasados -->", retrasoHtml);
+    }
+
+    private async Task SendEmail(IEmailService emailSender, string emailContent)
+    {
+        var emailDT0 = new EmailDTO
+        {
+            Para = _emailSettings.EmailSender,
+            Asunto = "Pagos Retrasados (No Responder)",
+            Contenido = emailContent
+        };
+
+        try
+        {
+            emailSender.SendEmail(emailDT0);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error enviando correo: {ex.Message}");
+            throw;
+        }
+    }
+    
+    #region context
+    
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly EmailSettings _emailSettings;
 
@@ -19,80 +124,6 @@ public class EmailServices : BackgroundService
         _scopeFactory = scopeFactory;
         _emailSettings = emailSettings.Value;
     }
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            using (var scope = _scopeFactory.CreateScope())
-            {
-                var emailSender = scope.ServiceProvider.GetRequiredService<IEmailService>();
-                var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
-                var pagos = await pagoRepository.GetRetrasosWithoutEmail();
-
-                List<Pago> pagosUpdate = [];
-                
-                if (pagos.Any())
-                {
-                    var inquilinosConRetraso = new StringBuilder();
-
-                    foreach (var pago in pagos)
-                    {
-                        try
-                        {
-                            pago.ConvertPagoEntityToPagoWithoutEmail();
-
-                            pago.Email = true;
-
-                            await pagoRepository.Update(pago);
-                            await scope.ServiceProvider.GetRequiredService<DepartContext>().SaveChangesAsync(stoppingToken);
-
-                            inquilinosConRetraso.Append($@"
-                                <div style='padding-bottom: 10px; margin-bottom: 10px;'>
-                                    <p style='border-bottom: 1px solid #ccc; margin: 0; padding-bottom: 10px;'>
-                                        Inquilino: {pago.Inquilino.FirstName} {pago.Inquilino.LastName} - Pago Id: {pago.IdPago}
-                                    </p>
-                                </div>
-                            ");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error checking retraso for pago: {ex.Message}");
-                            continue;
-                        }
-                    }
-
-                    string emailTemplate;
-                    string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Services", "Emails", "EmailBody.html");
-                    using (var reader = new StreamReader(templatePath))
-                    {
-                        emailTemplate = await reader.ReadToEndAsync(stoppingToken);
-                    }
-
-                    string emailContent = emailTemplate.Replace("<!-- Aquí se insertará la lista de inquilinos con pagos retrasados -->", inquilinosConRetraso.ToString());
-
-                    var emailDto = new EmailDTO
-                    {
-                        Para = _emailSettings.EmailSender,
-                        Asunto = "Pagos Retrasados (No Responder)",
-                        Contenido = emailContent
-                    };
-
-                    try
-                    {
-                        emailSender.SendEmail(emailDto);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error sending email or updating pagos: {ex.Message}");
-                        throw;
-                    }
-                }
-            }
-
-            Console.WriteLine("Ejecutando EmailService");
-
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
-        }
-    }
+    
+    #endregion
 }

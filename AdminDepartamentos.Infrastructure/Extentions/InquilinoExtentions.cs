@@ -12,7 +12,9 @@ public static class InquilinoExtentions
             IdInquilino = inquilino.IdInquilino,
             FirstName = inquilino.FirstName,
             LastName = inquilino.LastName,
-            NumDepartamento = inquilino.NumDepartamento
+            Cedula = inquilino.Cedula,
+            NumDepartamento = inquilino.NumDepartamento,
+            NumTelefono = inquilino.NumTelefono
         };
     }
 

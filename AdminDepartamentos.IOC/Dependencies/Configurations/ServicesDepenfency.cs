@@ -8,12 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
+namespace AdminDepartamentos.IOC.Dependencies.Configurations;
 
 public static class ServicesDepenfency
 {
     /// <summary>
-    ///     DbContext config
+    /// DbContext config
     /// </summary>
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -34,7 +34,7 @@ public static class ServicesDepenfency
     }
     
     /// <summary>
-    ///     Authentication config
+    /// Authentication config
     /// </summary>
     public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
@@ -72,7 +72,7 @@ public static class ServicesDepenfency
     }
     
     /// <summary>
-    ///     Swagger Confing
+    /// Swagger Confing
     /// </summary>
     public static void ConfigureSwagger(this IServiceCollection services)
     {

@@ -15,6 +15,14 @@ namespace AdminDepartamentos.Infrastructure.Repositories;
 /// </summary>
 public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoRepository
 {
+    public async Task<List<InquilinoModel>> GetInquilinos()
+    {
+        return await _context.Inquilinos
+            .Where(inq => !inq.Deleted)
+            .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
+            .ToListAsync();
+    }
+    
     public override async Task<Inquilino> GetById(int id)
     {
         if (id <= 0)
@@ -72,15 +80,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
         await base.Update(entity);
     }
-
-    public async Task<List<InquilinoModel>> GetInquilinos()
-    {
-        return await _context.Inquilinos
-            .Where(inq => !inq.Deleted)
-            .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
-            .ToListAsync();
-    }
-
+    
     public async Task MarkDeleted(int id)
     {
         var inquilino = await _context.Inquilinos.FirstOrDefaultAsync(i => i.IdInquilino == id);

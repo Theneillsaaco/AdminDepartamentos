@@ -13,7 +13,9 @@ public static class InquilinoViewExtenticion
             IdInquilino = inquilinoModel.IdInquilino,
             FirstName = inquilinoModel.FirstName,
             LastName = inquilinoModel.LastName,
-            NumDepartamento = inquilinoModel.NumDepartamento
+            Cedula = inquilinoModel.Cedula,
+            NumDepartamento = inquilinoModel.NumDepartamento,
+            NumTelefono = inquilinoModel.NumTelefono
         };
     }
 

@@ -3,16 +3,12 @@ using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.API.Services.Emails;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
-using AdminDepartamentos.IOC.Dependencies.ProgramExtentions;
+using AdminDepartamentos.IOC.Dependencies.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.ConfigureDbContext(builder.Configuration);
-builder.Services.ConfigureIdentity();
-builder.Services.ConfigureAuthentication(builder.Configuration);
-builder.Services.ConfigureSwagger();
-builder.Services.ConfigureOutputCache();
+builder.Services.AddConfigurationDependecy(builder.Configuration);
 
 // Add repository and other dependencies.
 builder.Services.AddRepositoryDependency();
