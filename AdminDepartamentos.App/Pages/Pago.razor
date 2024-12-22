@@ -1,6 +1,7 @@
 ﻿@page "/pago/{id:int}"
 
 @using AdminDepartamentos.App.Models
+@using AdminDepartamentos.App.Models.PagoModels
 
 @inject PagoService PagoService
 @inject NavigationManager Navigation
@@ -42,8 +43,8 @@ else
                 <ValidationSummary />
 
                 <div class="form-group mb-3">
-                    <label for="numDeposito" inert>Numero de Deposito</label>
-                    <InputNumber id="numDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
+                    <label for="NumDeposito" inert>Numero de Deposito</label>
+                    <InputNumber id="NumDeposito" class="form-control" @bind-Value="_pagoUpdateModel.NumDeposito"/>
                 </div>
 
                 <div class="form-group mb-3">
@@ -51,7 +52,7 @@ else
                     <InputNumber id="Monto" class="form-control" @bind-Value="_pagoUpdateModel.Monto" />
                 </div>
 
-                <div class="form-groupmb-3">
+                <div class="form-group mb-3">
                     <label for="fechaPagoInDays" inert>Días Hasta Pago</label>
                     <InputNumber id="fechaPagoInDays" class="form-control" @bind-Value="_pagoUpdateModel.FechaPagoInDays" />
                 </div>
@@ -65,6 +66,7 @@ else
     </div>
    
 }
+
 @code {
     [Parameter] public int Id { get; set; }
     private PagoGetByIdModel _pagoGetByIdModel;
@@ -73,14 +75,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         if (!await AuthService.IsAuthenticated())
-        {
             Navigation.NavigateTo("/login");
-        }
         
-        await CargarPago();
+        await LoadPago();
     }
 
-    private async Task CargarPago()
+    private async Task LoadPago()
     {
         var response = await PagoService.GetPagoById(Id);
         if (response is { Success: true, Data: not null })
@@ -107,9 +107,7 @@ else
             Navigation.NavigateTo("/pagos");
         }
         else
-        {
             await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
-        }
     }
 
     private async Task Regresar()

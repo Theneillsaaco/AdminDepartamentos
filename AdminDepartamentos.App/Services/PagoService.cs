@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using AdminDepartamentos.App.Models;
+using AdminDepartamentos.App.Models.PagoModels;
 using Blazored.LocalStorage;
 
 namespace AdminDepartamentos.App.Services;

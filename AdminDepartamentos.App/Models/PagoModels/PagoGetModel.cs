@@ -1,4 +1,4 @@
-﻿namespace AdminDepartamentos.App.Models;
+﻿namespace AdminDepartamentos.App.Models.PagoModels;
 
 public class PagoGetModel
 {

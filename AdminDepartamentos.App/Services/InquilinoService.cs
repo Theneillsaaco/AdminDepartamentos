@@ -17,7 +17,7 @@ public class InquilinoService
     public async Task<ResponseAPI<InquilinoGetByIdModel>> GetInquilinoById(int id)
     {
         await SetAuthorizationHeaderAsync();
-        return await _httpClient.GetFromJsonAsync<ResponseAPI<InquilinoGetByIdModel>>($"api/inquilino/{id}");
+        return await _httpClient.GetFromJsonAsync<ResponseAPI<InquilinoGetByIdModel>>($"api/inquilino/GetById/{id}");
     }
 
     public async Task<ResponseAPI<InquilinoSaveModel>> saveInquilino(InquilinoSaveModel inquilino)

@@ -78,7 +78,7 @@ public static class ServicesDepenfency
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.8" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.8.5" });
 
             // Configuración para JWT Authentication en Swagger
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
