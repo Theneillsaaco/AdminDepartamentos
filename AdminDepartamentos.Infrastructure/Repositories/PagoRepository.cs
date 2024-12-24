@@ -58,7 +58,7 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
             .ToListAsync();
     }
 
-    #region Context
+    #region Fields
 
     private readonly DepartContext _context;
 

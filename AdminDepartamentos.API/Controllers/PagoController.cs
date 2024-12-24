@@ -141,7 +141,7 @@ public class PagoController : ControllerBase
         await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
 
-    #region Context
+    #region Fields
 
     private readonly IPagoRepository _pagoRepository;
     private readonly IOutputCacheStore _outputCacheStore;

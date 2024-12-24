@@ -60,7 +60,7 @@ public class TokenAuthenticationStateProvider : AuthenticationStateProvider
         return Convert.FromBase64String(base64);
     }
     
-    #region Context
+    #region Fields
 
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorageService;

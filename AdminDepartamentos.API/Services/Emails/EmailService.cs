@@ -69,7 +69,7 @@ public class EmailService : IEmailService
         }
     }
     
-    #region Context
+    #region Fields
 
     private readonly IConfiguration _config;
 

@@ -28,7 +28,7 @@ public class AuthService
         return false;
     }
     
-    #region context
+    #region Fields
     
     private readonly HttpClient _httpClient;
     private readonly NavigationManager _navigationManager;

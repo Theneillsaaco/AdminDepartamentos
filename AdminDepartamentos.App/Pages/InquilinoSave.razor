@@ -1,0 +1,117 @@
+﻿@page "/inquilino/create"
+@using AdminDepartamentos.App.Models.InquilinoModels
+
+@inject InquilinoService InquilinoService
+@inject NavigationManager Navigation
+@inject AuthService AuthService
+@inject SweetAlertService Swal
+
+<h3 class="text-center mt-4 mb-4" inert>Nuevo Inquilino</h3>
+
+<EditForm Model="_inquilinoSaveModel" OnValidSubmit="SaveInquilino">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <strong inert>Datos del Inquilino</strong>
+        </div>
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <label for="FirstName" inert>Nombre</label>
+                <InputText id="FirstName" class="form-control" @bind-Value="_inquilinoSaveModel.InquilinoDto.FirstName" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="LastName" inert>Apellido</label>
+                <InputText id="LastName" class="form-control" @bind-Value="_inquilinoSaveModel.InquilinoDto.LastName" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="NumDepartamento" inert>Numero de departamento</label>
+                <InputNumber id="NumDepartamento" class="form-control" @bind-Value="_inquilinoSaveModel.InquilinoDto.NumDepartamento" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="NumTelefono" inert>Numero de telefono</label>
+                <InputText id="NumTelefono" class="form-control" @bind-Value="_inquilinoSaveModel.InquilinoDto.NumTelefono" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Cedula" inert>Cedula</label>
+                <InputText id="Cedula" class="form-control" @bind-Value="_inquilinoSaveModel.InquilinoDto.Cedula" />
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <strong inert>Datos del Pago</strong>
+        </div>
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <label for="Monto" inert>Monto</label>
+                <InputNumber id="Monto" class="form-control" @bind-Value="_inquilinoSaveModel.PagoDto.Monto" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="FechaPagoInDays" inert>Fecha del Pago</label>
+                <InputNumber id="FechaPagoInDays" class="form-control" @bind-Value="_inquilinoSaveModel.PagoDto.FechaPagoInDays" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="NumDeposito" inert>Numero de deposito</label>
+                <InputNumber id="NumDeposito" class="form-control" @bind-Value="_inquilinoSaveModel.PagoDto.NumDeposito" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-secondary" @onclick="Regresar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+</EditForm>
+
+@code {
+    private InquilinoSaveModel _inquilinoSaveModel = new()
+    {
+        InquilinoDto = new InquilinoDto(),
+        PagoDto = new PagoDto()
+    };
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsAuthenticated())
+            Navigation.NavigateTo("/login");
+    }
+
+    private async Task SaveInquilino()
+    {
+        var response = await InquilinoService.SaveInquilino(_inquilinoSaveModel);
+        if (!response.Success)
+        {
+            await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+            return;
+        }
+        
+        await Swal.FireAsync("Exito!", "El Inquilino ha sido creado con exito.", SweetAlertIcon.Success);
+        Navigation.NavigateTo("/inquilinos");
+    }
+    
+    private async Task Regresar()
+    {
+        var result = await Swal.FireAsync(new SweetAlertOptions
+        {
+            Title = "Estas Seguro?",
+            Text = "Si vuelves el progreso no se guardara",
+            Icon = SweetAlertIcon.Question,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Si, confirmar",
+            CancelButtonText = "Cancelar"
+        });
+        
+        if (result.IsConfirmed)
+            Navigation.NavigateTo("/inquilinos");
+    }
+}

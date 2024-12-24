@@ -170,7 +170,7 @@ public class InquilinoController : ControllerBase
         await _outputCacheStore.EvictByTagAsync("PagosCache", default);
     }
 
-    #region Context
+    #region Fields
 
     private readonly IInquilinoRepository _inquilinoRepository;
     private readonly IOutputCacheStore _outputCacheStore;

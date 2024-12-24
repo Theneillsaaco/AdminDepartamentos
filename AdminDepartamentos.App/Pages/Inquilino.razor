@@ -116,13 +116,14 @@ else
     private async Task UpdateInquilino()
     {
         var response = await InquilinoService.UpdateInquilino(Id, _inquilinoUpdateModel);
-        if (response.Success)
+        if (!response.Success)
         {
-            await Swal.FireAsync("¡Éxito!", "El inquilino ha sido actualizado correctamente.", SweetAlertIcon.Success);
-            Navigation.NavigateTo("/inquilinos");
-        }
-        else
             await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+            return;
+        }
+        
+        await Swal.FireAsync("¡Éxito!", "El inquilino ha sido actualizado correctamente.", SweetAlertIcon.Success);
+        Navigation.NavigateTo("/inquilinos");
     }
     
     private async Task Regresar()

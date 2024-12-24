@@ -114,7 +114,7 @@ public class EmailServices : BackgroundService
         }
     }
     
-    #region context
+    #region Fields
     
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly EmailSettings _emailSettings;

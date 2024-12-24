@@ -20,7 +20,7 @@ public class InquilinoService
         return await _httpClient.GetFromJsonAsync<ResponseAPI<InquilinoGetByIdModel>>($"api/inquilino/GetById/{id}");
     }
 
-    public async Task<ResponseAPI<InquilinoSaveModel>> saveInquilino(InquilinoSaveModel inquilino)
+    public async Task<ResponseAPI<InquilinoSaveModel>> SaveInquilino(InquilinoSaveModel inquilino)
     {
         await SetAuthorizationHeaderAsync();
         var response = await _httpClient.PostAsJsonAsync("api/inquilino/save", inquilino);

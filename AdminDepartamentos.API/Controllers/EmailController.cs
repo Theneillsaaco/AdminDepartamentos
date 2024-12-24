@@ -10,13 +10,6 @@ namespace AdminDepartamentos.API.Controllers;
 [Authorize]
 public class EmailController : ControllerBase
 {
-    private readonly IEmailService _emailSender;
-
-    public EmailController(IEmailService emailSender)
-    {
-        _emailSender = emailSender;
-    }
-
     [HttpPost]
     public IActionResult SendEmail(EmailDTO request)
     {
@@ -31,4 +24,15 @@ public class EmailController : ControllerBase
         
         return Ok();
     }
+
+    #region Fields
+
+    private readonly IEmailService _emailSender;
+
+    public EmailController(IEmailService emailSender)
+    {
+        _emailSender = emailSender;
+    }
+
+    #endregion
 }

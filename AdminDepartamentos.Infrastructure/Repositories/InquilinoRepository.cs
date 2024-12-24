@@ -44,7 +44,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
             try
             {
                 if (await base.Exists(cd => cd.Cedula == inquilinoDto.Cedula))
-                    throw new InquilinoException("El inquilino ya Existe.");
+                    throw new InquilinoException("El inquilino ya existe. Por favor, use otro número de cédula.");
 
                 var newInquilino = inquilinoDto.ConvertEntityInquilinoToInquilinoDto();
 
@@ -94,14 +94,12 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
         
         var pagos = await _context.Pagos.Where(pa => pa.IdInquilino == id).ToListAsync();
         foreach (var pago in pagos)
-        {
             pago.Deleted = true;
-        }
         
         await _context.SaveChangesAsync();
     }
 
-    #region context
+    #region Fields
 
     private readonly DepartContext _context;
 

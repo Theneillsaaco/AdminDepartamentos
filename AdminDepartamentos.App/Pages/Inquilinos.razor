@@ -9,6 +9,12 @@
 
 <h3 class="text-center mt-4 mb-4" inert>Inquilinos</h3>
 
+<div class="d-flex justify-content-start mb-4">
+    <button class="btn btn-success" @onclick="NavigateToCreateInquilino">
+        <Icon Name="IconName.PlusCircle"></Icon> Nuevo Inquilino
+    </button>
+</div>
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-danger text-center" inert>@errorMessage</div>
@@ -76,6 +82,11 @@ else
             errorMessage = response.Message;
     }
 
+    private void NavigateToCreateInquilino()
+    {
+        Navigation.NavigateTo("/inquilino/create");
+    }
+
     private void EditInquilino(int idInquilino)
     {
         Navigation.NavigateTo($"/inquilino/{idInquilino}");
@@ -96,13 +107,14 @@ else
         if (result.IsConfirmed)
         {
             var response = await InquilinoService.DeleteInquilino(id);
-            if (response.Success)
+            if (!response.Success)
             {
-                await Swal.FireAsync("Exito!", "El Inquilino  y el Pago fue borrado exitosamente.", SweetAlertIcon.Success);
-                await LoadInquilinos();
-            }
-            else
                 await Swal.FireAsync("Error", response.Message, SweetAlertIcon.Error);
+                return;
+            }
+            
+            await Swal.FireAsync("Exito!", "El Inquilino  y el Pago fue borrado exitosamente.", SweetAlertIcon.Success);
+            await LoadInquilinos();
         }
     }
 }
