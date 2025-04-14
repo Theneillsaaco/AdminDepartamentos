@@ -36,8 +36,11 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
     public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)
     {
-        if (inquilinoDto is null) throw new ArgumentNullException(nameof(inquilinoDto), "El Inquilino no puede ser null.");
-        if (pagoDto is null) throw new ArgumentNullException(nameof(pagoDto), "El Pago no puede ser null.");
+        if (inquilinoDto is null) 
+            throw new ArgumentNullException(nameof(inquilinoDto), "El Inquilino no puede ser null.");
+        
+        if (pagoDto is null) 
+            throw new ArgumentNullException(nameof(pagoDto), "El Pago no puede ser null.");
 
         using var transaction = await _context.Database.BeginTransactionAsync();
         {
@@ -76,7 +79,8 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
     public override async Task Update(Inquilino entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity), "El Inquilino no puede ser null.");
+        if (entity is null)
+            throw new ArgumentNullException(nameof(entity), "El Inquilino no puede ser null.");
 
         await base.Update(entity);
     }

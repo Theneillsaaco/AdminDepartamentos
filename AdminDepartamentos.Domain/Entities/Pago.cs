@@ -22,12 +22,15 @@ public partial class Pago
     [Required]
     public int FechaPagoInDays { get; set; }
 
+    [Required]
     [DefaultValue(true)]
     public bool Retrasado { get; set; }
     
+    [Required]
     [DefaultValue(true)]
     public bool Email { get; set; }
 
+    [Required]
     [DefaultValue(false)]
     public bool Deleted { get; set; }
 

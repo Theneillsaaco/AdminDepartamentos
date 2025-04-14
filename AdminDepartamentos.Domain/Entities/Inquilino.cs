@@ -25,6 +25,7 @@ public partial class Inquilino
     [Required]
     public string NumTelefono { get; set; }
 
+    [Required]
     public DateTime CreationDate { get; set; } = DateTime.Now;
 
     [Column(TypeName = "datetime2")]
@@ -33,6 +34,7 @@ public partial class Inquilino
     [DefaultValue(1)]
     public int CreationUser { get; set; }
 
+    [Required]
     [DefaultValue(0)]
     public bool Deleted { get; set; }
     

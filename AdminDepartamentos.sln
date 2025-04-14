@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.IOC", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.API", "AdminDepartamentos.API\AdminDepartamentos.API.csproj", "{5A6F2B02-06B4-483D-892B-403E6C428E4E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.Infrastructure.Unit.Test", "AdminDepartamentos.Infrastructure.Unit.Test\AdminDepartamentos.Infrastructure.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.Unit.Test", "AdminDepartamentos.Unit.Test\AdminDepartamentos.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{338C3EA5-9F97-4F1F-B78C-76553AC97379}"
 EndProject

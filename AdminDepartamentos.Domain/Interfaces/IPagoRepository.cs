@@ -9,7 +9,7 @@ public interface IPagoRepository : IBaseRepository<Pago>
     Task<List<PagoInquilinoModel>> GetPago();
 
     /// <summary>
-    /// Desatachar la entidad existente para evitar conflictos de seguimiento
+    /// Desatachar la entidad existente para evitar conflictos de seguimiento.
     /// </summary>
     void DetachEntity(Pago entity);
 
