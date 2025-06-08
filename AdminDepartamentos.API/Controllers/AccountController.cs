@@ -1,11 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AdminDepartamentos.API.Models;
-using Microsoft.AspNetCore.Authorization;
+using AdminDepartamentos.API.Models.LoginModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AdminDepartamentos.API.Controllers;

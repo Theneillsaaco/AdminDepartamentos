@@ -23,7 +23,6 @@
 
     <ItemGroup>
       <Folder Include="Models\InteresadoModels\Core\" />
-      <Folder Include="Models\UnidadHabitacionalModels\Core\" />
     </ItemGroup>
 
 </Project>

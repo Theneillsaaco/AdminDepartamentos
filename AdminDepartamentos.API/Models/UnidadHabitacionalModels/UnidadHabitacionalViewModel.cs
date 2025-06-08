@@ -1,15 +1,10 @@
-﻿using AdminDepartamentos.API.Models.InquilinoModels;
-using AdminDepartamentos.API.Models.InteresadoModels;
+﻿using AdminDepartamentos.API.Models.UnidadHabitacional.Core;
 using AdminDepartamentos.Domain.Models;
 
 namespace AdminDepartamentos.API.Models.UnidadHabitacional;
 
-public class UnidadHabitacionalViewModel
+public class UnidadHabitacionalViewModel : UnidadHabitacionalBaseModel
 {
-    public string Name { get; set; }
-
-    public string Tipo { get; set; }
-
     public bool occcupied { get; set; }
 
     public InquilinoModel? InquilinoActual { get; set; }
