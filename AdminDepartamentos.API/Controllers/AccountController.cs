@@ -2,8 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AdminDepartamentos.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AdminDepartamentos.API.Controllers;
@@ -12,6 +14,34 @@ namespace AdminDepartamentos.API.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
+    [HttpPost("register")] 
+    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if (model.Password != model.ConfirmPassword)
+            return BadRequest("Las contraseñas no coinciden.");
+
+        var userExists = await _userManager.FindByEmailAsync(model.Email);
+        if (userExists != null)
+            return BadRequest("El usuario ya existe.");
+
+        var user = new IdentityUser
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            EmailConfirmed = true
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+
+        if (!result.Succeeded)
+            return BadRequest(result.Errors.Select(e => e.Description));
+
+        return Ok(new { Message = "Usuario creado exitosamente." });
+    }
+    
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -64,6 +94,7 @@ public class AccountController : ControllerBase
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
     #region Fields
 
     private readonly UserManager<IdentityUser> _userManager;

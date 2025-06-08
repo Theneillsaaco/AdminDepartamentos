@@ -14,9 +14,8 @@ namespace AdminDepartamentos.API.Controllers;
 [ApiController]
 public class InquilinoController : ControllerBase
 {
-    // GET: api/<InquilinoController>
-    [HttpGet]
-    [Route("GetAll")]
+    // GET: api/InquilinoController/GetAll
+    [HttpGet("GetAll")]
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetAll()
     {
@@ -42,9 +41,8 @@ public class InquilinoController : ControllerBase
         return Ok(responseApi);
     }
 
-    // GET api/<InquilinoController>/5
-    [HttpGet]
-    [Route("GetById/{id}")]
+    // GET: api/InquilinoController/GetById/{id}
+    [HttpGet("GetById/{id}")]
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -74,9 +72,8 @@ public class InquilinoController : ControllerBase
         return Ok(responseApi);
     }
 
-    // POST api/<InquilinoController>
-    [HttpPost]
-    [Route("Save")]
+    // POST: api/InquilinoController/Save
+    [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] InquilinoSaveModel inquilinoSaveModel)
     {
         var responseApi = new ResponseAPI<InquilinoSaveModel>();
@@ -97,9 +94,8 @@ public class InquilinoController : ControllerBase
         return Ok(responseApi);
     }
 
-    // PUT api/<InquilinoController>/5
-    [HttpPut]
-    [Route("Update/{id}")]
+    // PUT: api/InquilinoController/Update/{id}
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel inquilinoUpdateModel)
     {
         var responseApi = new ResponseAPI<InquilinoUpdateModel>();
@@ -109,7 +105,7 @@ public class InquilinoController : ControllerBase
             if (!await _inquilinoRepository.Exists(cd => cd.IdInquilino == id))
             {
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino with Id {id} not found.";
+                responseApi.Message = $"Inquilino with Id: {id} not found.";
 
                 return NotFound(responseApi);
             }
@@ -133,9 +129,8 @@ public class InquilinoController : ControllerBase
     }
 
 
-    // DELETE api/<InquilinoController>/5
-    [HttpDelete]
-    [Route("Delete/{id}")]
+    // DELETE: api/InquilinoController/Delete/{id}
+    [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
         var responseApi = new ResponseAPI<int>();
@@ -145,7 +140,7 @@ public class InquilinoController : ControllerBase
             if (!await _inquilinoRepository.Exists(cd => cd.IdInquilino == id))
             {
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino with Id {id} not found.";
+                responseApi.Message = $"Inquilino with Id: {id} not found.";
                 return NotFound(responseApi);
             }
             

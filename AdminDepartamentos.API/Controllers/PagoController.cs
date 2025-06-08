@@ -16,8 +16,7 @@ namespace AdminDepartamentos.API.Controllers;
 public class PagoController : ControllerBase
 {
     // GET: api/<PagoController>
-    [HttpGet]
-    [Route("GetPago")]
+    [HttpGet("GetPago")]
     [OutputCache(PolicyName = "PagosCache")]
     public async Task<IActionResult> GetPago()
     {
@@ -41,8 +40,7 @@ public class PagoController : ControllerBase
     }
 
     // GET api/<PagoController>/5
-    [HttpGet]
-    [Route("GetById/{id}")]
+    [HttpGet("GetById/{id}")]
     [OutputCache(PolicyName = "PagosCache")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -65,8 +63,7 @@ public class PagoController : ControllerBase
     }
 
     // PUT api/<PagoController>/5
-    [HttpPut]
-    [Route("Update/{id}")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] PagoUpdateModel pagoUpdateModel)
     {
         var responseApi = new ResponseAPI<PagoUpdateModel>();
@@ -102,8 +99,7 @@ public class PagoController : ControllerBase
         return Ok(responseApi);
     }
 
-    [HttpPatch]
-    [Route("Retrasado/{id}")]
+    [HttpPatch("Retrasado/{id}")]
     public async Task<IActionResult> MarkRetrasado(int id)
     {
         var responseApi = new ResponseAPI<object>();

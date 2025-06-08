@@ -10,28 +10,14 @@ namespace AdminDepartamentos.Unit.Test.Infrastructure;
 
 public class InquilinoRepositoryTest
 {
-    #region Arrange
-
-    private readonly DbContextOptions<DepartContext> _options;
-
-    public InquilinoRepositoryTest()
-    {
-        _options = new DbContextOptionsBuilder<DepartContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-            .Options;
-    }
-
-    #endregion
-
     [Fact]
     public async Task GetInquilinos_ReturnsNonDeletedInquilinos()
     {
         // Arrange
         await using var context = new DepartContext(_options);
         context.Inquilinos.AddRange(
-            new Inquilino { FirstName = "Pepe", LastName = "Dominges", Cedula = "123", NumTelefono = "829-000-0000", Deleted = false },
-            new Inquilino { FirstName = "Juan", LastName = "Fernades", Cedula = "1234", NumTelefono = "829-000-0000", Deleted = true }
+            new Inquilino { FirstName = "Pepe", LastName = "Dominges", Cedula = "123", Telefono = "829-000-0000", Deleted = false },
+            new Inquilino { FirstName = "Juan", LastName = "Fernades", Cedula = "1234", Telefono = "829-000-0000", Deleted = true }
         );
         await context.SaveChangesAsync();
     
@@ -137,7 +123,7 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
 
-        var existing = new Inquilino { IdInquilino = 1, Cedula = "123", FirstName = "Pepe", LastName = "Dominges", NumTelefono = "829-000-0000"};
+        var existing = new Inquilino { IdInquilino = 1, Cedula = "123", FirstName = "Pepe", LastName = "Dominges", Telefono = "829-000-0000"};
         context.Inquilinos.Add(existing);
         await context.SaveChangesAsync();
         
@@ -159,8 +145,8 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
 
-        var inq1 = new Inquilino { IdInquilino = 1, Cedula = "001", FirstName = "Ana", LastName = "Martines", NumTelefono = "829-000-0000"};
-        var inq2 = new Inquilino { IdInquilino = 2, Cedula = "002", FirstName = "Luis", LastName = "Francisco", NumTelefono = "829-000-0000"};
+        var inq1 = new Inquilino { IdInquilino = 1, Cedula = "001", FirstName = "Ana", LastName = "Martines", Telefono = "829-000-0000"};
+        var inq2 = new Inquilino { IdInquilino = 2, Cedula = "002", FirstName = "Luis", LastName = "Francisco", Telefono = "829-000-0000"};
         context.Inquilinos.AddRange(inq1, inq2);
         await context.SaveChangesAsync();
 
@@ -201,4 +187,18 @@ public class InquilinoRepositoryTest
         Assert.True(inq.Deleted);
         Assert.True(context.Pagos.First().Deleted);
     }
+    
+    #region Arrange
+    
+    private readonly DbContextOptions<DepartContext> _options;
+
+    public InquilinoRepositoryTest()
+    {
+        _options = new DbContextOptionsBuilder<DepartContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+            .Options;
+    }
+
+    #endregion
 }

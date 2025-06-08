@@ -14,7 +14,6 @@ public static class InquilinoViewExtenticion
             FirstName = inquilinoModel.FirstName,
             LastName = inquilinoModel.LastName,
             Cedula = inquilinoModel.Cedula,
-            NumDepartamento = inquilinoModel.NumDepartamento,
             NumTelefono = inquilinoModel.NumTelefono
         };
     }
@@ -26,8 +25,7 @@ public static class InquilinoViewExtenticion
             FirstName = inquilinoUpdate.FirstName,
             LastName = inquilinoUpdate.LastName,
             Cedula = inquilinoUpdate.Cedula,
-            NumDepartamento = inquilinoUpdate.NumDepartamento,
-            NumTelefono = inquilinoUpdate.NumTelefono,
+            Telefono = inquilinoUpdate.NumTelefono,
             ModifyDate = DateTime.Now
         };
     }

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34902.65
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.API", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.Unit.Test", "AdminDepartamentos.Unit.Test\AdminDepartamentos.Unit.Test.csproj", "{27E7976D-4FDC-4FCB-B9B3-4CB80AE9C1A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{338C3EA5-9F97-4F1F-B78C-76553AC97379}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminDepartamentos.App", "AdminDepartamentos.App\AdminDepartamentos.App.csproj", "{338C3EA5-9F97-4F1F-B78C-76553AC97379}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

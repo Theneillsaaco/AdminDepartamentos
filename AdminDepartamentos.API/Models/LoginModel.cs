@@ -1,7 +1,20 @@
-﻿namespace AdminDepartamentos.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AdminDepartamentos.API.Models;
+
+public class RegisterModel
+{
+    [EmailAddress]
+    public string Email { get; set; }
+    
+    public string Password { get; set;}
+    
+    public string ConfirmPassword { get; set; }
+}
 
 public class LoginModel
 {
+    [EmailAddress]
     public string Email { get; set; }
     
     public string Password { get; set; }

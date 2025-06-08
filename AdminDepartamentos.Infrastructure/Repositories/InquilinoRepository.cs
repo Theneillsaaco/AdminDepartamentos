@@ -49,8 +49,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
                 if (await base.Exists(cd => cd.Cedula == inquilinoDto.Cedula))
                     throw new InquilinoException("El inquilino ya existe. Por favor, use otro número de cédula.");
 
-                var newInquilino = inquilinoDto.ConvertEntityInquilinoToInquilinoDto();
-
+                var newInquilino = inquilinoDto.ConvertInquilinoDtoToInquilinoEntity();
                 await _context.Inquilinos.AddAsync(newInquilino);
                 await _context.SaveChangesAsync();
 

@@ -13,20 +13,18 @@ public static class InquilinoExtentions
             FirstName = inquilino.FirstName,
             LastName = inquilino.LastName,
             Cedula = inquilino.Cedula,
-            NumDepartamento = inquilino.NumDepartamento,
-            NumTelefono = inquilino.NumTelefono
+            NumTelefono = inquilino.Telefono
         };
     }
 
-    public static Inquilino ConvertEntityInquilinoToInquilinoDto(this InquilinoDto inquilinoDto)
+    public static Inquilino ConvertInquilinoDtoToInquilinoEntity(this InquilinoDto inquilinoDto)
     {
         return new Inquilino
         {
             FirstName = inquilinoDto.FirstName,
             LastName = inquilinoDto.LastName,
             Cedula = inquilinoDto.Cedula,
-            NumDepartamento = inquilinoDto.NumDepartamento,
-            NumTelefono = inquilinoDto.NumTelefono
+            Telefono = inquilinoDto.NumTelefono
         };
     }
 }

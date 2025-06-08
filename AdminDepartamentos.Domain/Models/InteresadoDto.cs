@@ -1,12 +1,12 @@
 ﻿namespace AdminDepartamentos.Domain.Models;
 
-public class InquilinoDto
+public class InteresadoDto
 {
     public string FirstName { get; set; }
     
     public string LastName { get; set; }
     
-    public string Cedula { get; set; }
+    public string Telefono { get; set; }
     
-    public string NumTelefono { get; set; }
+    public int IdUnidadHabitacional { get; set; }
 }

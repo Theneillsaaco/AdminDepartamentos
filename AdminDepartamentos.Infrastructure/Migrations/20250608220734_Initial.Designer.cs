@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdminDepartament.Infrastucture.Migrations
 {
     [DbContext(typeof(DepartContext))]
-    [Migration("20240810234338_Initial")]
+    [Migration("20250608220734_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace AdminDepartament.Infrastucture.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "9.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -53,6 +53,9 @@ namespace AdminDepartament.Infrastucture.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IdUnidadHabitacional")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -60,16 +63,49 @@ namespace AdminDepartament.Infrastucture.Migrations
                     b.Property<DateTime?>("ModifyDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NumDepartamento")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NumTelefono")
+                    b.Property<string>("Telefono")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdInquilino");
 
                     b.ToTable("Inquilinos");
+                });
+
+            modelBuilder.Entity("AdminDepartamentos.Domain.Entities.Interesado", b =>
+                {
+                    b.Property<int>("IdInteresado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdInteresado"));
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdUnidadHabitacional")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdInteresado");
+
+                    b.HasIndex("IdUnidadHabitacional");
+
+                    b.ToTable("Interesados");
                 });
 
             modelBuilder.Entity("AdminDepartamentos.Domain.Entities.Pago", b =>
@@ -95,18 +131,51 @@ namespace AdminDepartament.Infrastucture.Migrations
                     b.Property<decimal>("Monto")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("NumDeposito")
-                        .IsRequired()
+                    b.Property<int>("NumDeposito")
                         .HasColumnType("int");
 
                     b.Property<bool>("Retrasado")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("RetrasadoDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("IdPago");
 
                     b.HasIndex("IdInquilino");
 
                     b.ToTable("Pagos");
+                });
+
+            modelBuilder.Entity("AdminDepartamentos.Domain.Entities.UnidadHabitacional", b =>
+                {
+                    b.Property<int>("IdUnidadHabitacional")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdUnidadHabitacional"));
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("IdInquilinoActual")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdUnidadHabitacional");
+
+                    b.HasIndex("IdInquilinoActual")
+                        .IsUnique()
+                        .HasFilter("[IdInquilinoActual] IS NOT NULL");
+
+                    b.ToTable("UnidadHabitacionals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -307,6 +376,17 @@ namespace AdminDepartament.Infrastucture.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AdminDepartamentos.Domain.Entities.Interesado", b =>
+                {
+                    b.HasOne("AdminDepartamentos.Domain.Entities.UnidadHabitacional", "UnidadHabitacional")
+                        .WithMany("Interesados")
+                        .HasForeignKey("IdUnidadHabitacional")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UnidadHabitacional");
+                });
+
             modelBuilder.Entity("AdminDepartamentos.Domain.Entities.Pago", b =>
                 {
                     b.HasOne("AdminDepartamentos.Domain.Entities.Inquilino", "Inquilino")
@@ -316,6 +396,15 @@ namespace AdminDepartament.Infrastucture.Migrations
                         .IsRequired();
 
                     b.Navigation("Inquilino");
+                });
+
+            modelBuilder.Entity("AdminDepartamentos.Domain.Entities.UnidadHabitacional", b =>
+                {
+                    b.HasOne("AdminDepartamentos.Domain.Entities.Inquilino", "InquilinoActual")
+                        .WithOne("UnidadHabitacional")
+                        .HasForeignKey("AdminDepartamentos.Domain.Entities.UnidadHabitacional", "IdInquilinoActual");
+
+                    b.Navigation("InquilinoActual");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -372,6 +461,13 @@ namespace AdminDepartament.Infrastucture.Migrations
             modelBuilder.Entity("AdminDepartamentos.Domain.Entities.Inquilino", b =>
                 {
                     b.Navigation("Pagos");
+
+                    b.Navigation("UnidadHabitacional");
+                });
+
+            modelBuilder.Entity("AdminDepartamentos.Domain.Entities.UnidadHabitacional", b =>
+                {
+                    b.Navigation("Interesados");
                 });
 #pragma warning restore 612, 618
         }

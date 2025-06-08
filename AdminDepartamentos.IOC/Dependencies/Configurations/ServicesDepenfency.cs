@@ -13,7 +13,7 @@ namespace AdminDepartamentos.IOC.Dependencies.Configurations;
 public static class ServicesDepenfency
 {
     /// <summary>
-    /// DbContext config
+    /// DbContext config.
     /// </summary>
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -21,6 +21,10 @@ public static class ServicesDepenfency
             options.UseSqlServer(configuration.GetConnectionString("DataBase")));
     }
 
+    /// <summary>
+    /// Identity config.
+    /// </summary>
+    /// <param name="services"></param>
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
@@ -34,7 +38,7 @@ public static class ServicesDepenfency
     }
     
     /// <summary>
-    /// Authentication config
+    /// Authentication config.
     /// </summary>
     public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
@@ -62,23 +66,28 @@ public static class ServicesDepenfency
             });
     }
     
+    /// <summary>
+    /// Cache config.
+    /// </summary>
+    /// <param name="services"></param>
     public static void ConfigureOutputCache(this IServiceCollection services)
     {
         services.AddOutputCache(option =>
         {
             option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
             option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
+            option.AddPolicy("UnidadHabitacionalCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("UnidadHabitacionalCache"));
         });
     }
     
     /// <summary>
-    /// Swagger Confing
+    /// Swagger Config.
     /// </summary>
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.8.5" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.8.6" });
 
             // Configuración para JWT Authentication en Swagger
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

@@ -7,6 +7,7 @@ namespace AdminDepartamentos.Domain.Entities;
 public partial class Pago
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdPago { get; set; }
     
     [Required]
@@ -25,6 +26,8 @@ public partial class Pago
     [Required]
     [DefaultValue(true)]
     public bool Retrasado { get; set; }
+    
+    public DateTime? RetrasadoDate { get; set; }
     
     [Required]
     [DefaultValue(true)]

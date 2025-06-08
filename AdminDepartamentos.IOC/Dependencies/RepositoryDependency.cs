@@ -9,7 +9,9 @@ public static class RepositoryDependency
     public static void AddRepositoryDependency(this IServiceCollection services)
     {
         services.AddScoped<IInquilinoRepository, InquilinoRepository>()
-            .AddScoped<IPagoRepository, PagoRepository>();
+            .AddScoped<IPagoRepository, PagoRepository>()
+            .AddScoped<IInteresadoRepository, InteresadoRepository>()
+            .AddScoped<IUnidadHabitacionalRepository, UnidadHabitacionalRepository>();
 
         // Services...
     }

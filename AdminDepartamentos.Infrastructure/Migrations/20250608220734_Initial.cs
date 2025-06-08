@@ -59,8 +59,8 @@ namespace AdminDepartament.Infrastucture.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cedula = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NumDepartamento = table.Column<int>(type: "int", nullable: false),
-                    NumTelefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdUnidadHabitacional = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreationUser = table.Column<int>(type: "int", nullable: false),
@@ -189,6 +189,7 @@ namespace AdminDepartament.Infrastucture.Migrations
                     Monto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     FechaPagoInDays = table.Column<int>(type: "int", nullable: false),
                     Retrasado = table.Column<bool>(type: "bit", nullable: false),
+                    RetrasadoDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Email = table.Column<bool>(type: "bit", nullable: false),
                     Deleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -200,6 +201,51 @@ namespace AdminDepartament.Infrastucture.Migrations
                         column: x => x.IdInquilino,
                         principalTable: "Inquilinos",
                         principalColumn: "IdInquilino",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UnidadHabitacionals",
+                columns: table => new
+                {
+                    IdUnidadHabitacional = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdInquilinoActual = table.Column<int>(type: "int", nullable: true),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnidadHabitacionals", x => x.IdUnidadHabitacional);
+                    table.ForeignKey(
+                        name: "FK_UnidadHabitacionals_Inquilinos_IdInquilinoActual",
+                        column: x => x.IdInquilinoActual,
+                        principalTable: "Inquilinos",
+                        principalColumn: "IdInquilino");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Interesados",
+                columns: table => new
+                {
+                    IdInteresado = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdUnidadHabitacional = table.Column<int>(type: "int", nullable: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Interesados", x => x.IdInteresado);
+                    table.ForeignKey(
+                        name: "FK_Interesados_UnidadHabitacionals_IdUnidadHabitacional",
+                        column: x => x.IdUnidadHabitacional,
+                        principalTable: "UnidadHabitacionals",
+                        principalColumn: "IdUnidadHabitacional",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -243,9 +289,21 @@ namespace AdminDepartament.Infrastucture.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Interesados_IdUnidadHabitacional",
+                table: "Interesados",
+                column: "IdUnidadHabitacional");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pagos_IdInquilino",
                 table: "Pagos",
                 column: "IdInquilino");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnidadHabitacionals_IdInquilinoActual",
+                table: "UnidadHabitacionals",
+                column: "IdInquilinoActual",
+                unique: true,
+                filter: "[IdInquilinoActual] IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -267,6 +325,9 @@ namespace AdminDepartament.Infrastucture.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Interesados");
+
+            migrationBuilder.DropTable(
                 name: "Pagos");
 
             migrationBuilder.DropTable(
@@ -274,6 +335,9 @@ namespace AdminDepartament.Infrastucture.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "UnidadHabitacionals");
 
             migrationBuilder.DropTable(
                 name: "Inquilinos");

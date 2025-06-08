@@ -23,6 +23,10 @@ public class DepartContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Inquilino> Inquilinos { get; set; }
     public DbSet<Pago> Pagos { get; set; }
+    
+    public DbSet<UnidadHabitacional> UnidadHabitacionals { get; set; }
+    
+    public DbSet<Interesado> Interesados { get; set; }
 
     #endregion
 }
