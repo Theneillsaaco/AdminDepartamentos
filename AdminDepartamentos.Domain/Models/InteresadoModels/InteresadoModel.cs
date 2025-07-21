@@ -10,7 +10,9 @@ public class InteresadoModel
     
     public string Telefono { get; set; }
     
+    public string TipoUnidadInteres { get; set; }
+    
     public DateTime Fecha { get; set; }
 
-    public int IdUnidadHabitacional { get; set; }
+    public string FullName => $"{FirstName} {LastName}";
 }

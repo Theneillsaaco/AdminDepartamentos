@@ -12,5 +12,7 @@ public class UnidadHabitacionalModel
 
     public InquilinoModel? InquilinoActual { get; set; }
 
-    public List<InteresadoModel> Interesados { get; set; } = new();
+    public List<InteresadoModel> Interesados { get; set; } = new List<InteresadoModel>();
+    
+    public string TextStatus => occcupied ? "Ocupada" : "Disponible";
 }

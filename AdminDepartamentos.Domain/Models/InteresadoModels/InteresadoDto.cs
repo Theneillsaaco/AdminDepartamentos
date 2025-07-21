@@ -8,5 +8,5 @@ public class InteresadoDto
     
     public string Telefono { get; set; }
     
-    public int IdUnidadHabitacional { get; set; }
+    public string TipoUnidadInteres { get; set; }
 }
