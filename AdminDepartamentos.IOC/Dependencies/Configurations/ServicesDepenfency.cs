@@ -18,7 +18,7 @@ public static class ServicesDepenfency
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<DepartContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DataBase")));
+            options.UseNpgsql(configuration.GetConnectionString("DataBase")));
     }
 
     /// <summary>

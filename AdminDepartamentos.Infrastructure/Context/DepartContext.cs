@@ -15,7 +15,7 @@ public class DepartContext : IdentityDbContext<IdentityUser>
             .HasMany(i => i.Pagos)
             .WithOne(p => p.Inquilino)
             .HasForeignKey(p => p.IdInquilino);
-
+        
         base.OnModelCreating(builder);
     }
 

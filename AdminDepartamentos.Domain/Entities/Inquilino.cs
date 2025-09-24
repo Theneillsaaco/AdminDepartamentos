@@ -25,9 +25,10 @@ public partial class Inquilino
     public int? IdUnidadHabitacional { get; set; }
     
     [Required]
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime CreationDate { get; set; } = DateTime.Now;
 
-    [Column(TypeName = "datetime2")]
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifyDate { get; set; }
 
     [DefaultValue(1)]
@@ -37,6 +38,7 @@ public partial class Inquilino
     [DefaultValue(0)]
     public bool Deleted { get; set; }
     
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime? DeletedDate { get; set; }
 
     public virtual ICollection<Pago> Pagos { get; set; }

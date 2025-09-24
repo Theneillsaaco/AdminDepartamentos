@@ -2,6 +2,8 @@
 
 public class InteresadoModel
 {
+    public int IdUnidadHabitacional { get; set; }
+    
     public int IdInteresado { get; set; }
 
     public string FirstName { get; set; }

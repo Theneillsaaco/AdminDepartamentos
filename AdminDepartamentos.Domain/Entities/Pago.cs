@@ -27,6 +27,7 @@ public partial class Pago
     [DefaultValue(true)]
     public bool Retrasado { get; set; }
     
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime? RetrasadoDate { get; set; }
     
     [Required]

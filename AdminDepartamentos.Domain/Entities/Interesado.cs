@@ -21,6 +21,7 @@ public class Interesado
     public string Telefono { get; set; }
     
     [Required]
+    [Column(TypeName = "timestamp without time zone")]
     public DateTime Fecha { get; set; } = DateTime.Now;
 
     [Required]
