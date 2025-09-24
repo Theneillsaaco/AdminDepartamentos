@@ -77,6 +77,7 @@ public static class ServicesDepenfency
             option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
             option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
             option.AddPolicy("UnidadHabitacionalCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("UnidadHabitacionalCache"));
+            option.AddPolicy("InteresadoCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InteresadoCache"));
         });
     }
     

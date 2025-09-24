@@ -12,7 +12,7 @@ public class InteresadoModel
     
     public string Telefono { get; set; }
     
-    public string TipoUnidadInteres { get; set; }
+    public string TipoUnidadHabitacional { get; set; }
     
     public DateTime Fecha { get; set; }
 

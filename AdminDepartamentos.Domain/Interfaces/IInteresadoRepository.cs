@@ -6,8 +6,8 @@ namespace AdminDepartamentos.Domain.Interfaces;
 
 public interface IInteresadoRepository : IBaseRepository<Interesado>
 {
-    Task<List<InteresadoModel>> GetByUnidad(int idUnidad);
-
+    Task<List<InteresadoModel>> GetByType(string type);
+    
     Task<List<Interesado>> GetPendingInteresado();
     
     Task<(bool Success, string Message)> Save(InteresadoDto interesadoDto);

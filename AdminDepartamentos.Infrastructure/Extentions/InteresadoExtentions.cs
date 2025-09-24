@@ -14,7 +14,7 @@ public static class InteresadoExtentions
             LastName = interesado.LastName,
             Telefono = interesado.Telefono,
             Fecha = interesado.Fecha,
-            IdUnidadHabitacional = interesado.IdUnidadHabitacional
+            TipoUnidadHabitacional = interesado.TipoUnidadHabitacional,
         };
     }
 
@@ -25,7 +25,7 @@ public static class InteresadoExtentions
             FirstName = interesadoDto.FirstName,
             LastName = interesadoDto.LastName,
             Telefono = interesadoDto.Telefono,
-            IdUnidadHabitacional = interesadoDto.IdUnidadHabitacional
+            TipoUnidadHabitacional = interesadoDto.TipoUnidadHabitacional
         };
     }
 }

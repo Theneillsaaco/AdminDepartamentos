@@ -8,6 +8,8 @@ public class UnidadHabitacionalModel
 
     public string Tipo { get; set; }
 
+    public string LightCode { get; set; }
+    
     public bool occcupied { get; set; }
 
     public InquilinoModel? InquilinoActual { get; set; }

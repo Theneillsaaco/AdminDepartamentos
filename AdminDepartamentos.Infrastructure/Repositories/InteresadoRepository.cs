@@ -11,11 +11,10 @@ namespace AdminDepartamentos.Infrastructure.Repositories;
 
 public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepository
 {
-   
-    public async Task<List<InteresadoModel>> GetByUnidad(int idUnidad)
+    public async Task<List<InteresadoModel>> GetByType(string type)
     {
         return await _context.Interesados
-            .Where(inte => inte.IdUnidadHabitacional == idUnidad && !inte.Deleted)
+            .Where(inte => inte.TipoUnidadHabitacional == type && !inte.Deleted)
             .Select(inte => inte.ConvertInteresadoEntityToInteresadoModel())
             .ToListAsync();
     }
@@ -33,7 +32,7 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
         if (id <= 0)
             throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
         
-        if (!await base.Exists(cd => cd.IdUnidadHabitacional == id))
+        if (!await base.Exists(cd => cd.IdInteresado == id))
             throw new InquilinoException("El Interesado no existe.");
         
         return await base.GetById(id);

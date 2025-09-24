@@ -13,12 +13,29 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
 {
     public async Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales()
     {
-        return await _context.UnidadHabitacionals
+        var unidades = await _context.UnidadHabitacionals
             .Where(uni => !uni.Deleted)
             .Include(uni => uni.InquilinoActual)
-            .Include(uni => uni.Interesados)
-            .Select(uni => uni.ConvertUnidadHabitacionalEntityToUnidadHabitacionalModel())
             .ToListAsync();
+        
+        var interesados = await _context.Interesados
+            .Where(i => !i.Deleted)
+            .ToListAsync();
+
+        return unidades.Select(uni => new UnidadHabitacionalModel
+        {
+            IdUnidadHabitacional = uni.IdUnidadHabitacional,
+            Name = uni.Name,
+            Tipo = uni.Tipo,
+            InquilinoActual = uni.InquilinoActual != null
+                ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
+                : null,
+            
+            Interesados = interesados
+                .Where(i => i.TipoUnidadHabitacional == uni.Tipo)
+                .Select(i => i.ConvertInteresadoEntityToInteresadoModel())
+                .ToList()
+        }).ToList();
     }
     
     public async Task<List<UnidadHabitacional>> GetAvailableUnidadHabitacional()

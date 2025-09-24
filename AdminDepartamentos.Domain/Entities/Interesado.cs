@@ -25,7 +25,7 @@ public class Interesado
     public DateTime Fecha { get; set; } = DateTime.Now;
 
     [Required]
-    public int IdUnidadHabitacional { get; set; }
+    public string TipoUnidadHabitacional { get; set; }
     
     [Required]
     [DefaultValue(0)]

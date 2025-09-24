@@ -14,6 +14,9 @@ public partial class UnidadHabitacional
     public string Name { get; set; }
     
     [Required]
+    public string LightCode { get; set; }
+    
+    [Required]
     public string Tipo { get; set; }
     
     public bool Occcupied => InquilinoActual != null;

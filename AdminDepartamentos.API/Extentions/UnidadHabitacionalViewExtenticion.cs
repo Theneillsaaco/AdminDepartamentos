@@ -4,7 +4,7 @@ using AdminDepartamentos.Domain.Models;
 
 namespace AdminDepartamentos.API.Extentions;
 
-public static class UnidadHabitacionalViewExtenticionModel
+public static class UnidadHabitacionalViewExtenticion
 {
     public static UnidadHabitacionalViewModel ConvertUnidadHabitacionalViewModelToUnidadHabitacionalModel(
         this UnidadHabitacionalModel unidadHabitacionalModel)
@@ -13,6 +13,7 @@ public static class UnidadHabitacionalViewExtenticionModel
         {
             Name = unidadHabitacionalModel.Name,
             Tipo = unidadHabitacionalModel.Tipo,
+            LightCode = unidadHabitacionalModel.LightCode,
             occcupied = unidadHabitacionalModel.occcupied,
             InquilinoActual = unidadHabitacionalModel.InquilinoActual,
             Interesados = unidadHabitacionalModel.Interesados
@@ -25,7 +26,8 @@ public static class UnidadHabitacionalViewExtenticionModel
         return new UnidadHabitacional
         {
             Name = unidadHabitacionalUpdateModel.Name,
-            Tipo = unidadHabitacionalUpdateModel.Tipo
+            Tipo = unidadHabitacionalUpdateModel.Tipo,
+            LightCode = unidadHabitacionalUpdateModel.LightCode
         };
     }
 
@@ -37,6 +39,7 @@ public static class UnidadHabitacionalViewExtenticionModel
             IdUnidadHabitacional = unidadHabitacional.IdUnidadHabitacional,
             Name = unidadHabitacional.Name,
             Tipo = unidadHabitacional.Tipo,
+            LightCode = unidadHabitacional.LightCode,
             Occcupied = unidadHabitacional.Occcupied,
             IdInquilinoActual = unidadHabitacional.IdInquilinoActual,
             InquilinoActual = unidadHabitacional.InquilinoActual?.ConvertInquilinoEntityToUnidadHabitacionalGetByInquilinoModel()

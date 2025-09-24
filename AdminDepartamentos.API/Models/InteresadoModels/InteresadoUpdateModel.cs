@@ -1,6 +1,6 @@
 ﻿namespace AdminDepartamentos.API.Models.InteresadoModels;
 
-public class InteresadoViewModel
+public class InteresadoUpdateModel
 {
     public string FirstName { get; set; }
 
@@ -10,7 +10,5 @@ public class InteresadoViewModel
 
     public DateTime Fecha { get; set; }
 
-    public int UnidadHabitacionalId { get; set; }
-
-    public string? UnidadHabitacionalName { get; set; }
+    public string TipoUnidadHabitacional { get; set; }
 }

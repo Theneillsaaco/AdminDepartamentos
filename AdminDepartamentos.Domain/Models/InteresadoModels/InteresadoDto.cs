@@ -2,13 +2,11 @@
 
 public class InteresadoDto
 {
-    public int IdUnidadHabitacional { get; set; }
-    
     public string FirstName { get; set; }
     
     public string LastName { get; set; }
     
     public string Telefono { get; set; }
     
-    public string TipoUnidadInteres { get; set; }
+    public string TipoUnidadHabitacional { get; set; }
 }
