@@ -55,8 +55,8 @@ Crea un archivo appsettings.Development.json (o appsettings.json) con el siguien
   "Email":
   {
     "Host": "smtp.tu-host.com",
-    "Port": 587, "UserName":
-    "usuario@dominio.com",
+    "Port": 587,
+    "UserName": "usuario@dominio.com",
     "Password": "password",
     "Para": "destino@dominio.com"
   } 
