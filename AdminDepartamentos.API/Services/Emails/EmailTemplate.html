@@ -1,109 +1,115 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>AdminDepart</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: #f9f9f9;
-            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #1c1b1f;
         }
         .container {
             max-width: 600px;
             margin: 20px auto;
-            padding: 20px;
+            border-radius: 16px;
             background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         .header {
-            background-color: #5c2c94;
-            padding: 30px;
+            background-color: #5c2c94; /* tono primario */
             text-align: center;
+            padding: 32px 20px 24px;
             color: #ffffff;
         }
         .header img {
-            max-width: 80px;
-            margin-bottom: 15px;
+            max-width: 72px;
+            margin-bottom: 12px;
         }
         .header h1 {
-            font-size: 22px;
+            font-size: 20px;
+            font-weight: 600;
             margin: 0;
+            letter-spacing: 0.5px;
         }
         .content {
-            padding: 20px;
+            padding: 24px 20px;
             text-align: center;
         }
         .content img {
-            max-width: 100px;
-            margin-bottom: 15px;
+            max-width: 64px;
+            margin-bottom: 12px;
         }
         .content h2 {
-            font-size: 24px;
-            color: #028383;
-            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #006a6a; /* tono secundario */
+            margin: 0 0 12px;
         }
         .content p {
-            font-size: 16px;
-            color: #555555;
-            margin-bottom: 20px;
-        }
-        .tenant-list {
-            padding: 15px;
-            background-color: #f0f8ff;
-            border-radius: 8px;
-            text-align: left;
             font-size: 15px;
             line-height: 1.5;
-            color: #333333;
+            color: #49454f;
+            margin: 0 0 20px;
+        }
+        .tenant-list {
+            background-color: #f0f8ff;
             border: 1px solid #d9d9d9;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: left;
+            font-size: 14px;
+            color: #1c1b1f;
         }
         .tenant-item {
             padding: 10px 0;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e0e0e0;
         }
         .tenant-item:last-child {
             border-bottom: none;
         }
         .footer {
+            font-size: 13px;
+            color: #5f6368;
             text-align: center;
-            padding: 15px;
-            font-size: 14px;
-            color: #777777;
-            background-color: #f7f7f7;
-            border-top: 1px solid #ddd;
+            background-color: #fafafa;
+            padding: 16px;
+            border-top: 1px solid #e0e0e0;
         }
         @media (max-width: 480px) {
             .header h1 {
-                font-size: 20px;
+                font-size: 18px;
             }
             .content h2 {
-                font-size: 20px;
+                font-size: 16px;
             }
             .tenant-list {
-                font-size: 14px;
+                font-size: 13px;
             }
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <!-- HEADER -->
     <div class="header">
         <img src="cid:BlazorStrap.png" alt="Logo">
         <h1>Administración Departamento</h1>
     </div>
+    <!-- CONTENT -->
     <div class="content">
         <img src="cid:grey_check_v2.png" alt="Pagos Retrasados">
         <h2>Pagos Retrasados</h2>
-        <p>A continuación, se muestra una lista de inquilinos con pagos retrasados:</p>
+        <p>Estos son los inquilinos con pagos pendientes:</p>
         <div class="tenant-list" id="inquilinosRetrasados">
-            <!-- Aquí se insertará la lista de inquilinos con pagos retrasados -->
+            <!-- Lista de inquilinos retrasados -->
         </div>
     </div>
+    <!-- FOOTER -->
     <div class="footer">
         Este correo ha sido generado automáticamente. Por favor, no responda a este mensaje.
     </div>
