@@ -22,11 +22,6 @@ builder.Services.AddHostedService<EmailServices>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Tests.
-var serviceProvider = builder.Services.BuildServiceProvider();
-var logger = serviceProvider.GetService<ILogger<Program>>();
-logger.LogInformation("Services registered successfully");
-
 // Configure the HTTP request pipeline.
 var app = builder.Build();
 
@@ -35,6 +30,11 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+    // Tests.
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    var logger = serviceProvider.GetService<ILogger<Program>>();
+    logger.LogInformation("Services registered successfully");
 }
 else
 {
@@ -43,11 +43,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseCors(policy => policy
-    .WithOrigins("http://localhost:54321")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowCredentials());
+app.UseCors("DefaultCorsPolicy");
 
 app.UseRateLimiter();
 
