@@ -69,10 +69,9 @@ public class AccountController : ControllerBase
     [HttpGet("isauthenticated")]
     public IActionResult IsAuthenticated()
     {
-        if (User.Identity.IsAuthenticated)
-            return Ok(new { IsAuthenticated = true, User = User.Identity.Name });
-        else
-            return Ok(new { IsAuthenticated = false });
+        return User.Identity.IsAuthenticated
+            ? Ok(new { IsAuthenticated = true, User = User.Identity.Name })
+            : Ok(new { IsAuthenticated = false });
     }
 
     private string GenerateJwtToken(IdentityUser user)

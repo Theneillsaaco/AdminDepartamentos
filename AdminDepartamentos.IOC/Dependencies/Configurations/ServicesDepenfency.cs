@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using AdminDepartamentos.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,13 +30,17 @@ public static class ServicesDepenfency
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
-            {
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 6;
-            })
-            .AddSignInManager<SignInManager<IdentityUser>>()
-            .AddEntityFrameworkStores<DepartContext>()
-            .AddDefaultTokenProviders();
+        {
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            options.Lockout.MaxFailedAccessAttempts = 10;
+        })
+        .AddSignInManager<SignInManager<IdentityUser>>()
+        .AddEntityFrameworkStores<DepartContext>()
+        .AddDefaultTokenProviders();
     }
     
     /// <summary>
@@ -45,25 +51,52 @@ public static class ServicesDepenfency
         var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
 
         services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = true;
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = true, 
+                ValidateAudience = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidAudience = configuration["Jwt:Audience"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+    }
+
+    public static void ConfigureCORS(this IServiceCollection services,  IConfiguration configuration)
+    {
+        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("DefaultCorsPolicy", builder =>
             {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true, 
-                    ValidateAudience = false,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
+                builder.WithOrigins(allowedOrigins)
+                    .WithMethods("GET", "POST", "PUT", "DELETE")
+                    .AllowCredentials()
+                    .WithHeaders("Authorization", "Content-Type");
             });
+        });
+
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("LoginLimiter", limiterOptions =>
+            {
+                limiterOptions.PermitLimit = 10;
+                limiterOptions.Window = TimeSpan.FromMinutes(15);
+                limiterOptions.QueueLimit = 0;
+            });
+        });
     }
     
     /// <summary>

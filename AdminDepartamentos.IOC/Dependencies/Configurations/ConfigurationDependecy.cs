@@ -12,5 +12,6 @@ public static class ConfigurationDependecy
         services.ConfigureAuthentication(configuration);
         services.ConfigureSwagger();
         services.ConfigureOutputCache();
+        services.ConfigureCORS(configuration);
     }
 }

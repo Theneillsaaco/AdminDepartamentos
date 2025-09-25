@@ -36,12 +36,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
 
 app.UseCors(policy => policy
     .WithOrigins("http://localhost:54321")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials());
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
