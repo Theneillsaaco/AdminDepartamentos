@@ -29,7 +29,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DepartApi v0.9.1");
+        c.ConfigObject.AdditionalItems["withCredentials"] = true;
+    });
     
     // Tests.
     var serviceProvider = builder.Services.BuildServiceProvider();

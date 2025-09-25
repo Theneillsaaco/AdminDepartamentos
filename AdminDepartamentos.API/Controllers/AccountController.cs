@@ -56,13 +56,21 @@ public class AccountController : ControllerBase
 
         var token = GenerateJwtToken(user);
 
-        return Ok(new { Token = token });
+        Response.Cookies.Append("jwt", token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTimeOffset.Now.AddMinutes(30)
+        });
+
+        return Ok(new { Message = "Login exitoso." });
     }
     
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
-        await _signInManager.SignOutAsync();
+       Response.Cookies.Delete("jwt");
         return Ok(new { Message = "Cierre de sesion con exito." });
     }
 
