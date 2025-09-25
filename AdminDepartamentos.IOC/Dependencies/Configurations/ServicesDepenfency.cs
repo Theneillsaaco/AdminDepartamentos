@@ -75,13 +75,13 @@ public static class ServicesDepenfency
 
     public static void ConfigureCORS(this IServiceCollection services,  IConfiguration configuration)
     {
-        var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>();
-
+        var origins = configuration.GetSection("CORS:Origins").Get<string[]>();
+        
         services.AddCors(options =>
         {
             options.AddPolicy("DefaultCorsPolicy", builder =>
             {
-                builder.WithOrigins(allowedOrigins)
+                builder.WithOrigins(origins ?? [])
                     .WithMethods("GET", "POST", "PUT", "DELETE")
                     .AllowCredentials()
                     .WithHeaders("Authorization", "Content-Type");

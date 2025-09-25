@@ -71,7 +71,7 @@ public class AccountController : ControllerBase
     {
         return User.Identity.IsAuthenticated
             ? Ok(new { IsAuthenticated = true, User = User.Identity.Name })
-            : Ok(new { IsAuthenticated = false });
+            : Unauthorized(new { IsAuthenticated = false });
     }
 
     private string GenerateJwtToken(IdentityUser user)
@@ -81,6 +81,7 @@ public class AccountController : ControllerBase
 
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
