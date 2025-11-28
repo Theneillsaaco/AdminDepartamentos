@@ -60,7 +60,7 @@ public class AccountController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = DateTimeOffset.Now.AddMinutes(30)
         });
 

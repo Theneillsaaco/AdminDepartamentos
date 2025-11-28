@@ -15,6 +15,7 @@ public static class PagoViewExtenticion
             NumDeposito = pagoInquilinoModel.NumDeposito,
             FechaPagoInDays = pagoInquilinoModel.FechaPagoInDays,
             Retrasado = pagoInquilinoModel.Retrasado,
+	    Monto = pagoInquilinoModel.Monto,
 
             //Inquilino
             IdInquilino = pagoInquilinoModel.IdInquilino,
