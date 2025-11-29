@@ -40,7 +40,7 @@ public static class UnidadHabitacionalViewExtenticion
             Name = unidadHabitacional.Name,
             Tipo = unidadHabitacional.Tipo,
             LightCode = unidadHabitacional.LightCode,
-            Occcupied = unidadHabitacional.Occcupied,
+            Occupied = unidadHabitacional.Occupied,
             IdInquilinoActual = unidadHabitacional.IdInquilinoActual,
             InquilinoActual = unidadHabitacional.InquilinoActual?.ConvertInquilinoEntityToUnidadHabitacionalGetByInquilinoModel()
         };

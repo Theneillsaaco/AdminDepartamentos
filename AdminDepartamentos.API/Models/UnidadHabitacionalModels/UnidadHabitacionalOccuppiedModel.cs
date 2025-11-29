@@ -6,7 +6,7 @@ public class UnidadHabitacionalOccuppiedModel : UnidadHabitacionalBaseModel
 {
     public int IdUnidadHabitacional { get; set; }
     
-    public bool Occcupied { get; set; }
+    public bool Occupied { get; set; }
     
     public int? IdInquilinoActual { get; set; }
     

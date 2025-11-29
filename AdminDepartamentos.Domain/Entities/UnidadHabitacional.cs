@@ -19,7 +19,7 @@ public partial class UnidadHabitacional
     [Required]
     public string Tipo { get; set; }
     
-    public bool Occcupied => InquilinoActual != null;
+    public bool Occupied => InquilinoActual != null;
     
     public int? IdInquilinoActual { get; set; }
     
