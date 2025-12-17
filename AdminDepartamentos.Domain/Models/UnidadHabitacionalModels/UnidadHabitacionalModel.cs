@@ -10,11 +10,11 @@ public class UnidadHabitacionalModel
 
     public string LightCode { get; set; }
     
-    public bool occcupied { get; set; }
+    public bool Occupied { get; set; }
 
     public InquilinoModel? InquilinoActual { get; set; }
 
     public List<InteresadoModel> Interesados { get; set; } = new List<InteresadoModel>();
     
-    public string TextStatus => occcupied ? "Ocupada" : "Disponible";
+    public string TextStatus => Occupied ? "Ocupada" : "Disponible";
 }

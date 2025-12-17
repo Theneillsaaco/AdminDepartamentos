@@ -27,6 +27,9 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
             IdUnidadHabitacional = uni.IdUnidadHabitacional,
             Name = uni.Name,
             Tipo = uni.Tipo,
+            LightCode = uni.LightCode,
+            Occupied = uni.IdInquilinoActual != null,
+            
             InquilinoActual = uni.InquilinoActual != null
                 ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
                 : null,

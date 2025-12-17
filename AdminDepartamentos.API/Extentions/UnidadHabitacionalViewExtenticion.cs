@@ -11,10 +11,11 @@ public static class UnidadHabitacionalViewExtenticion
     {
         return new UnidadHabitacionalViewModel
         {
+	    IdUnidadHabitacional = unidadHabitacionalModel.IdUnidadHabitacional,
             Name = unidadHabitacionalModel.Name,
             Tipo = unidadHabitacionalModel.Tipo,
             LightCode = unidadHabitacionalModel.LightCode,
-            occcupied = unidadHabitacionalModel.occcupied,
+            Occupied = unidadHabitacionalModel.Occupied,
             InquilinoActual = unidadHabitacionalModel.InquilinoActual,
             Interesados = unidadHabitacionalModel.Interesados
         };

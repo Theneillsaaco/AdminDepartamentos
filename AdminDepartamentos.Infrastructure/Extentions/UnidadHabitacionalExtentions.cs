@@ -13,7 +13,7 @@ public static class UnidadHabitacionalExtentions
             Name = unidadHabitacional.Name,
             Tipo = unidadHabitacional.Tipo,
             LightCode = unidadHabitacional.LightCode,
-            occcupied = unidadHabitacional.Occupied,
+            Occupied = unidadHabitacional.Occupied,
             InquilinoActual = unidadHabitacional.InquilinoActual?.ConvertInquilinoEntityToInquilinoModel(),
             Interesados = unidadHabitacional.Interesados.Select(uni => uni.ConvertInteresadoEntityToInteresadoModel()).ToList()
         };
