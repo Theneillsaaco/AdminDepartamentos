@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Serilog;
 
 namespace AdminDepartamentos.IOC.Dependencies.Configurations;
 
@@ -108,6 +110,26 @@ public static class ServicesDepenfency
                 limiterOptions.Window = TimeSpan.FromMinutes(15);
                 limiterOptions.QueueLimit = 0;
             });
+        });
+    }
+
+    public static void ConfigureSerilog(this IHostBuilder host, IConfiguration configuration)
+    {
+        host.UseSerilog((context, services, loggerConfiguration) =>
+        {
+            loggerConfiguration
+                .ReadFrom.Configuration(configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext()
+                .Enrich.WithProcessId()
+                .Enrich.WithThreadId()
+                .Enrich.WithMachineName()
+                .WriteTo.Console()
+                .WriteTo.File(
+                    path: "Logs/log-.txt",
+                    rollingInterval: RollingInterval.Day,
+                    retainedFileCountLimit: 7
+                );
         });
     }
     

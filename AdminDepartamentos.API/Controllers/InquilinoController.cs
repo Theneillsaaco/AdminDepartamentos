@@ -19,22 +19,28 @@ public class InquilinoController : ControllerBase
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetAll()
     {
+        _logger.LogInformation("GETAll Inquilinos - Start.");   
+        
         var responseApi = new ResponseAPI<List<InquilinoViewModel>>();
 
         try
         {
             var inquilinos = await _inquilinoRepository.GetInquilinos();
-
+            
             var inquilinoViewModels =
                 inquilinos.Select(inq => inq.ConvertInquilinoViewModelToInquilinoModel()).ToList();
-
+            
+            _logger.LogInformation("GETAll Inquilinos - Total encontrados: {Count}.", inquilinos.Count());
+            
             responseApi.Success = true;
             responseApi.Data = inquilinoViewModels;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "GETAll Inquilinos - Error.");
+            
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -46,6 +52,8 @@ public class InquilinoController : ControllerBase
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetById(int id)
     {
+        _logger.LogInformation("GET Inquilino - Start.");   
+        
         var responseApi = new ResponseAPI<Inquilino>();
 
         try
@@ -54,18 +62,21 @@ public class InquilinoController : ControllerBase
             
             if (inquilino is null)
             {
+                _logger.LogWarning("GET Inquilino - Inquilino with {id} not found.", id);  
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino with Id {id} not found.";
+                responseApi.Message = $"Inquilino not found.";
                 return NotFound(responseApi);
             }
             
+            _logger.LogInformation("GET Inquilino - Inquilino with {id} found.", id); 
             responseApi.Success = true;
             responseApi.Data = inquilino;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "GET Inquilino - Error.");
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -76,20 +87,32 @@ public class InquilinoController : ControllerBase
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] InquilinoSaveModel inquilinoSaveModel)
     {
+        _logger.LogInformation("Save Inquilino - Start.");
+        
         var responseApi = new ResponseAPI<InquilinoSaveModel>();
 
         if (inquilinoSaveModel.InquilinoDto is null || inquilinoSaveModel.PagoDto is null)
         {
+            _logger.LogWarning("Save Inquilino - Invalid data. { ", inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto, " }");
             responseApi.Success = false;
             responseApi.Message = "Datos invalidos.";
-            return BadRequest(ModelState);
+            return BadRequest(responseApi);
         }
 
         var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
         await ClearCacheAsync();
+
+        if (!result.Success)
+        {
+            _logger.LogWarning(result.Message, "Save Inquilino - Error.");
+            responseApi.Success = false;
+            responseApi.Message = "Error al guardar el inquilino.";
+            return BadRequest(responseApi);
+        }
         
-        responseApi.Success = result.Success;
-        responseApi.Message = result.Message;
+        _logger.LogInformation("Save Inquilino - Inquilino saved.");
+        responseApi.Success = true;
+        responseApi.Message = "El inquilino se guardo correctamente.";
 
         return Ok(responseApi);
     }
@@ -98,14 +121,17 @@ public class InquilinoController : ControllerBase
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel inquilinoUpdateModel)
     {
+        _logger.LogInformation("Update Inquilino - Start.");  
+        
         var responseApi = new ResponseAPI<InquilinoUpdateModel>();
 
         try
         {
             if (!await _inquilinoRepository.Exists(cd => cd.IdInquilino == id))
             {
+                _logger.LogWarning("Update Inquilino - Inquilino with {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino with Id: {id} not found.";
+                responseApi.Message = $"Inquilino not found.";
 
                 return NotFound(responseApi);
             }
@@ -116,12 +142,14 @@ public class InquilinoController : ControllerBase
             await _inquilinoRepository.Update(inquilino);
             await ClearCacheAsync();
             
+            _logger.LogInformation("Update Inquilino - Inquilino updated.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Update Inquilino - Error.");
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -133,26 +161,30 @@ public class InquilinoController : ControllerBase
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
+        _logger.LogInformation("Delete Inquilino - Start."); 
         var responseApi = new ResponseAPI<int>();
 
         try
         {
             if (!await _inquilinoRepository.Exists(cd => cd.IdInquilino == id))
             {
+                _logger.LogWarning("Delete Inquilino - Inquilino with {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino with Id: {id} not found.";
+                responseApi.Message = $"Inquilino not found.";
                 return NotFound(responseApi);
             }
             
             await _inquilinoRepository.MarkDeleted(id);
             await ClearCacheAsync();
             
+            _logger.LogInformation("Delete Inquilino - Inquilino deleted.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Delete Inquilino - Error.");
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "internal server error";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -169,11 +201,13 @@ public class InquilinoController : ControllerBase
 
     private readonly IInquilinoRepository _inquilinoRepository;
     private readonly IOutputCacheStore _outputCacheStore;
+    private readonly ILogger<InquilinoController> _logger;
 
-    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore)
+    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
     {
         _inquilinoRepository = inquilinoRepository;
         _outputCacheStore = outputCacheStore;
+        _logger = logger;
     }
 
     #endregion

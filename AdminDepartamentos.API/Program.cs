@@ -4,6 +4,7 @@ using AdminDepartamentos.API.Services.Emails;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
 using AdminDepartamentos.IOC.Dependencies.Configurations;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddConfigurationDependecy(builder.Configuration);
 builder.Services.AddRepositoryDependency();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Host.ConfigureSerilog(builder.Configuration);
 
 // Register hosted services.
 builder.Services.AddHostedService<CheckRetrasosService>();
@@ -44,6 +46,16 @@ else
 {
     app.UseHsts();
 }
+
+app.UseSerilogRequestLogging(options =>
+{
+    options.EnrichDiagnosticContext = (ctx, http) =>
+    {
+        ctx.Set("TraceId", http.TraceIdentifier);
+        ctx.Set("RequestPath", http.Request.Path);
+        ctx.Set("Method", http.Request.Method);
+    };
+});
 
 app.UseHttpsRedirection();
 
