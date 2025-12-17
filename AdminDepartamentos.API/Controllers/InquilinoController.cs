@@ -31,14 +31,12 @@ public class InquilinoController : ControllerBase
                 inquilinos.Select(inq => inq.ConvertInquilinoViewModelToInquilinoModel()).ToList();
             
             _logger.LogInformation("GETAll Inquilinos - Total encontrados: {Count}.", inquilinos.Count());
-            
             responseApi.Success = true;
             responseApi.Data = inquilinoViewModels;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GETAll Inquilinos - Error.");
-            
+            _logger.LogError("GETAll Inquilinos - Error. Errors: {ex}", ex);
             responseApi.Success = false;
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
@@ -62,19 +60,19 @@ public class InquilinoController : ControllerBase
             
             if (inquilino is null)
             {
-                _logger.LogWarning("GET Inquilino - Inquilino with {id} not found.", id);  
+                _logger.LogWarning("GET Inquilino - Inquilino with id {id} not found.", id);  
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino not found.";
+                responseApi.Message = "Inquilino not found.";
                 return NotFound(responseApi);
             }
             
-            _logger.LogInformation("GET Inquilino - Inquilino with {id} found.", id); 
+            _logger.LogInformation("GET Inquilino - Inquilino with id {id} found.", id); 
             responseApi.Success = true;
             responseApi.Data = inquilino;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GET Inquilino - Error.");
+            _logger.LogError("GET Inquilino - Error. Errors: {ex}", ex);
             responseApi.Success = false;
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
@@ -93,7 +91,7 @@ public class InquilinoController : ControllerBase
 
         if (inquilinoSaveModel.InquilinoDto is null || inquilinoSaveModel.PagoDto is null)
         {
-            _logger.LogWarning("Save Inquilino - Invalid data. { ", inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto, " }");
+            _logger.LogWarning("Save Inquilino - Invalid data. Inquilino: {inquilinoSaveModel.inquilinoDto}, Pago: {inquilinoSaveModel.PagoDto}", inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
             responseApi.Success = false;
             responseApi.Message = "Datos invalidos.";
             return BadRequest(responseApi);
@@ -104,7 +102,7 @@ public class InquilinoController : ControllerBase
 
         if (!result.Success)
         {
-            _logger.LogWarning(result.Message, "Save Inquilino - Error.");
+            _logger.LogWarning("Save Inquilino - Error. Errors {result.Message}", result.Message);
             responseApi.Success = false;
             responseApi.Message = "Error al guardar el inquilino.";
             return BadRequest(responseApi);
@@ -131,7 +129,7 @@ public class InquilinoController : ControllerBase
             {
                 _logger.LogWarning("Update Inquilino - Inquilino with {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino not found.";
+                responseApi.Message = "Inquilino not found.";
 
                 return NotFound(responseApi);
             }
@@ -147,7 +145,7 @@ public class InquilinoController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Update Inquilino - Error.");
+            _logger.LogError("Update Inquilino - Error. Errors {ex}", ex);
             responseApi.Success = false;
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
@@ -170,7 +168,7 @@ public class InquilinoController : ControllerBase
             {
                 _logger.LogWarning("Delete Inquilino - Inquilino with {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Inquilino not found.";
+                responseApi.Message = "Inquilino not found.";
                 return NotFound(responseApi);
             }
             
@@ -182,7 +180,7 @@ public class InquilinoController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Delete Inquilino - Error.");
+            _logger.LogError("Delete Inquilino - Error. Errors {ex}", ex);
             responseApi.Success = false;
             responseApi.Message = "internal server error";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
