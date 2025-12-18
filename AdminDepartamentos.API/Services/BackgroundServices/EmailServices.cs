@@ -13,20 +13,31 @@ public class EmailServices : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Email background service started.");
+        
         while (!stoppingToken.IsCancellationRequested)
         {
-            try
+            using (_logger.BeginScope("EmailJobCycle {CycleId}", Guid.NewGuid()))
             {
-                Console.WriteLine("Email service running.");
-                await ProcessDelayedPaymentsAsync(stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en EmailService: {ex.Message}");
+                try
+                {
+                    _logger.LogInformation("Email job cycle started.");
+                    await ProcessDelayedPaymentsAsync(stoppingToken);
+                    _logger.LogInformation("Email job cycle finished successfully.");
+                }
+                catch (OperationCanceledException)
+                {
+                    _logger.LogInformation("Email service cancellation requested.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Unhandled error in EmailService execution loop. Errors: {ex.Message}", ex.Message);
+                }
             }
             
             await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
+        _logger.LogInformation("Email service stopped.");
     }
     
     private async Task ProcessDelayedPaymentsAsync(CancellationToken stoppingToken)
@@ -35,18 +46,23 @@ public class EmailServices : BackgroundService
 
         var emailSender = scope.ServiceProvider.GetRequiredService<IEmailService>();
         var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
+        
         var pagos = await pagoRepository.GetRetrasosWithoutEmail();
-
+        
+        _logger.LogInformation("Found {Count} delayed payments without email.", pagos.Count());
         if (!pagos.Any())
             return;
         
         var retrasoHtml = await GenerateDelayedPaymentsHtml(pagos, pagoRepository, scope, stoppingToken);
 
-        if (!string.IsNullOrEmpty(retrasoHtml))
+        if (string.IsNullOrEmpty(retrasoHtml))
         {
-            string emailContent = await LoadEmailTemplate(retrasoHtml, stoppingToken);
-            await SendEmail(emailSender, emailContent);
+            _logger.LogWarning("No email content generated. Email will not be sent.");
+            return;
         }
+        
+        string emailContent = await LoadEmailTemplate(retrasoHtml, stoppingToken);
+        await SendEmail(emailSender, emailContent);
     }
 
     private async Task<string> GenerateDelayedPaymentsHtml(IEnumerable<Pago> pagos, IPagoRepository pagoRepository,
@@ -57,24 +73,33 @@ public class EmailServices : BackgroundService
 
         foreach (var pago in pagos)
         {
-            try
+            using (_logger.BeginScope("PagoId {IdPago}", pago.IdPago))
             {
-                pago.ConvertPagoEntityToPagoWithoutEmail();
-                pago.Email = true;
+                try
+                {
+                    _logger.LogInformation("Processing delayed payment for tenant {Tenant}.",
+                        $"{pago.Inquilino.FirstName} {pago.Inquilino.LastName}"
+                    );
+                    
+                    pago.ConvertPagoEntityToPagoWithoutEmail();
+                    pago.Email = true;
                 
-                await pagoRepository.Update(pago);
-                await dbContext.SaveChangesAsync(stoppingToken);
+                    await pagoRepository.Update(pago);
+                    await dbContext.SaveChangesAsync(stoppingToken);
                 
-                retrasoHtml.Append($@"
-                     <div class='tenant-item'>
-                        <strong>Inquilino:</strong> {pago.Inquilino.FirstName} {pago.Inquilino.LastName} <br>
-                        <strong>Pago Id:</strong> {pago.IdPago}
-                    </div>
-                ");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing pago (Id: {pago.IdPago}): {ex.Message}");
+                    retrasoHtml.Append($@"
+                        <div class='tenant-item'>
+                            <strong>Inquilino:</strong> {pago.Inquilino.FirstName} {pago.Inquilino.LastName} <br>
+                            <strong>Pago Id:</strong> {pago.IdPago}
+                        </div>
+                    ");
+                    
+                    _logger.LogInformation("Pago marked as emailed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error processing delayed payment.");
+                }
             }
         }
         
@@ -85,8 +110,13 @@ public class EmailServices : BackgroundService
     {
         string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Services", "Emails", "EmailTemplate.html");
 
+        _logger.LogDebug("Loading email template from {Path}", templatePath);
+
         if (!File.Exists(templatePath))
+        {
+            _logger.LogError("Email template file not found at {Path}", templatePath);
             throw new FileNotFoundException($"No se encontró la plantilla de correo: {templatePath}");
+        }
 
         using var reader = new StreamReader(templatePath);
         var emailTemplate = await reader.ReadToEndAsync(stoppingToken);
@@ -96,7 +126,7 @@ public class EmailServices : BackgroundService
 
     private async Task SendEmail(IEmailService emailSender, string emailContent)
     {
-        var emailDT0 = new EmailDTO
+        var emailDto = new EmailDTO
         {
             Para = _emailSettings.EmailSender,
             Asunto = "Pagos Retrasados (No Responder)",
@@ -105,11 +135,15 @@ public class EmailServices : BackgroundService
 
         try
         {
-            emailSender.SendEmail(emailDT0);
+            _logger.LogInformation("Sending delayed payments email to {Recipient}.", emailDto.Para);
+
+            emailSender.SendEmail(emailDto);
+            
+            _logger.LogInformation("Delayed payments email sent successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error enviando correo: {ex.Message}");
+            _logger.LogError(ex, "Error sending delayed payments email.");
             throw;
         }
     }
@@ -117,11 +151,13 @@ public class EmailServices : BackgroundService
     #region Fields
     
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<EmailServices> _logger;
     private readonly EmailSettings _emailSettings;
 
-    public EmailServices(IServiceScopeFactory scopeFactory, IOptions<EmailSettings> emailSettings)
+    public EmailServices(IServiceScopeFactory scopeFactory, IOptions<EmailSettings> emailSettings, ILogger<EmailServices> logger)
     {
         _scopeFactory = scopeFactory;
+        _logger = logger;
         _emailSettings = emailSettings.Value;
     }
     

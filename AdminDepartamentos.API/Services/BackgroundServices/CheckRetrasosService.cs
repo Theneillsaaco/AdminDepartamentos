@@ -8,33 +8,46 @@ namespace AdminDepartamentos.API.Services.BackgroundServices;
 
 public class CheckRetrasosService : BackgroundService
 {
-    
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("CheckRetrasosService background service started.");
         while (!stoppingToken.IsCancellationRequested)
         {
-            try
+            using (_logger.BeginScope("CheckRetrasosServiceCycle {CycleId}", Guid.NewGuid()))
             {
-                Console.WriteLine("Ejecutando CheckRetrasosService");
-                await ProcessRetraso(stoppingToken);
+                try
+                {
+                    _logger.LogInformation("Starting daily retraso check.");
+                    await ProcessRetraso(stoppingToken);
+                    _logger.LogInformation("Daily retraso check finished successfully.");
+                }
+                catch (OperationCanceledException)
+                {
+                    _logger.LogInformation("CheckRetrasosService cancellation requested.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error checking retraso.");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error en CheckRetrasosService: {ex.Message}");
-            }
-
+            
             await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
         }
+        
+        _logger.LogInformation("CheckRetrasosService stopped.");
     }
 
     private async Task ProcessRetraso(CancellationToken stoppingToken)
     {
         using var scope = _scopeFactory.CreateScope();
+        
         var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
         var dbContext = scope.ServiceProvider.GetRequiredService<DepartContext>();
         
         var pagos = await pagoRepository.GetPago();
+        
+        _logger.LogInformation("Retrieved {Count} pagos for retraso evaluation.", pagos.Count());
+        
         if (!pagos.Any())
             return;
         
@@ -42,16 +55,23 @@ public class CheckRetrasosService : BackgroundService
 
         foreach (var pago in pagos.Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
         {
-            try
+            using (_logger.BeginScope("PagoId {IdPago}", pago.IdPago))
             {
-                if (!UpdateRetrasoStatus(pago, pagoRepository)) continue;
-                
-                pagosUpdate.Add(pago);
-                Console.WriteLine($"Marked Pago ID {pago.IdPago} as retrasado.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error checking retraso for Pago ID {pago.IdPago}: {ex.Message}");
+                try
+                {
+                    if (!UpdateRetrasoStatus(pago, pagoRepository))
+                    {
+                        _logger.LogDebug("Pago retraso status unchanged.");
+                        continue;
+                    }
+
+                    pagosUpdate.Add(pago);
+                    _logger.LogInformation("Pago marked as retrasado.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error checking retraso for pago.");
+                }
             }
         }
 
@@ -73,23 +93,30 @@ public class CheckRetrasosService : BackgroundService
 
         try
         {
+            _logger.LogInformation("Updating {Count} pagos with retraso changes.", 
+                pagosUpdate.Count
+            );
+
             await pagoRepository.Update(pagosUpdate);
             await dbContext.SaveChangesAsync(stoppingToken);
-            Console.WriteLine($"{pagosUpdate.Count} pagos actualizados en la base de datos.");
+
+            _logger.LogInformation("Pagos updated successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al actualizar los pagos: {ex.Message}");
+            _logger.LogError(ex, "Error updating pagos retraso status.");
         }
     }
     
     #region Fields
 
     private readonly IServiceScopeFactory _scopeFactory;
-    
-    public CheckRetrasosService(IServiceScopeFactory scopeFactory)
+    private readonly ILogger<CheckRetrasosService> _logger;
+
+    public CheckRetrasosService(IServiceScopeFactory scopeFactory, ILogger<CheckRetrasosService> logger)
     {
         _scopeFactory = scopeFactory;
+        _logger = logger;
     }
 
     #endregion
