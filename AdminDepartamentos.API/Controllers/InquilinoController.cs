@@ -104,13 +104,13 @@ public class InquilinoController : ControllerBase
         {
             _logger.LogWarning("Save Inquilino - Error. Errors {result.Message}", result.Message);
             responseApi.Success = false;
-            responseApi.Message = "Error al guardar el inquilino.";
+            responseApi.Message = "Error al guardar el Inquilino.";
             return BadRequest(responseApi);
         }
         
         _logger.LogInformation("Save Inquilino - Inquilino saved.");
         responseApi.Success = true;
-        responseApi.Message = "El inquilino se guardo correctamente.";
+        responseApi.Message = "El Inquilino se guardo correctamente.";
 
         return Ok(responseApi);
     }

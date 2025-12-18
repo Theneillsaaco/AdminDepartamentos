@@ -20,6 +20,8 @@ public class UnidadHabitacionalController : ControllerBase
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetAll()
     {
+        _logger.LogInformation("GETAll UnidadHabitacional - Start.");
+        
         var responseApi = new ResponseAPI<List<UnidadHabitacionalViewModel>>();
 
         try
@@ -28,13 +30,15 @@ public class UnidadHabitacionalController : ControllerBase
             var unidadViewModels =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalViewModelToUnidadHabitacionalModel()).ToList();
             
+            _logger.LogInformation("GETAll UnidadHabitacional - Total encontrados: {Count}.", unidad.Count());
             responseApi.Success = true;
             responseApi.Data = unidadViewModels;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GETAll UnidadHabitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -46,6 +50,8 @@ public class UnidadHabitacionalController : ControllerBase
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetById(int id)
     {
+        _logger.LogInformation("GET UnidadHabitacional - Start.");
+        
         var responseApi = new ResponseAPI<UnidadHabitacional>();
 
         try
@@ -54,18 +60,21 @@ public class UnidadHabitacionalController : ControllerBase
 
             if (unidad is null)
             {
+                _logger.LogWarning("GET UnidadHabitacional - Unidad Habitacional with Id {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Unidad Habitacional with Id {id} not found.";
+                responseApi.Message = "Unidad Habitacional not found.";
                 return NotFound(responseApi);
             }
 
+            _logger.LogInformation("GET UnidadHabitacional - Unidad Habitacional with id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = unidad;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GET UnidadHabitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return  StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -77,19 +86,23 @@ public class UnidadHabitacionalController : ControllerBase
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetAvailable()
     {
+        _logger.LogInformation("GET Available UnidadHabitacional - Start.");
+        
         var responseApi = new ResponseAPI<List<UnidadHabitacional>>();
 
         try
         {
             var availableUnits = await _unidadHabitacionalRepository.GetAvailableUnidadHabitacional();
             
+            _logger.LogInformation("GET Available UnidadHabitacional - Total encontrados: {Count}.", availableUnits.Count());
             responseApi.Success = true;
             responseApi.Data = availableUnits;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GET Available UnidadHabitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -101,6 +114,8 @@ public class UnidadHabitacionalController : ControllerBase
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetOccupied()
     {
+        _logger.LogInformation("GET Occupied UnidadHabitacional - Start.");
+        
         var responseApi = new ResponseAPI<List<UnidadHabitacionalOccuppiedModel>>();
 
         try
@@ -109,13 +124,15 @@ public class UnidadHabitacionalController : ControllerBase
             var occupiedUnits =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel()).ToList();
                 
+            _logger.LogInformation("GET Occupied UnidadHabitacional - Total encontrados: {Count}.", occupiedUnits.Count());
             responseApi.Success = true;
             responseApi.Data = occupiedUnits;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GET Occupied UnidadHabitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -126,6 +143,7 @@ public class UnidadHabitacionalController : ControllerBase
     [HttpPut("AssignInquilino")]
     public async Task<IActionResult> AssignInquilino([FromQuery] int idUnidad, [FromQuery] int idInquilino)
     {
+        _logger.LogInformation("Assign Inquilino to Unidad Habitacional - Start.");
         var responseApi = new ResponseAPI<bool>();
 
         try
@@ -134,19 +152,23 @@ public class UnidadHabitacionalController : ControllerBase
             
             if (!result)
             {
+                _logger.LogWarning("Error to assign Inquilino to Unidad Habitacional - Unidad Habitacional with id {idUnidad}, Inquilino with id {idInquilino}.", idUnidad, idInquilino);
                 responseApi.Success = false;
                 responseApi.Message = "No se pudo asignar el inquilino.";
                 return NotFound(responseApi);
             }
 
             await ClearCache();
+            
+            _logger.LogInformation("Assign Inquilino to Unidad Habitacional - Success.");
             responseApi.Success = true;
             responseApi.Data = result;
         }
         catch (Exception ex)
         {
+            _logger.LogError("Assign Inquilino to Unidad Habitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -157,6 +179,8 @@ public class UnidadHabitacionalController : ControllerBase
     [HttpPut("Release/{id}")]
     public async Task<IActionResult> Release(int id)
     {
+        _logger.LogInformation("Release Unidad Habitacional - Start.");
+        
         var responseApi = new ResponseAPI<bool>();
 
         try
@@ -165,19 +189,23 @@ public class UnidadHabitacionalController : ControllerBase
 
             if (!result)
             {
+                _logger.LogWarning("Error to release Unidad Habitacional - Unidad Habitacional with id {id}.", id);
                 responseApi.Success = false;
                 responseApi.Message = "No se pudo liberar la unidad.";
                 return NotFound(responseApi);
             }
 
             await ClearCache();
+            
+            _logger.LogInformation("Release Unidad Habitacional - Success.");
             responseApi.Success = true;
             responseApi.Data = result;
         }
         catch(Exception ex)
         {
+            _logger.LogError("Release Unidad Habitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
 
@@ -188,14 +216,25 @@ public class UnidadHabitacionalController : ControllerBase
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] UnidadHabitacionalDto unidadHabitacionalDto)
     {
+        _logger.LogInformation("Save Unidad Habitacional - Start.");
+        
         var responseApi = new ResponseAPI<UnidadHabitacionalDto>();
 
         var result = await _unidadHabitacionalRepository.Save(unidadHabitacionalDto);
         await ClearCache();
         
-        responseApi.Success = result.Success;
-        responseApi.Message = result.Message;
-
+        if (!result.Success)
+        {
+            _logger.LogWarning("Save Unidad Habitacional - Error. Errors {result.Message}", result.Message);
+            responseApi.Success = false;
+            responseApi.Message = "Error al guardar el Unidad Habitacional.";
+            return BadRequest(responseApi);
+        }
+        
+        _logger.LogInformation("Save Unidad Habitacional - Unidad Habitacional saved.");
+        responseApi.Success = true;
+        responseApi.Message = "El Unidad Habitacional se guardo correctamente.";
+        
         return Ok(responseApi);
     }
 
@@ -203,15 +242,17 @@ public class UnidadHabitacionalController : ControllerBase
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> Updated(int id, [FromBody] UnidadHabitacionalUpdateModel unidadHabitacionalUpdate)
     {
+        _logger.LogInformation("Update Unidad Habitacional - Start.");
+        
         var responseApi = new ResponseAPI<UnidadHabitacionalUpdateModel>();
 
         try
         {
             if (!await _unidadHabitacionalRepository.Exists(cd => cd.IdUnidadHabitacional == id))
             {
+                _logger.LogWarning("Update Unidad Habitacional - Unidad Habitacional with Id {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Unidad Habitacional with Id: {id} not found.";
-
+                responseApi.Message = "Unidad Habitacional not found.";
                 return NotFound(responseApi);
             }
 
@@ -221,12 +262,14 @@ public class UnidadHabitacionalController : ControllerBase
             await _unidadHabitacionalRepository.Update(unidad);
             await ClearCache();
             
+            _logger.LogInformation("Update Unidad Habitacional - Unidad Habitacional updated.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError("Update Unidad Habitacional - Error. Errors {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -237,26 +280,31 @@ public class UnidadHabitacionalController : ControllerBase
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDeleted(int id)
     {
+        _logger.LogInformation("Delete Unidad Habitacional - Start.");
+        
         var responseApi = new ResponseAPI<int>();
 
         try
         {
             if (!await _unidadHabitacionalRepository.Exists(cd => cd.IdUnidadHabitacional == id))
             {
+                _logger.LogWarning("Delete Unidad Habitacional - Unidad Habitacional with Id {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Unidad Habitacional with Id: {id} not found.";
+                responseApi.Message = "Unidad Habitacional not found.";
                 return NotFound(responseApi);
             }
 
             await _unidadHabitacionalRepository.MarkDeleted(id);
             await ClearCache();
             
+            _logger.LogInformation("Delete Unidad Habitacional - Unidad Habitacional deleted.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError("Delete Unidad Habitacional - Error. Errors {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -272,11 +320,13 @@ public class UnidadHabitacionalController : ControllerBase
     
     private readonly IUnidadHabitacionalRepository _unidadHabitacionalRepository;
     private readonly IOutputCacheStore _outputCacheStore;
-    
-    public UnidadHabitacionalController(IUnidadHabitacionalRepository unidadHabitacionalRepository, IOutputCacheStore outputCacheStore)
+    private readonly ILogger<UnidadHabitacionalController> _logger;
+
+    public UnidadHabitacionalController(IUnidadHabitacionalRepository unidadHabitacionalRepository, IOutputCacheStore outputCacheStore, ILogger<UnidadHabitacionalController> logger)
     {
         _unidadHabitacionalRepository = unidadHabitacionalRepository;
         _outputCacheStore = outputCacheStore;
+        _logger = logger;
     }
 
     #endregion

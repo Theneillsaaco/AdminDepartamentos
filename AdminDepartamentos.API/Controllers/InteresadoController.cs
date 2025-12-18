@@ -20,19 +20,23 @@ public class InteresadoController : ControllerBase
     [OutputCache(PolicyName = "InteresadoCache")]
     public async Task<IActionResult> GetByType(string type)
     {
+        _logger.LogInformation("GETByType Interesado - Start.");
+        
         var responseApi = new ResponseAPI<List<InteresadoModel>>();
 
         try
         {
             var interesados = await _interesadoRepository.GetByType(type);
             
+            _logger.LogInformation("GETByType Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;
             responseApi.Data = interesados;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GETByType Interesado - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -44,19 +48,23 @@ public class InteresadoController : ControllerBase
     [OutputCache(PolicyName = "InteresadoCache")]
     public async Task<IActionResult> GetPending()
     {
+        _logger.LogInformation("GETPending Interesado - Start.");
+        
         var responseApi = new ResponseAPI<List<Interesado>>();
 
         try
         {
             var interesados = await _interesadoRepository.GetPendingInteresado();
             
+            _logger.LogInformation("GETPending Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;
             responseApi.Data = interesados;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GETPending Interesado - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -68,6 +76,8 @@ public class InteresadoController : ControllerBase
     [OutputCache(PolicyName = "InteresadoCache")]
     public async Task<IActionResult> GetById(int id)
     {
+        _logger.LogInformation("GET Interesado - Start.");
+        
         var responseApi = new ResponseAPI<Interesado>();
 
         try
@@ -76,18 +86,21 @@ public class InteresadoController : ControllerBase
 
             if (interesado is null)
             {
+                _logger.LogWarning("GET Interesado - Interesado with Id {id} not found.", id);
                 responseApi.Success = false;
                 responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
             
+            _logger.LogInformation("GET Interesado - Interesado with Id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = interesado;
         }
         catch (Exception ex)
         {
+            _logger.LogError("GET Interesado - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -98,12 +111,24 @@ public class InteresadoController : ControllerBase
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] InteresadoDto interesadoDto)
     {
+        _logger.LogInformation("Save Interesado - Start.");
+        
         var responseApi = new ResponseAPI<InteresadoDto>();
 
         var result = await _interesadoRepository.Save(interesadoDto);
         await ClearCache();
-        responseApi.Success = result.Success;
-        responseApi.Message = result.Message;
+        
+        if (!result.Success)
+        {
+            _logger.LogWarning("Save Interesado - Error. Errors {result.Message}", result.Message);
+            responseApi.Success = false;
+            responseApi.Message = "Error al guardar el Interesado.";
+            return BadRequest(responseApi);
+        }
+
+        _logger.LogInformation("Save Interesado - Interesado saved.");
+        responseApi.Success = true;
+        responseApi.Message = "El Interesado se guardo correctamente.";
         
         return Ok(responseApi);
     }
@@ -112,14 +137,17 @@ public class InteresadoController : ControllerBase
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] InteresadoUpdateModel interesadoUpdateModel)
     {
+        _logger.LogInformation("Update Interesado - Start.");
+        
         var responseApi = new ResponseAPI<bool>();
 
         try
         {
             if (!await _interesadoRepository.Exists(cd => cd.IdInteresado == id))
             {
+                _logger.LogWarning("Update Interesado - Interesado with Id: {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Interesado with Id: {id} not found.";
+                responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
     
@@ -129,12 +157,14 @@ public class InteresadoController : ControllerBase
             await _interesadoRepository.Update(interesado);
             await ClearCache();
             
+            _logger.LogInformation("Update Interesado - Interesado updated.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError("Update Interesado - Error. Errors: {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -145,26 +175,31 @@ public class InteresadoController : ControllerBase
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
+        _logger.LogInformation("Delete Interesado - Start.");
+        
         var responseApi = new ResponseAPI<int>();
 
         try
         {
             if (!await _interesadoRepository.Exists(cd => cd.IdInteresado == id))
             {
+                _logger.LogWarning("Delete Interesado - Interesado with Id: {id} not found.", id);
                 responseApi.Success = false;
-                responseApi.Message = $"Interesado with Id: {id} not found.";
+                responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
             
             await _interesadoRepository.MarkDeleted(id);
             await ClearCache();
             
+            _logger.LogInformation("Delete Interesado - Interesado deleted.");
             responseApi.Success = true;
         }
         catch (Exception ex)
         {
+            _logger.LogError("Delete Interesado - Error. Errors {ex}", ex);
             responseApi.Success = false;
-            responseApi.Message = ex.InnerException?.Message ?? ex.Message;
+            responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
         
@@ -180,11 +215,13 @@ public class InteresadoController : ControllerBase
     
     private readonly IInteresadoRepository _interesadoRepository;
     private readonly IOutputCacheStore _outputCacheStore;
-    
-    public InteresadoController(IInteresadoRepository interesadoRepository, IOutputCacheStore outputCacheStore)
+    private readonly ILogger<InteresadoController> _logger;
+
+    public InteresadoController(IInteresadoRepository interesadoRepository, IOutputCacheStore outputCacheStore, ILogger<InteresadoController> logger)
     {
         _interesadoRepository = interesadoRepository;
         _outputCacheStore = outputCacheStore;
+        _logger = logger;
     }
     
     #endregion
