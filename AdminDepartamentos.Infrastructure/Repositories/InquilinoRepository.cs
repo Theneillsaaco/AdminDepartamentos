@@ -19,7 +19,6 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     public async Task<List<InquilinoModel>> GetInquilinos()
     {
         return await _context.Inquilinos
-            .Where(inq => !inq.Deleted)
             .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
             .ToListAsync();
     }
@@ -56,7 +55,6 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
             await transaction.RollbackAsync();
             return (false, $"Ocurrio un error al crear el inquilino y el pago. Error: {ex.Message}");
         }
-        
     }
 
     public override async Task Update(Inquilino entity)
@@ -69,18 +67,14 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     
     public async Task MarkDeleted(int id)
     {
-        var inquilino = await _context.Inquilinos.FirstOrDefaultAsync(i => i.IdInquilino == id);
+        var inquilino = await _context.Inquilinos
+            .Include(i => i.Pago)
+            .FirstOrDefaultAsync(i => i.IdInquilino == id);
 
         if (inquilino is null)
             throw new InquilinoException("El inquilino no Existe.");
         
-        inquilino.Deleted = true;
-        inquilino.DeletedDate = DateTime.Now;
-        inquilino.ModifyDate = DateTime.Now;
-        
-        var pagos = await _context.Pagos.Where(pa => pa.IdInquilino == id).ToListAsync();
-        foreach (var pago in pagos)
-            pago.Deleted = true;
+        inquilino.MarkDeleted();
         
         await _context.SaveChangesAsync();
     }

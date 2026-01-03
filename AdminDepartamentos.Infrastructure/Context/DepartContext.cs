@@ -15,7 +15,13 @@ public class DepartContext : IdentityDbContext<IdentityUser>
             .HasOne(i => i.Pago)
             .WithOne(p => p.Inquilino)
             .HasForeignKey<Pago>(p => p.IdInquilino)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Entity<Inquilino>()
+            .HasQueryFilter(i => !i.Deleted);
+
+        builder.Entity<Pago>()
+            .HasQueryFilter(p => !p.Deleted);
         
         base.OnModelCreating(builder);
     }

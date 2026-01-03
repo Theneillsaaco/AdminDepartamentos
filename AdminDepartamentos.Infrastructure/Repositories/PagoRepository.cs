@@ -29,7 +29,6 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
         return await _context.Pagos
-            .Where(pa => !pa.Deleted)
             .Join(_context.Inquilinos,
                 pa => pa.IdInquilino, inq => inq.IdInquilino,
                 (pa, inq) => pa.ConvertPagoEntityToPagoInquilinoModel(inq))
@@ -53,7 +52,7 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
     public async Task<List<Pago>> GetRetrasosWithoutEmail()
     {
         return await _context.Pagos
-            .Where(pa => pa.Retrasado && !pa.Email && !pa.Deleted)
+            .Where(pa => pa.Retrasado && !pa.Email)
             .Include(pa => pa.Inquilino)
             .ToListAsync();
     }

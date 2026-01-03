@@ -2,14 +2,6 @@ namespace AdminDepartamentos.Domain.Entities;
 
 public partial class Pago
 {
-    public void MarkDeleted()
-    {
-        if (Deleted)
-            return;
-
-        Deleted = true;
-    }
-
     public static Pago Create(int? numDeposito, decimal monto, int fechaPagoInDays)
     {
         if (monto <= 0)
@@ -26,4 +18,11 @@ public partial class Pago
         };
     }
 
+    public void MarkDeleted()
+    {
+        if (Deleted)
+            return;
+
+        Deleted = true;
+    }
 }
