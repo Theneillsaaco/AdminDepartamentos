@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,8 +18,8 @@ public partial class UnidadHabitacional
     
     [Required]
     public string Tipo { get; set; }
-    
-    public bool Occupied => InquilinoActual != null;
+
+    public bool Occupied => IdInquilinoActual.HasValue;
     
     public int? IdInquilinoActual { get; set; }
     

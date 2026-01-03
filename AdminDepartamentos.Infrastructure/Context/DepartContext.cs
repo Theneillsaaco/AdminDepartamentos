@@ -23,6 +23,12 @@ public class DepartContext : IdentityDbContext<IdentityUser>
         builder.Entity<Pago>()
             .HasQueryFilter(p => !p.Deleted);
         
+        builder.Entity<Interesado>()
+            .HasQueryFilter(u => !u.Deleted);
+        
+        builder.Entity<UnidadHabitacional>()
+            .HasQueryFilter(u => !u.Deleted);
+        
         base.OnModelCreating(builder);
     }
 

@@ -4,7 +4,7 @@ public partial class Inquilino
 {
     public bool IsDeleted => Deleted;
 
-    public void AsignPago(Pago pago)
+    public void AssignPago(Pago pago)
     {
         Pago = pago ?? throw new ArgumentNullException(nameof(pago));
     }

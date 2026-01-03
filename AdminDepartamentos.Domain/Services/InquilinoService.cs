@@ -28,7 +28,7 @@ public class InquilinoService
             pagoDto.FechaPagoInDays
         );
 
-        inquilino.AsignPago(pago);
+        inquilino.AssignPago(pago);
 
         return inquilino;
     }

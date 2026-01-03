@@ -13,39 +13,31 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
 {
     public async Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales()
     {
-        var unidades = await _context.UnidadHabitacionals
-            .Where(uni => !uni.Deleted)
+        return await _context.UnidadHabitacionals
             .Include(uni => uni.InquilinoActual)
+            .Include(uni => uni.Interesados)
+            .Select(uni => new UnidadHabitacionalModel
+            {
+                IdUnidadHabitacional = uni.IdUnidadHabitacional,
+                Name = uni.Name,
+                Tipo = uni.Tipo,
+                LightCode = uni.LightCode,
+                Occupied = uni.IdInquilinoActual != null,
+                InquilinoActual = uni.InquilinoActual != null 
+                    ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel() 
+                    : null,
+                Interesados = uni.Interesados
+                    .Select(i => i.ConvertInteresadoEntityToInteresadoModel())
+                    .ToList()
+            })
             .ToListAsync();
-        
-        var interesados = await _context.Interesados
-            .Where(i => !i.Deleted)
-            .ToListAsync();
-
-        return unidades.Select(uni => new UnidadHabitacionalModel
-        {
-            IdUnidadHabitacional = uni.IdUnidadHabitacional,
-            Name = uni.Name,
-            Tipo = uni.Tipo,
-            LightCode = uni.LightCode,
-            Occupied = uni.IdInquilinoActual != null,
-            
-            InquilinoActual = uni.InquilinoActual != null
-                ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
-                : null,
-            
-            Interesados = interesados
-                .Where(i => i.TipoUnidadHabitacional == uni.Tipo)
-                .Select(i => i.ConvertInteresadoEntityToInteresadoModel())
-                .ToList()
-        }).ToList();
     }
     
     public async Task<List<UnidadHabitacional>> GetAvailableUnidadHabitacional()
     {
         return await _context.UnidadHabitacionals
             .Include(uni => uni.Interesados)
-            .Where(uni => uni.IdInquilinoActual == null && !uni.Deleted)
+            .Where(uni => uni.IdInquilinoActual == null)
             .ToListAsync();
     }
 
@@ -53,7 +45,7 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
     {
         return await _context.UnidadHabitacionals
             .Include(uni => uni.InquilinoActual)
-            .Where(uni => uni.IdInquilinoActual != null && !uni.Deleted)
+            .Where(uni => uni.IdInquilinoActual != null)
             .ToListAsync();
     }
     
@@ -96,33 +88,28 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
 
     public async Task<bool> AssignInquilino(int idUnidadHabitacional, int idInquilino)
     {
-        var unidad = await _context.UnidadHabitacionals.FindAsync(idUnidadHabitacional);
-        if (unidad is null) return false;
-        
-        unidad.IdInquilinoActual = idInquilino;
+        var unidad = await GetById(idUnidadHabitacional);
+        unidad.AssignInquilino(idInquilino);
         await _context.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> ReleaseUnit(int idUnidadHabitacional)
     {
-        var unidad = await _context.UnidadHabitacionals.FindAsync(idUnidadHabitacional);
-        if (unidad is null) return false;
-        
-        unidad.IdInquilinoActual = null;
+        var unidad = await GetById(idUnidadHabitacional);
+        unidad.Release();
         await _context.SaveChangesAsync();
         return true;
     }
 
     public async Task MarkDeleted(int id)
     {
-        var unidad = await _context.UnidadHabitacionals.FirstOrDefaultAsync(i => i.IdUnidadHabitacional == id);
-
+        var unidad = await GetById(id);
+        
         if (unidad is null)
             throw new UnidadHabitacionalException("La unidad Habitacional no Existe.");
         
-        unidad.Deleted = true;
-        
+        unidad.MarkDeleted();
         await _context.SaveChangesAsync();
     }
     
