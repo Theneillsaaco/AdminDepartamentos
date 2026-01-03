@@ -3,6 +3,7 @@ using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InquilinoModels;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
+using AdminDepartamentos.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -97,7 +98,12 @@ public class InquilinoController : ControllerBase
             return BadRequest(responseApi);
         }
 
-        var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
+        var inquilino = _inquilinoService.Save(
+            inquilinoSaveModel.InquilinoDto,
+            inquilinoSaveModel.PagoDto
+        );
+        
+        var result = await _inquilinoRepository.Save(inquilino);
         await ClearCacheAsync();
 
         if (!result.Success)
@@ -117,7 +123,7 @@ public class InquilinoController : ControllerBase
 
     // PUT: api/InquilinoController/Update/{id}
     [HttpPut("Update/{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel inquilinoUpdateModel)
+    public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel model)
     {
         _logger.LogInformation("Update Inquilino - Start.");  
         
@@ -133,9 +139,15 @@ public class InquilinoController : ControllerBase
 
                 return NotFound(responseApi);
             }
+            
+            var inquilino = await _inquilinoRepository.GetById(id);
 
-            var inquilino = inquilinoUpdateModel.ConvertEntityInquilinoToInquilinoUpdateModel();
-            inquilino.IdInquilino = id;
+            inquilino.Update(
+                model.FirstName,
+                model.LastName,
+                model.Cedula,
+                model.NumTelefono
+            );
 
             await _inquilinoRepository.Update(inquilino);
             await ClearCacheAsync();
@@ -198,12 +210,14 @@ public class InquilinoController : ControllerBase
     #region Fields
 
     private readonly IInquilinoRepository _inquilinoRepository;
+    private readonly InquilinoService _inquilinoService;
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<InquilinoController> _logger;
 
-    public InquilinoController(IInquilinoRepository inquilinoRepository, IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
+    public InquilinoController(IInquilinoRepository inquilinoRepository, InquilinoService inquilinoService, IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
     {
         _inquilinoRepository = inquilinoRepository;
+        _inquilinoService = inquilinoService;
         _outputCacheStore = outputCacheStore;
         _logger = logger;
     }

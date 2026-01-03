@@ -1,7 +1,8 @@
-﻿using AdminDepartamentos.Infrastructure.Extentions;
-using AdminDepartamentos.Domain.Entities;
+﻿using AdminDepartamentos.Domain.Entities;
+using AdminDepartamentos.Domain.Extentions;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Domain.Services;
 using AdminDepartamentos.Infrastructure.Context;
 using AdminDepartamentos.Infrastructure.Core;
 using AdminDepartamentos.Infrastructure.Exceptions;
@@ -34,46 +35,28 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
         return await base.GetById(id);
     }
 
-    public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)
+    public async Task<(bool Success, string Message)> Save(Inquilino inquilino)
     {
-        if (inquilinoDto is null) 
-            throw new ArgumentNullException(nameof(inquilinoDto), "El Inquilino no puede ser null.");
-        
-        if (pagoDto is null) 
-            throw new ArgumentNullException(nameof(pagoDto), "El Pago no puede ser null.");
-
         using var transaction = await _context.Database.BeginTransactionAsync();
+        
+        try
         {
-            try
-            {
-                if (await base.Exists(cd => cd.Cedula == inquilinoDto.Cedula))
-                    throw new InquilinoException("El inquilino ya existe. Por favor, use otro número de cédula.");
+            if (await base.Exists(cd => cd.Cedula == inquilino.Cedula))
+                throw new InquilinoException("El inquilino ya existe. Por favor, use otro número de cédula.");
 
-                var newInquilino = inquilinoDto.ConvertInquilinoDtoToInquilinoEntity();
-                await _context.Inquilinos.AddAsync(newInquilino);
-                await _context.SaveChangesAsync();
+            await _context.Inquilinos.AddAsync(inquilino);
+            await _context.SaveChangesAsync();
 
-                var newPago = new Pago
-                {
-                    IdInquilino = newInquilino.IdInquilino,
-                    Monto = pagoDto.Monto,
-                    NumDeposito = pagoDto.NumDeposito,
-                    FechaPagoInDays = pagoDto.FechaPagoInDays
-                };
+            await transaction.CommitAsync();
 
-                await _context.Pagos.AddAsync(newPago);
-                await _context.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-
-                return (true, "Inquilino y pago creados exitosamente.");
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return (false, $"Ocurrio un error al crear el inquilino y el pago. Error: {ex.Message}");
-            }
+            return (true, "Inquilino y pago creados exitosamente.");
         }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return (false, $"Ocurrio un error al crear el inquilino y el pago. Error: {ex.Message}");
+        }
+        
     }
 
     public override async Task Update(Inquilino entity)
@@ -105,6 +88,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     #region Fields
 
     private readonly DepartContext _context;
+    private readonly InquilinoService _domainService;
 
     public InquilinoRepository(DepartContext context) : base(context)
     {

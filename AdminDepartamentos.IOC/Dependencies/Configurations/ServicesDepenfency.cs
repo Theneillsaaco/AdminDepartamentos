@@ -123,13 +123,7 @@ public static class ServicesDepenfency
                 .Enrich.FromLogContext()
                 .Enrich.WithProcessId()
                 .Enrich.WithThreadId()
-                .Enrich.WithMachineName()
-                .WriteTo.Console()
-                .WriteTo.File(
-                    path: "Logs/log-.txt",
-                    rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 7
-                );
+                .Enrich.WithMachineName();
         });
     }
     

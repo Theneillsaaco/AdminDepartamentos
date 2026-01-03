@@ -12,9 +12,10 @@ public class DepartContext : IdentityDbContext<IdentityUser>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Inquilino>()
-            .HasMany(i => i.Pagos)
+            .HasOne(i => i.Pago)
             .WithOne(p => p.Inquilino)
-            .HasForeignKey(p => p.IdInquilino);
+            .HasForeignKey<Pago>(p => p.IdInquilino)
+            .OnDelete(DeleteBehavior.Cascade);
         
         base.OnModelCreating(builder);
     }

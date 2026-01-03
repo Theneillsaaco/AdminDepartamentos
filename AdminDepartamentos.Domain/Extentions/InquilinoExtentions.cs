@@ -1,7 +1,7 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
 
-namespace AdminDepartamentos.Infrastructure.Extentions;
+namespace AdminDepartamentos.Domain.Extentions;
 
 public static class InquilinoExtentions
 {
@@ -19,12 +19,10 @@ public static class InquilinoExtentions
 
     public static Inquilino ConvertInquilinoDtoToInquilinoEntity(this InquilinoDto inquilinoDto)
     {
-        return new Inquilino
-        {
-            FirstName = inquilinoDto.FirstName,
-            LastName = inquilinoDto.LastName,
-            Cedula = inquilinoDto.Cedula,
-            Telefono = inquilinoDto.NumTelefono
-        };
+        return Inquilino.Create(inquilinoDto.FirstName,
+            inquilinoDto.LastName,
+            inquilinoDto.Cedula,
+            inquilinoDto.NumTelefono
+        );
     }
 }

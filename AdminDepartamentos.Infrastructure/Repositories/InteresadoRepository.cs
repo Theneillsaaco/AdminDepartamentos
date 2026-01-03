@@ -1,10 +1,10 @@
 ﻿using AdminDepartamentos.Domain.Entities;
+using AdminDepartamentos.Domain.Extentions;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
 using AdminDepartamentos.Infrastructure.Context;
 using AdminDepartamentos.Infrastructure.Core;
 using AdminDepartamentos.Infrastructure.Exceptions;
-using AdminDepartamentos.Infrastructure.Extentions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AdminDepartamentos.Infrastructure.Repositories;

@@ -17,16 +17,4 @@ public static class InquilinoViewExtenticion
             NumTelefono = inquilinoModel.NumTelefono
         };
     }
-
-    public static Inquilino ConvertEntityInquilinoToInquilinoUpdateModel(this InquilinoUpdateModel inquilinoUpdate)
-    {
-        return new Inquilino
-        {
-            FirstName = inquilinoUpdate.FirstName,
-            LastName = inquilinoUpdate.LastName,
-            Cedula = inquilinoUpdate.Cedula,
-            Telefono = inquilinoUpdate.NumTelefono,
-            ModifyDate = DateTime.Now
-        };
-    }
 }
