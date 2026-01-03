@@ -80,7 +80,7 @@ public class PagoController : ControllerBase
 
     // PUT api/<PagoController>/5
     [HttpPut("Update/{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] PagoUpdateModel pagoUpdateModel)
+    public async Task<IActionResult> Update(int id, [FromBody] PagoUpdateModel model)
     {
         _logger.LogInformation("Update Pago - Start.");
         var responseApi = new ResponseAPI<PagoUpdateModel>();
@@ -96,13 +96,14 @@ public class PagoController : ControllerBase
             }
 
             var pago = await _pagoRepository.GetById(id);
-            _pagoRepository.DetachEntity(pago);
 
-            var updatedPago = pagoUpdateModel.ConverToPagoEntityToPagoUpdateModel();
-            updatedPago.IdPago = id;
-            updatedPago.IdInquilino = pago.IdInquilino;
+            pago.Update(
+                model.NumDeposito, 
+                model.Monto,
+                model.FechaPagoInDays
+            );
 
-            await _pagoRepository.Update(updatedPago);
+            await _pagoRepository.Update(pago);
             await ClearCacheAsync();
             
             _logger.LogInformation("Update Pago - Pago updated.");

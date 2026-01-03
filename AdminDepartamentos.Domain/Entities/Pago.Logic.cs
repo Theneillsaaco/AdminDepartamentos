@@ -18,11 +18,30 @@ public partial class Pago
         };
     }
 
+    public void Update(int? numDeposito, decimal monto, int fechaPagoInDays)
+    {
+        NumDeposito = numDeposito;
+        Monto = monto;
+        FechaPagoInDays = fechaPagoInDays;
+    }
+    
     public void MarkDeleted()
     {
         if (Deleted)
             return;
 
         Deleted = true;
+    }
+
+    public void CheckRetraso(DateTime currentDate)
+    {
+        if (Retrasado)
+            return;
+
+        if ((currentDate is { Month: 2, Day: 29 } && FechaPagoInDays == 30) ||
+            (currentDate.Day == FechaPagoInDays))
+        {
+            Retrasado = true;
+        }
     }
 }

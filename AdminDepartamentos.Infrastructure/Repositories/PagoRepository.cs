@@ -29,15 +29,9 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
         return await _context.Pagos
-            .Join(_context.Inquilinos,
-                pa => pa.IdInquilino, inq => inq.IdInquilino,
-                (pa, inq) => pa.ConvertPagoEntityToPagoInquilinoModel(inq))
+            .Include(p => p.Inquilino)
+            .Select(p => p.ConvertPagoEntityToPagoInquilinoModel(p.Inquilino))
             .ToListAsync();
-    }
-
-    public void DetachEntity(Pago entity)
-    {
-        _context.Entry(entity).State = EntityState.Detached;
     }
 
     public void CheckRetraso(Pago pago)
