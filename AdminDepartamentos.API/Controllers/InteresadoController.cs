@@ -135,7 +135,7 @@ public class InteresadoController : ControllerBase
     
     // PUT: api/Interesado/Update/{id}
     [HttpPut("Update/{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] InteresadoUpdateModel interesadoUpdateModel)
+    public async Task<IActionResult> Update(int id, [FromBody] InteresadoUpdateModel model)
     {
         _logger.LogInformation("Update Interesado - Start.");
         
@@ -151,8 +151,13 @@ public class InteresadoController : ControllerBase
                 return NotFound(responseApi);
             }
     
-            var interesado = interesadoUpdateModel.ConvertInteresadoUpdateModelToInteresadoEntity();
-            interesado.IdInteresado = id;
+            var interesado = await _interesadoRepository.GetById(id);
+            interesado.Update(
+                model.FirstName,
+                model.LastName,
+                model.Telefono,
+                model.TipoUnidadHabitacional
+            );
             
             await _interesadoRepository.Update(interesado);
             await ClearCache();

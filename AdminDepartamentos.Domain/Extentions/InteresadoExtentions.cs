@@ -18,14 +18,13 @@ public static class InteresadoExtentions
         };
     }
 
-    public static Interesado ConvertInteresadoDtoToInteresadoEntity(this InteresadoDto interesadoDto)
+    public static Interesado ConvertInteresadoDtoToInteresadoEntity(this InteresadoDto dto)
     {
-        return new Interesado()
-        {
-            FirstName = interesadoDto.FirstName,
-            LastName = interesadoDto.LastName,
-            Telefono = interesadoDto.Telefono,
-            TipoUnidadHabitacional = interesadoDto.TipoUnidadHabitacional
-        };
+        return new Interesado(
+            dto.FirstName,
+            dto.LastName,
+            dto.Telefono,
+            dto.TipoUnidadHabitacional
+        );
     }
 }

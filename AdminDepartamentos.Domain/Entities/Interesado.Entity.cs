@@ -1,11 +1,22 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AdminDepartamentos.Domain.Entities;
 
-public class Interesado
+public partial class Interesado
 {
+    protected Interesado() {}
+    
+    public Interesado(string firstName, string lastName, string telefono, string tipoUnidad)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Telefono = telefono;
+        TipoUnidadHabitacional = tipoUnidad;
+        Deleted = false;
+    }
+    
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdInteresado { get; set; }

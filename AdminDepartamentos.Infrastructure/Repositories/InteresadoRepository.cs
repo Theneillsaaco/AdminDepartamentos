@@ -65,13 +65,12 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
 
     public async Task MarkDeleted(int id)
     {
-        var interesado = await _context.Interesados.FirstOrDefaultAsync(i => i.IdInteresado == id);
+        var interesado = await GetById(id);
         
         if (interesado is null)
             throw new InteresadoExceptions("El interesado no Existe.");
-
-        interesado.Deleted = true;
         
+        interesado.MarkDeleted();
         await _context.SaveChangesAsync();
     }
 
