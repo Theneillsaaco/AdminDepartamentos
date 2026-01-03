@@ -20,17 +20,17 @@ public class InquilinoController : ControllerBase
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetAll()
     {
-        _logger.LogInformation("GETAll Inquilinos - Start.");   
-        
+        _logger.LogInformation("GETAll Inquilinos - Start.");
+
         var responseApi = new ResponseAPI<List<InquilinoViewModel>>();
 
         try
         {
             var inquilinos = await _inquilinoRepository.GetInquilinos();
-            
+
             var inquilinoViewModels =
                 inquilinos.Select(inq => inq.ConvertInquilinoViewModelToInquilinoModel()).ToList();
-            
+
             _logger.LogInformation("GETAll Inquilinos - Total encontrados: {Count}.", inquilinos.Count());
             responseApi.Success = true;
             responseApi.Data = inquilinoViewModels;
@@ -51,23 +51,23 @@ public class InquilinoController : ControllerBase
     [OutputCache(PolicyName = "InquilinosCache")]
     public async Task<IActionResult> GetById(int id)
     {
-        _logger.LogInformation("GET Inquilino - Start.");   
-        
+        _logger.LogInformation("GET Inquilino - Start.");
+
         var responseApi = new ResponseAPI<Inquilino>();
 
         try
         {
             var inquilino = await _inquilinoRepository.GetById(id);
-            
+
             if (inquilino is null)
             {
-                _logger.LogWarning("GET Inquilino - Inquilino with id {id} not found.", id);  
+                _logger.LogWarning("GET Inquilino - Inquilino with id {id} not found.", id);
                 responseApi.Success = false;
                 responseApi.Message = "Inquilino not found.";
                 return NotFound(responseApi);
             }
-            
-            _logger.LogInformation("GET Inquilino - Inquilino with id {id} found.", id); 
+
+            _logger.LogInformation("GET Inquilino - Inquilino with id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = inquilino;
         }
@@ -87,12 +87,14 @@ public class InquilinoController : ControllerBase
     public async Task<IActionResult> Save([FromBody] InquilinoSaveModel inquilinoSaveModel)
     {
         _logger.LogInformation("Save Inquilino - Start.");
-        
+
         var responseApi = new ResponseAPI<InquilinoSaveModel>();
 
         if (inquilinoSaveModel.InquilinoDto is null || inquilinoSaveModel.PagoDto is null)
         {
-            _logger.LogWarning("Save Inquilino - Invalid data. Inquilino: {inquilinoSaveModel.inquilinoDto}, Pago: {inquilinoSaveModel.PagoDto}", inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
+            _logger.LogWarning(
+                "Save Inquilino - Invalid data. Inquilino: {inquilinoSaveModel.inquilinoDto}, Pago: {inquilinoSaveModel.PagoDto}",
+                inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
             responseApi.Success = false;
             responseApi.Message = "Datos invalidos.";
             return BadRequest(responseApi);
@@ -102,7 +104,7 @@ public class InquilinoController : ControllerBase
             inquilinoSaveModel.InquilinoDto,
             inquilinoSaveModel.PagoDto
         );
-        
+
         var result = await _inquilinoRepository.Save(inquilino);
         await ClearCacheAsync();
 
@@ -113,7 +115,7 @@ public class InquilinoController : ControllerBase
             responseApi.Message = "Error al guardar el Inquilino.";
             return BadRequest(responseApi);
         }
-        
+
         _logger.LogInformation("Save Inquilino - Inquilino saved.");
         responseApi.Success = true;
         responseApi.Message = "El Inquilino se guardo correctamente.";
@@ -125,8 +127,8 @@ public class InquilinoController : ControllerBase
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] InquilinoUpdateModel model)
     {
-        _logger.LogInformation("Update Inquilino - Start.");  
-        
+        _logger.LogInformation("Update Inquilino - Start.");
+
         var responseApi = new ResponseAPI<InquilinoUpdateModel>();
 
         try
@@ -139,7 +141,7 @@ public class InquilinoController : ControllerBase
 
                 return NotFound(responseApi);
             }
-            
+
             var inquilino = await _inquilinoRepository.GetById(id);
 
             inquilino.Update(
@@ -151,7 +153,7 @@ public class InquilinoController : ControllerBase
 
             await _inquilinoRepository.Update(inquilino);
             await ClearCacheAsync();
-            
+
             _logger.LogInformation("Update Inquilino - Inquilino updated.");
             responseApi.Success = true;
         }
@@ -171,7 +173,7 @@ public class InquilinoController : ControllerBase
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
-        _logger.LogInformation("Delete Inquilino - Start."); 
+        _logger.LogInformation("Delete Inquilino - Start.");
         var responseApi = new ResponseAPI<int>();
 
         try
@@ -183,10 +185,10 @@ public class InquilinoController : ControllerBase
                 responseApi.Message = "Inquilino not found.";
                 return NotFound(responseApi);
             }
-            
+
             await _inquilinoRepository.MarkDeleted(id);
             await ClearCacheAsync();
-            
+
             _logger.LogInformation("Delete Inquilino - Inquilino deleted.");
             responseApi.Success = true;
         }
@@ -214,7 +216,8 @@ public class InquilinoController : ControllerBase
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<InquilinoController> _logger;
 
-    public InquilinoController(IInquilinoRepository inquilinoRepository, InquilinoService inquilinoService, IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
+    public InquilinoController(IInquilinoRepository inquilinoRepository, InquilinoService inquilinoService,
+        IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
     {
         _inquilinoRepository = inquilinoRepository;
         _inquilinoService = inquilinoService;

@@ -37,9 +37,9 @@ public class PagoRepository : BaseRepository<Pago>, IPagoRepository
     public void CheckRetraso(Pago pago)
     {
         var currentDate = DateTime.Now;
-        
+
         if ((currentDate is { Month: 2, Day: 29 } && pago.FechaPagoInDays == 30) ||
-            (currentDate.Day == pago.FechaPagoInDays))
+            currentDate.Day == pago.FechaPagoInDays)
             pago.Retrasado = true;
     }
 

@@ -16,13 +16,4 @@ public static class InquilinoExtentions
             NumTelefono = inquilino.Telefono
         };
     }
-
-    public static Inquilino ConvertInquilinoDtoToInquilinoEntity(this InquilinoDto inquilinoDto)
-    {
-        return Inquilino.Create(inquilinoDto.FirstName,
-            inquilinoDto.LastName,
-            inquilinoDto.Cedula,
-            inquilinoDto.NumTelefono
-        );
-    }
 }

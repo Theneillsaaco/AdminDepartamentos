@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>AdminDepart</title>
     <style>
         body {
@@ -12,50 +12,59 @@
             font-family: 'Roboto', Arial, sans-serif;
             color: #1c1b1f;
         }
+
         .container {
             max-width: 600px;
             margin: 20px auto;
             border-radius: 16px;
             background-color: #ffffff;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             background-color: #5c2c94; /* tono primario */
             text-align: center;
             padding: 32px 20px 24px;
             color: #ffffff;
         }
+
         .header img {
             max-width: 72px;
             margin-bottom: 12px;
         }
+
         .header h1 {
             font-size: 20px;
             font-weight: 600;
             margin: 0;
             letter-spacing: 0.5px;
         }
+
         .content {
             padding: 24px 20px;
             text-align: center;
         }
+
         .content img {
             max-width: 64px;
             margin-bottom: 12px;
         }
+
         .content h2 {
             font-size: 18px;
             font-weight: 600;
             color: #006a6a; /* tono secundario */
             margin: 0 0 12px;
         }
+
         .content p {
             font-size: 15px;
             line-height: 1.5;
             color: #49454f;
             margin: 0 0 20px;
         }
+
         .tenant-list {
             background-color: #f0f8ff;
             border: 1px solid #d9d9d9;
@@ -65,13 +74,16 @@
             font-size: 14px;
             color: #1c1b1f;
         }
+
         .tenant-item {
             padding: 10px 0;
             border-bottom: 1px solid #e0e0e0;
         }
+
         .tenant-item:last-child {
             border-bottom: none;
         }
+
         .footer {
             font-size: 13px;
             color: #5f6368;
@@ -80,13 +92,16 @@
             padding: 16px;
             border-top: 1px solid #e0e0e0;
         }
+
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 18px;
             }
+
             .content h2 {
                 font-size: 16px;
             }
+
             .tenant-list {
                 font-size: 13px;
             }
@@ -97,12 +112,12 @@
 <div class="container">
     <!-- HEADER -->
     <div class="header">
-        <img src="cid:BlazorStrap.png" alt="Logo">
+        <img alt="Logo" src="cid:BlazorStrap.png">
         <h1>Administración Departamento</h1>
     </div>
     <!-- CONTENT -->
     <div class="content">
-        <img src="cid:grey_check_v2.png" alt="Pagos Retrasados">
+        <img alt="Pagos Retrasados" src="cid:grey_check_v2.png">
         <h2>Pagos Retrasados</h2>
         <p>Estos son los inquilinos con pagos pendientes:</p>
         <div class="tenant-list" id="inquilinosRetrasados">

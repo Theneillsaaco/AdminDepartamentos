@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AdminDepartamentos.Infrastructure.Repositories;
 
-public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepository
+public class InteresadoRepository : BaseRepository<Interesado>, IInteresadoRepository
 {
     public async Task<List<InteresadoModel>> GetByType(string type)
     {
@@ -31,10 +31,10 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
     {
         if (id <= 0)
             throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
-        
+
         if (!await base.Exists(cd => cd.IdInteresado == id))
             throw new InquilinoException("El Interesado no existe.");
-        
+
         return await base.GetById(id);
     }
 
@@ -42,7 +42,7 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
     {
         if (interesadoDto is null)
             return (false, "El interesado no puede ser null");
-        
+
         try
         {
             await _context.Interesados.AddAsync(interesadoDto.ConvertInteresadoDtoToInteresadoEntity());
@@ -54,22 +54,22 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
             return (false, $"Ocurrio un error al crear el interesado. Error: {ex.Message}");
         }
     }
-    
+
     public override async Task Update(Interesado entity)
     {
         if (entity is null)
             throw new ArgumentNullException(nameof(entity), "El Interesado no puede ser null.");
-        
+
         await base.Update(entity);
     }
 
     public async Task MarkDeleted(int id)
     {
         var interesado = await GetById(id);
-        
+
         if (interesado is null)
             throw new InteresadoExceptions("El interesado no Existe.");
-        
+
         interesado.MarkDeleted();
         await _context.SaveChangesAsync();
     }
@@ -77,11 +77,11 @@ public class InteresadoRepository : BaseRepository<Interesado> , IInteresadoRepo
     #region Fields
 
     private readonly DepartContext _context;
-    
+
     public InteresadoRepository(DepartContext context) : base(context)
     {
         _context = context;
     }
-    
+
     #endregion
 }

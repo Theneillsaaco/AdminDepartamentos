@@ -12,7 +12,7 @@ namespace AdminDepartamentos.API.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    [HttpPost("register")] 
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         _logger.LogInformation("Register User - Start.");
@@ -28,7 +28,7 @@ public class AccountController : ControllerBase
             _logger.LogWarning("Register User - Passwords do not match.");
             return BadRequest("Las contraseñas no coinciden.");
         }
-        
+
         var userExists = await _userManager.FindByEmailAsync(model.Email);
 
         if (userExists != null)
@@ -36,7 +36,7 @@ public class AccountController : ControllerBase
             _logger.LogWarning("Register User - User already exists.");
             return BadRequest("El usuario ya existe.");
         }
-        
+
         var user = new IdentityUser
         {
             UserName = model.Email,
@@ -48,19 +48,20 @@ public class AccountController : ControllerBase
 
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Register User - Error creating user. Error: {@Errors}.", result.Errors.Select(e => e.Description));
+            _logger.LogWarning("Register User - Error creating user. Error: {@Errors}.",
+                result.Errors.Select(e => e.Description));
             return BadRequest("Error creating user.");
         }
-        
+
         _logger.LogInformation("Register User - User created successfully.");
         return Ok(new { Message = "Usuario creado exitosamente." });
     }
-    
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         _logger.LogInformation("Login User - Start.");
-        
+
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Login User - ModelState invalid.");
@@ -73,14 +74,14 @@ public class AccountController : ControllerBase
             _logger.LogWarning("Login User - User not found. Email: {Email}.", model.Email);
             return Unauthorized("Usuario o contraseña incorrectos.");
         }
-        
+
         var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
         if (!result.Succeeded)
         {
             _logger.LogWarning("Login User - Invalid credentials. Email: {Email}.", model.Email);
             return Unauthorized("Usuario o contraseña incorrectos.");
         }
-        
+
         var token = GenerateJwtToken(user);
 
         Response.Cookies.Append("jwt", token, new CookieOptions
@@ -94,7 +95,7 @@ public class AccountController : ControllerBase
         _logger.LogInformation("Login User - User logged in successfully. Email: {Email}.", model.Email);
         return Ok(new { Message = "Login exitoso." });
     }
-    
+
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
@@ -122,9 +123,9 @@ public class AccountController : ControllerBase
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: new[]
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -142,7 +143,8 @@ public class AccountController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly ILogger<AccountController> _logger;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, ILogger<AccountController> logger)
+    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+        IConfiguration configuration, ILogger<AccountController> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;

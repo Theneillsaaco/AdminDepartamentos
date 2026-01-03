@@ -2,4 +2,6 @@
 
 namespace AdminDepartamentos.API.Models.PagoModels;
 
-public class PagoUpdateModel : PagoViewBaseModel { }
+public class PagoUpdateModel : PagoViewBaseModel
+{
+}

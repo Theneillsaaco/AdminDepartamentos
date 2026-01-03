@@ -1,7 +1,6 @@
 ﻿using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
-using AdminDepartamentos.Domain.Models;
 using AdminDepartamentos.Infrastructure.Context;
 
 namespace AdminDepartamentos.API.Services.BackgroundServices;
@@ -30,31 +29,30 @@ public class CheckRetrasosService : BackgroundService
                     _logger.LogError(ex, "Error checking retraso.");
                 }
             }
-            
+
             await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
         }
-        
+
         _logger.LogInformation("CheckRetrasosService stopped.");
     }
 
     private async Task ProcessRetraso(CancellationToken stoppingToken)
     {
         using var scope = _scopeFactory.CreateScope();
-        
+
         var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
         var dbContext = scope.ServiceProvider.GetRequiredService<DepartContext>();
-        
+
         var pagos = await pagoRepository.GetPago();
-        
+
         _logger.LogInformation("Retrieved {Count} pagos for retraso evaluation.", pagos.Count());
-        
+
         if (!pagos.Any())
             return;
-        
+
         var pagosUpdate = new List<Pago>();
 
         foreach (var pago in pagos.Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
-        {
             using (_logger.BeginScope("PagoId {IdPago}", pago.IdPago))
             {
                 try
@@ -73,19 +71,18 @@ public class CheckRetrasosService : BackgroundService
                     _logger.LogError(ex, "Error checking retraso for pago.");
                 }
             }
-        }
 
         if (pagosUpdate.Any())
             await UpdatePagos(pagosUpdate, dbContext, stoppingToken);
     }
-    
+
     private bool UpdateRetrasoStatus(Pago pago, IPagoRepository pagoRepository)
     {
-        bool originalState = pago.Retrasado;
+        var originalState = pago.Retrasado;
         pagoRepository.CheckRetraso(pago);
         return pago.Retrasado != originalState;
     }
-    
+
     private async Task UpdatePagos(List<Pago> pagosUpdate, DepartContext dbContext, CancellationToken stoppingToken)
     {
         using var updateScope = _scopeFactory.CreateScope();
@@ -93,7 +90,7 @@ public class CheckRetrasosService : BackgroundService
 
         try
         {
-            _logger.LogInformation("Updating {Count} pagos with retraso changes.", 
+            _logger.LogInformation("Updating {Count} pagos with retraso changes.",
                 pagosUpdate.Count
             );
 
@@ -107,7 +104,7 @@ public class CheckRetrasosService : BackgroundService
             _logger.LogError(ex, "Error updating pagos retraso status.");
         }
     }
-    
+
     #region Fields
 
     private readonly IServiceScopeFactory _scopeFactory;

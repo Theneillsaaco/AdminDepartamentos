@@ -6,10 +6,10 @@ public partial class Pago
     {
         if (monto <= 0)
             throw new Exception("El monto debe ser mayor a 0");
-        
+
         if (fechaPagoInDays > 31)
             throw new Exception("La Fecha no puede ser superior a 30");
-            
+
         return new Pago
         {
             NumDeposito = numDeposito,
@@ -24,7 +24,7 @@ public partial class Pago
         Monto = monto;
         FechaPagoInDays = fechaPagoInDays;
     }
-    
+
     public void MarkDeleted()
     {
         if (Deleted)
@@ -39,9 +39,7 @@ public partial class Pago
             return;
 
         if ((currentDate is { Month: 2, Day: 29 } && FechaPagoInDays == 30) ||
-            (currentDate.Day == FechaPagoInDays))
-        {
+            currentDate.Day == FechaPagoInDays)
             Retrasado = true;
-        }
     }
 }

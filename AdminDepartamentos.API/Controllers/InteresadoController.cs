@@ -1,5 +1,4 @@
 using AdminDepartamentos.API.Core;
-using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InteresadoModels;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
@@ -21,13 +20,13 @@ public class InteresadoController : ControllerBase
     public async Task<IActionResult> GetByType(string type)
     {
         _logger.LogInformation("GETByType Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<List<InteresadoModel>>();
 
         try
         {
             var interesados = await _interesadoRepository.GetByType(type);
-            
+
             _logger.LogInformation("GETByType Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;
             responseApi.Data = interesados;
@@ -39,23 +38,23 @@ public class InteresadoController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
-    
+
     // GET: api/Intersado/GetPending
     [HttpGet("GetPending")]
     [OutputCache(PolicyName = "InteresadoCache")]
     public async Task<IActionResult> GetPending()
     {
         _logger.LogInformation("GETPending Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<List<Interesado>>();
 
         try
         {
             var interesados = await _interesadoRepository.GetPendingInteresado();
-            
+
             _logger.LogInformation("GETPending Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;
             responseApi.Data = interesados;
@@ -67,17 +66,17 @@ public class InteresadoController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
-    
+
     // GET: api/Interesado/GetById/{id}
     [HttpGet("GetById/{id}")]
     [OutputCache(PolicyName = "InteresadoCache")]
     public async Task<IActionResult> GetById(int id)
     {
         _logger.LogInformation("GET Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<Interesado>();
 
         try
@@ -91,7 +90,7 @@ public class InteresadoController : ControllerBase
                 responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
-            
+
             _logger.LogInformation("GET Interesado - Interesado with Id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = interesado;
@@ -103,21 +102,21 @@ public class InteresadoController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
-        return Ok(responseApi); 
+
+        return Ok(responseApi);
     }
-    
+
     // POST: api/Interesado/Save
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] InteresadoDto interesadoDto)
     {
         _logger.LogInformation("Save Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<InteresadoDto>();
 
         var result = await _interesadoRepository.Save(interesadoDto);
         await ClearCache();
-        
+
         if (!result.Success)
         {
             _logger.LogWarning("Save Interesado - Error. Errors {result.Message}", result.Message);
@@ -129,16 +128,16 @@ public class InteresadoController : ControllerBase
         _logger.LogInformation("Save Interesado - Interesado saved.");
         responseApi.Success = true;
         responseApi.Message = "El Interesado se guardo correctamente.";
-        
+
         return Ok(responseApi);
     }
-    
+
     // PUT: api/Interesado/Update/{id}
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] InteresadoUpdateModel model)
     {
         _logger.LogInformation("Update Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<bool>();
 
         try
@@ -150,7 +149,7 @@ public class InteresadoController : ControllerBase
                 responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
-    
+
             var interesado = await _interesadoRepository.GetById(id);
             interesado.Update(
                 model.FirstName,
@@ -158,10 +157,10 @@ public class InteresadoController : ControllerBase
                 model.Telefono,
                 model.TipoUnidadHabitacional
             );
-            
+
             await _interesadoRepository.Update(interesado);
             await ClearCache();
-            
+
             _logger.LogInformation("Update Interesado - Interesado updated.");
             responseApi.Success = true;
         }
@@ -172,16 +171,16 @@ public class InteresadoController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
-    
+
     // DELETE: api/Interesado/Delete/{id}
     [HttpDelete("Delete/{id}")]
     public async Task<IActionResult> MarkDelete(int id)
     {
         _logger.LogInformation("Delete Interesado - Start.");
-        
+
         var responseApi = new ResponseAPI<int>();
 
         try
@@ -193,10 +192,10 @@ public class InteresadoController : ControllerBase
                 responseApi.Message = "Interesado not found.";
                 return NotFound(responseApi);
             }
-            
+
             await _interesadoRepository.MarkDeleted(id);
             await ClearCache();
-            
+
             _logger.LogInformation("Delete Interesado - Interesado deleted.");
             responseApi.Success = true;
         }
@@ -207,7 +206,7 @@ public class InteresadoController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
 
@@ -215,19 +214,20 @@ public class InteresadoController : ControllerBase
     {
         await _outputCacheStore.EvictByTagAsync("InteresadoCache", default);
     }
-        
+
     #region Fields
-    
+
     private readonly IInteresadoRepository _interesadoRepository;
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<InteresadoController> _logger;
 
-    public InteresadoController(IInteresadoRepository interesadoRepository, IOutputCacheStore outputCacheStore, ILogger<InteresadoController> logger)
+    public InteresadoController(IInteresadoRepository interesadoRepository, IOutputCacheStore outputCacheStore,
+        ILogger<InteresadoController> logger)
     {
         _interesadoRepository = interesadoRepository;
         _outputCacheStore = outputCacheStore;
         _logger = logger;
     }
-    
+
     #endregion
 }

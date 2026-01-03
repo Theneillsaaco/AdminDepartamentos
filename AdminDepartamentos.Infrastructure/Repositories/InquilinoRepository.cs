@@ -22,7 +22,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
             .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
             .ToListAsync();
     }
-    
+
     public override async Task<Inquilino> GetById(int id)
     {
         if (id <= 0)
@@ -37,7 +37,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     public async Task<(bool Success, string Message)> Save(Inquilino inquilino)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
-        
+
         try
         {
             if (await base.Exists(cd => cd.Cedula == inquilino.Cedula))
@@ -64,7 +64,7 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
         await base.Update(entity);
     }
-    
+
     public async Task MarkDeleted(int id)
     {
         var inquilino = await _context.Inquilinos
@@ -73,9 +73,9 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
 
         if (inquilino is null)
             throw new InquilinoException("El inquilino no Existe.");
-        
+
         inquilino.MarkDeleted();
-        
+
         await _context.SaveChangesAsync();
     }
 

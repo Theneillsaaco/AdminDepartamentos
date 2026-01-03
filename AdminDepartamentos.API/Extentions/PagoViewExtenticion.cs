@@ -15,7 +15,7 @@ public static class PagoViewExtenticion
             NumDeposito = pagoInquilinoModel.NumDeposito,
             FechaPagoInDays = pagoInquilinoModel.FechaPagoInDays,
             Retrasado = pagoInquilinoModel.Retrasado,
-	        Monto = pagoInquilinoModel.Monto,
+            Monto = pagoInquilinoModel.Monto,
 
             //Inquilino
             IdInquilino = pagoInquilinoModel.IdInquilino,
@@ -60,7 +60,7 @@ public static class PagoViewExtenticion
             Retrasado = pagoInquilinoModel.Retrasado
         };
     }
-    
+
     public static PagoWithoutEmail ConvertPagoEntityToPagoWithoutEmail(this Pago pago)
     {
         return new PagoWithoutEmail
@@ -69,7 +69,7 @@ public static class PagoViewExtenticion
             Retrasado = pago.Retrasado,
             Deleted = pago.Deleted,
             Email = pago.Email,
-            
+
             // Inquilino
             IdInquilino = pago.IdInquilino,
             InquilinoFirstName = pago.Inquilino.FirstName,

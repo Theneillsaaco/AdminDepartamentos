@@ -11,7 +11,7 @@ public static class UnidadHabitacionalViewExtenticion
     {
         return new UnidadHabitacionalViewModel
         {
-	    IdUnidadHabitacional = unidadHabitacionalModel.IdUnidadHabitacional,
+            IdUnidadHabitacional = unidadHabitacionalModel.IdUnidadHabitacional,
             Name = unidadHabitacionalModel.Name,
             Tipo = unidadHabitacionalModel.Tipo,
             LightCode = unidadHabitacionalModel.LightCode,
@@ -20,7 +20,7 @@ public static class UnidadHabitacionalViewExtenticion
             Interesados = unidadHabitacionalModel.Interesados
         };
     }
-    
+
     public static UnidadHabitacionalOccuppiedModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel(
         this UnidadHabitacional unidadHabitacional)
     {
@@ -32,7 +32,8 @@ public static class UnidadHabitacionalViewExtenticion
             LightCode = unidadHabitacional.LightCode,
             Occupied = unidadHabitacional.Occupied,
             IdInquilinoActual = unidadHabitacional.IdInquilinoActual,
-            InquilinoActual = unidadHabitacional.InquilinoActual?.ConvertInquilinoEntityToUnidadHabitacionalGetByInquilinoModel()
+            InquilinoActual = unidadHabitacional.InquilinoActual
+                ?.ConvertInquilinoEntityToUnidadHabitacionalGetByInquilinoModel()
         };
     }
 

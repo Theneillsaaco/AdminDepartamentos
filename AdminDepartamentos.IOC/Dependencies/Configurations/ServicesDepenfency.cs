@@ -17,7 +17,7 @@ namespace AdminDepartamentos.IOC.Dependencies.Configurations;
 public static class ServicesDepenfency
 {
     /// <summary>
-    /// DbContext config.
+    ///     DbContext config.
     /// </summary>
     public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -26,71 +26,68 @@ public static class ServicesDepenfency
     }
 
     /// <summary>
-    /// Identity config.
+    ///     Identity config.
     /// </summary>
     /// <param name="services"></param>
     public static void ConfigureIdentity(this IServiceCollection services)
     {
         services.AddIdentityCore<IdentityUser>(options =>
-        {
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-            options.Lockout.MaxFailedAccessAttempts = 10;
-        })
-        .AddSignInManager<SignInManager<IdentityUser>>()
-        .AddEntityFrameworkStores<DepartContext>()
-        .AddDefaultTokenProviders();
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+            })
+            .AddSignInManager<SignInManager<IdentityUser>>()
+            .AddEntityFrameworkStores<DepartContext>()
+            .AddDefaultTokenProviders();
     }
-    
+
     /// <summary>
-    /// Authentication config.
+    ///     Authentication config.
     /// </summary>
     public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
 
         services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-        {
-            options.RequireHttpsMetadata = true;
-            options.SaveToken = true;
-            options.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidIssuer = configuration["Jwt:Issuer"],
-                ValidAudience = configuration["Jwt:Audience"],
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
-            };
-            
-            options.Events = new JwtBearerEvents
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                OnMessageReceived = context =>
+                options.RequireHttpsMetadata = true;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    if (context.Request.Cookies.ContainsKey("jwt"))
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["jwt"];
+                        if (context.Request.Cookies.ContainsKey("jwt")) context.Token = context.Request.Cookies["jwt"];
+                        return Task.CompletedTask;
                     }
-                    return Task.CompletedTask;
-                }
-            };
-        });
+                };
+            });
     }
 
-    public static void ConfigureCORS(this IServiceCollection services,  IConfiguration configuration)
+    public static void ConfigureCORS(this IServiceCollection services, IConfiguration configuration)
     {
         var origins = configuration.GetSection("CORS:Origins").Get<string[]>();
-        
+
         services.AddCors(options =>
         {
             options.AddPolicy("DefaultCorsPolicy", builder =>
@@ -126,30 +123,33 @@ public static class ServicesDepenfency
                 .Enrich.WithMachineName();
         });
     }
-    
+
     /// <summary>
-    /// Cache config.
+    ///     Cache config.
     /// </summary>
     /// <param name="services"></param>
     public static void ConfigureOutputCache(this IServiceCollection services)
     {
         services.AddOutputCache(option =>
         {
-            option.AddPolicy("InquilinosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
+            option.AddPolicy("InquilinosCache",
+                builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InquilinosCache"));
             option.AddPolicy("PagosCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("PagosCache"));
-            option.AddPolicy("UnidadHabitacionalCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("UnidadHabitacionalCache"));
-            option.AddPolicy("InteresadoCache", builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InteresadoCache"));
+            option.AddPolicy("UnidadHabitacionalCache",
+                builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("UnidadHabitacionalCache"));
+            option.AddPolicy("InteresadoCache",
+                builder => builder.Expire(TimeSpan.FromMinutes(20)).Tag("InteresadoCache"));
         });
     }
-    
+
     /// <summary>
-    /// Swagger Config.
+    ///     Swagger Config.
     /// </summary>
     public static void ConfigureSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.9.1" });
-        }); 
+        });
     }
 }

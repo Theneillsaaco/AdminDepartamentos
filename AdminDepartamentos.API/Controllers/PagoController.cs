@@ -1,11 +1,9 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.PagoModels;
-using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.AspNetCore.OutputCaching;
 
 namespace AdminDepartamentos.API.Controllers;
@@ -20,8 +18,8 @@ public class PagoController : ControllerBase
     [OutputCache(PolicyName = "PagosCache")]
     public async Task<IActionResult> GetPago()
     {
-        _logger.LogInformation("GETAll Pago - Start."); 
-        
+        _logger.LogInformation("GETAll Pago - Start.");
+
         var responseApi = new ResponseAPI<List<PagoGetByInquilinoModel>>();
 
         try
@@ -49,21 +47,21 @@ public class PagoController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         _logger.LogInformation("GET Pago - Start.");
-        
+
         var responseApi = new ResponseAPI<PagoGetModel>();
 
         try
         {
             var pago = await _pagoRepository.GetById(id);
-            
+
             if (pago is null)
             {
-                _logger.LogWarning("GET Pago - Pago with id {id} not found.", id);  
+                _logger.LogWarning("GET Pago - Pago with id {id} not found.", id);
                 responseApi.Success = false;
                 responseApi.Message = "Pago not found.";
                 return NotFound(responseApi);
             }
-            
+
             _logger.LogInformation("GET Pago - Pago with Id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = pago.ConvertToPagoGetModel();
@@ -98,14 +96,14 @@ public class PagoController : ControllerBase
             var pago = await _pagoRepository.GetById(id);
 
             pago.Update(
-                model.NumDeposito, 
+                model.NumDeposito,
                 model.Monto,
                 model.FechaPagoInDays
             );
 
             await _pagoRepository.Update(pago);
             await ClearCacheAsync();
-            
+
             _logger.LogInformation("Update Pago - Pago updated.");
             responseApi.Success = true;
         }
@@ -142,7 +140,7 @@ public class PagoController : ControllerBase
 
             await _pagoRepository.Update(pago);
             await ClearCacheAsync();
-            
+
             _logger.LogInformation("Mark Pago as Retrasado - Pago updated.");
             responseApi.Success = true;
         }
@@ -156,7 +154,7 @@ public class PagoController : ControllerBase
 
         return Ok(responseApi);
     }
-    
+
     private async Task ClearCacheAsync()
     {
         await _outputCacheStore.EvictByTagAsync("PagosCache", default);
@@ -168,7 +166,8 @@ public class PagoController : ControllerBase
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<PagoController> _logger;
 
-    public PagoController(IPagoRepository pagoRepository, IOutputCacheStore outputCacheStore, ILogger<PagoController> logger)
+    public PagoController(IPagoRepository pagoRepository, IOutputCacheStore outputCacheStore,
+        ILogger<PagoController> logger)
     {
         _pagoRepository = pagoRepository;
         _outputCacheStore = outputCacheStore;

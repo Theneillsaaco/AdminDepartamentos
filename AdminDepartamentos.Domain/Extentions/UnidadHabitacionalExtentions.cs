@@ -5,7 +5,8 @@ namespace AdminDepartamentos.Domain.Extentions;
 
 public static class UnidadHabitacionalExtentions
 {
-    public static UnidadHabitacionalModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalModel(this UnidadHabitacional unidadHabitacional)
+    public static UnidadHabitacionalModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalModel(
+        this UnidadHabitacional unidadHabitacional)
     {
         return new UnidadHabitacionalModel
         {
@@ -15,7 +16,8 @@ public static class UnidadHabitacionalExtentions
             LightCode = unidadHabitacional.LightCode,
             Occupied = unidadHabitacional.Occupied,
             InquilinoActual = unidadHabitacional.InquilinoActual?.ConvertInquilinoEntityToInquilinoModel(),
-            Interesados = unidadHabitacional.Interesados.Select(uni => uni.ConvertInteresadoEntityToInteresadoModel()).ToList()
+            Interesados = unidadHabitacional.Interesados.Select(uni => uni.ConvertInteresadoEntityToInteresadoModel())
+                .ToList()
         };
     }
 
@@ -23,7 +25,7 @@ public static class UnidadHabitacionalExtentions
         this UnidadHabitacionalDto unidadHabitacionalDto)
     {
         return new UnidadHabitacional(
-            unidadHabitacionalDto.Name, 
+            unidadHabitacionalDto.Name,
             unidadHabitacionalDto.Tipo,
             unidadHabitacionalDto.LightCode
         );

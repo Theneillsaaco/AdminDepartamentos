@@ -1,5 +1,4 @@
 ﻿using AdminDepartamentos.API.Models.InquilinoModels;
-using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
 
 namespace AdminDepartamentos.API.Extentions;

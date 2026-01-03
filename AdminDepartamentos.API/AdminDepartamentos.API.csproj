@@ -7,22 +7,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MailKit" Version="4.14.1" />
+        <PackageReference Include="MailKit" Version="4.14.1"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AdminDepartamentos.Infrastructure\AdminDepartamentos.Infrastructure.csproj" />
-        <ProjectReference Include="..\AdminDepartamentos.IOC\AdminDepartamentos.IOC.csproj" />
+        <ProjectReference Include="..\AdminDepartamentos.Infrastructure\AdminDepartamentos.Infrastructure.csproj"/>
+        <ProjectReference Include="..\AdminDepartamentos.IOC\AdminDepartamentos.IOC.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models\InteresadoModels\Core\" />
+        <Folder Include="Models\InteresadoModels\Core\"/>
     </ItemGroup>
 
 </Project>

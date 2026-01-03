@@ -13,7 +13,7 @@ public class EmailService : IEmailService
     {
         // Crear el mensaje del correo
         var email = CreateEmailMessage(request);
-        
+
         // Enviar el correo
         using var smtp = new SmtpClient();
         smtp.Connect(
@@ -34,12 +34,12 @@ public class EmailService : IEmailService
         };
         email.From.Add(MailboxAddress.Parse(_config["Email:UserName"]));
         email.To.Add(MailboxAddress.Parse(request.Para));
-        
+
         var builder = new BodyBuilder
         {
             HtmlBody = request.Contenido
         };
-        
+
         AddLinkedResources(builder);
 
         email.Body = builder.ToMessageBody();
@@ -51,24 +51,24 @@ public class EmailService : IEmailService
     {
         var imagePaths = new Dictionary<string, string>
         {
-            {"BlazorStrap.png", "cid:BlazorStrap.png"},
-            {"grey_check_v2.png", "cid:grey_check_v2.png"}
+            { "BlazorStrap.png", "cid:BlazorStrap.png" },
+            { "grey_check_v2.png", "cid:grey_check_v2.png" }
         };
-        
-        string basePath = Path.Combine(Directory.GetCurrentDirectory(), "Services", "Emails");
+
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "Services", "Emails");
 
         foreach (var (fileName, placeholder) in imagePaths)
         {
             var filePath = Path.Combine(basePath, fileName);
             if (!File.Exists(filePath)) continue;
-            
+
             var linkedResource = builder.LinkedResources.Add(filePath);
             linkedResource.ContentId = MimeUtils.GenerateMessageId();
-                
+
             builder.HtmlBody = builder.HtmlBody.Replace(placeholder, $"cid:{linkedResource.ContentId}");
         }
     }
-    
+
     #region Fields
 
     private readonly IConfiguration _config;

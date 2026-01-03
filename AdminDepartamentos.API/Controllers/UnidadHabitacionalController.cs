@@ -21,7 +21,7 @@ public class UnidadHabitacionalController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         _logger.LogInformation("GETAll UnidadHabitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<List<UnidadHabitacionalViewModel>>();
 
         try
@@ -29,7 +29,7 @@ public class UnidadHabitacionalController : ControllerBase
             var unidad = await _unidadHabitacionalRepository.GetUnidadHabitacionales();
             var unidadViewModels =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalViewModelToUnidadHabitacionalModel()).ToList();
-            
+
             _logger.LogInformation("GETAll UnidadHabitacional - Total encontrados: {Count}.", unidad.Count());
             responseApi.Success = true;
             responseApi.Data = unidadViewModels;
@@ -41,8 +41,8 @@ public class UnidadHabitacionalController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
-        return Ok(responseApi); 
+
+        return Ok(responseApi);
     }
 
     // GET: api/UnidadHabitacionalController/GetById/{id}
@@ -51,7 +51,7 @@ public class UnidadHabitacionalController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         _logger.LogInformation("GET UnidadHabitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<UnidadHabitacional>();
 
         try
@@ -75,26 +75,27 @@ public class UnidadHabitacionalController : ControllerBase
             _logger.LogError("GET UnidadHabitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
             responseApi.Message = "Internal server error.";
-            return  StatusCode(StatusCodes.Status500InternalServerError, responseApi);
+            return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
-    
+
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Available")]
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetAvailable()
     {
         _logger.LogInformation("GET Available UnidadHabitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<List<UnidadHabitacional>>();
 
         try
         {
             var availableUnits = await _unidadHabitacionalRepository.GetAvailableUnidadHabitacional();
-            
-            _logger.LogInformation("GET Available UnidadHabitacional - Total encontrados: {Count}.", availableUnits.Count());
+
+            _logger.LogInformation("GET Available UnidadHabitacional - Total encontrados: {Count}.",
+                availableUnits.Count());
             responseApi.Success = true;
             responseApi.Data = availableUnits;
         }
@@ -108,14 +109,14 @@ public class UnidadHabitacionalController : ControllerBase
 
         return Ok(responseApi);
     }
-    
+
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Occupied")]
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
     public async Task<IActionResult> GetOccupied()
     {
         _logger.LogInformation("GET Occupied UnidadHabitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<List<UnidadHabitacionalOccuppiedModel>>();
 
         try
@@ -123,8 +124,9 @@ public class UnidadHabitacionalController : ControllerBase
             var unidad = await _unidadHabitacionalRepository.GetOccupiedUnidadHabitacional();
             var occupiedUnits =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel()).ToList();
-                
-            _logger.LogInformation("GET Occupied UnidadHabitacional - Total encontrados: {Count}.", occupiedUnits.Count());
+
+            _logger.LogInformation("GET Occupied UnidadHabitacional - Total encontrados: {Count}.",
+                occupiedUnits.Count());
             responseApi.Success = true;
             responseApi.Data = occupiedUnits;
         }
@@ -135,10 +137,10 @@ public class UnidadHabitacionalController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
-    
+
     // PUT: api/UnidadHabitacionalController/AssignInquilino
     [HttpPut("AssignInquilino")]
     public async Task<IActionResult> AssignInquilino([FromQuery] int idUnidad, [FromQuery] int idInquilino)
@@ -149,17 +151,19 @@ public class UnidadHabitacionalController : ControllerBase
         try
         {
             var result = await _unidadHabitacionalRepository.AssignInquilino(idUnidad, idInquilino);
-            
+
             if (!result)
             {
-                _logger.LogWarning("Error to assign Inquilino to Unidad Habitacional - Unidad Habitacional with id {idUnidad}, Inquilino with id {idInquilino}.", idUnidad, idInquilino);
+                _logger.LogWarning(
+                    "Error to assign Inquilino to Unidad Habitacional - Unidad Habitacional with id {idUnidad}, Inquilino with id {idInquilino}.",
+                    idUnidad, idInquilino);
                 responseApi.Success = false;
                 responseApi.Message = "No se pudo asignar el inquilino.";
                 return NotFound(responseApi);
             }
 
             await ClearCache();
-            
+
             _logger.LogInformation("Assign Inquilino to Unidad Habitacional - Success.");
             responseApi.Success = true;
             responseApi.Data = result;
@@ -180,7 +184,7 @@ public class UnidadHabitacionalController : ControllerBase
     public async Task<IActionResult> Release(int id)
     {
         _logger.LogInformation("Release Unidad Habitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<bool>();
 
         try
@@ -196,12 +200,12 @@ public class UnidadHabitacionalController : ControllerBase
             }
 
             await ClearCache();
-            
+
             _logger.LogInformation("Release Unidad Habitacional - Success.");
             responseApi.Success = true;
             responseApi.Data = result;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError("Release Unidad Habitacional - Error. Errors: {ex}", ex);
             responseApi.Success = false;
@@ -211,18 +215,18 @@ public class UnidadHabitacionalController : ControllerBase
 
         return Ok(responseApi);
     }
-    
+
     // POST: api/UnidadHabitacionalController/Save
     [HttpPost("Save")]
     public async Task<IActionResult> Save([FromBody] UnidadHabitacionalDto unidadHabitacionalDto)
     {
         _logger.LogInformation("Save Unidad Habitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<UnidadHabitacionalDto>();
 
         var result = await _unidadHabitacionalRepository.Save(unidadHabitacionalDto);
         await ClearCache();
-        
+
         if (!result.Success)
         {
             _logger.LogWarning("Save Unidad Habitacional - Error. Errors {result.Message}", result.Message);
@@ -230,11 +234,11 @@ public class UnidadHabitacionalController : ControllerBase
             responseApi.Message = "Error al guardar el Unidad Habitacional.";
             return BadRequest(responseApi);
         }
-        
+
         _logger.LogInformation("Save Unidad Habitacional - Unidad Habitacional saved.");
         responseApi.Success = true;
         responseApi.Message = "El Unidad Habitacional se guardo correctamente.";
-        
+
         return Ok(responseApi);
     }
 
@@ -243,7 +247,7 @@ public class UnidadHabitacionalController : ControllerBase
     public async Task<IActionResult> Updated(int id, [FromBody] UnidadHabitacionalUpdateModel unidadHabitacionalUpdate)
     {
         _logger.LogInformation("Update Unidad Habitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<UnidadHabitacionalUpdateModel>();
 
         try
@@ -258,14 +262,14 @@ public class UnidadHabitacionalController : ControllerBase
 
             var unidad = await _unidadHabitacionalRepository.GetById(id);
             unidad.UpdateInfo(
-                unidadHabitacionalUpdate.Name, 
-                unidadHabitacionalUpdate.Tipo, 
+                unidadHabitacionalUpdate.Name,
+                unidadHabitacionalUpdate.Tipo,
                 unidadHabitacionalUpdate.LightCode
             );
-            
+
             await _unidadHabitacionalRepository.Update(unidad);
             await ClearCache();
-            
+
             _logger.LogInformation("Update Unidad Habitacional - Unidad Habitacional updated.");
             responseApi.Success = true;
         }
@@ -276,7 +280,7 @@ public class UnidadHabitacionalController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
 
@@ -285,7 +289,7 @@ public class UnidadHabitacionalController : ControllerBase
     public async Task<IActionResult> MarkDeleted(int id)
     {
         _logger.LogInformation("Delete Unidad Habitacional - Start.");
-        
+
         var responseApi = new ResponseAPI<int>();
 
         try
@@ -300,7 +304,7 @@ public class UnidadHabitacionalController : ControllerBase
 
             await _unidadHabitacionalRepository.MarkDeleted(id);
             await ClearCache();
-            
+
             _logger.LogInformation("Delete Unidad Habitacional - Unidad Habitacional deleted.");
             responseApi.Success = true;
         }
@@ -311,7 +315,7 @@ public class UnidadHabitacionalController : ControllerBase
             responseApi.Message = "Internal server error.";
             return StatusCode(StatusCodes.Status500InternalServerError, responseApi);
         }
-        
+
         return Ok(responseApi);
     }
 
@@ -321,12 +325,13 @@ public class UnidadHabitacionalController : ControllerBase
     }
 
     #region Fields
-    
+
     private readonly IUnidadHabitacionalRepository _unidadHabitacionalRepository;
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<UnidadHabitacionalController> _logger;
 
-    public UnidadHabitacionalController(IUnidadHabitacionalRepository unidadHabitacionalRepository, IOutputCacheStore outputCacheStore, ILogger<UnidadHabitacionalController> logger)
+    public UnidadHabitacionalController(IUnidadHabitacionalRepository unidadHabitacionalRepository,
+        IOutputCacheStore outputCacheStore, ILogger<UnidadHabitacionalController> logger)
     {
         _unidadHabitacionalRepository = unidadHabitacionalRepository;
         _outputCacheStore = outputCacheStore;

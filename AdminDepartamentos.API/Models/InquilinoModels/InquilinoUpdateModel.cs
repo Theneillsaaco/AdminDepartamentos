@@ -2,4 +2,6 @@
 
 namespace AdminDepartamentos.API.Models.InquilinoModels;
 
-public class InquilinoUpdateModel : InquilinoBaseViewModel { }
+public class InquilinoUpdateModel : InquilinoBaseViewModel
+{
+}

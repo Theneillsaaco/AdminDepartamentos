@@ -1,5 +1,5 @@
-using AdminDepartamentos.Domain.Models;
 using AdminDepartamentos.Domain.Interfaces;
+using AdminDepartamentos.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +14,7 @@ public class EmailController : ControllerBase
     public IActionResult SendEmail(EmailDTO request)
     {
         _logger.LogInformation("Send Email - Start.");
-        
+
         try
         {
             _emailSender.SendEmail(request);
@@ -25,7 +25,7 @@ public class EmailController : ControllerBase
             _logger.LogError(ex, "Send Email - Error. Request: {request}", request);
             throw new Exception(ex.InnerException?.Message ?? ex.Message);
         }
-        
+
         return Ok();
     }
 

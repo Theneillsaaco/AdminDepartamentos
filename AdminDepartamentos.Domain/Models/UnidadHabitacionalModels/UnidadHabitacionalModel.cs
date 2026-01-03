@@ -3,18 +3,18 @@
 public class UnidadHabitacionalModel
 {
     public int IdUnidadHabitacional { get; set; }
-    
+
     public string Name { get; set; }
 
     public string Tipo { get; set; }
 
     public string LightCode { get; set; }
-    
+
     public bool Occupied { get; set; }
 
     public InquilinoModel? InquilinoActual { get; set; }
 
-    public List<InteresadoModel> Interesados { get; set; } = new List<InteresadoModel>();
-    
+    public List<InteresadoModel> Interesados { get; set; } = new();
+
     public string TextStatus => Occupied ? "Ocupada" : "Disponible";
 }

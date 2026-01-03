@@ -36,7 +36,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "DepartApi v0.9.1");
         c.ConfigObject.AdditionalItems["withCredentials"] = true;
     });
-    
+
     // Tests.
     var serviceProvider = builder.Services.BuildServiceProvider();
     var logger = serviceProvider.GetService<ILogger<Program>>();

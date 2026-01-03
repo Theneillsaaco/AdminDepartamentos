@@ -1,7 +1,6 @@
 ﻿using AdminDepartamentos.Domain.Core.Interfaces;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Domain.Services;
 
 namespace AdminDepartamentos.Domain.Interfaces;
 

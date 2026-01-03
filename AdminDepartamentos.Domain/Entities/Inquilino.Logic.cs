@@ -18,16 +18,16 @@ public partial class Inquilino
     {
         if (string.IsNullOrWhiteSpace(cedula))
             throw new Exception("La cedula es obligatoria");
-        
+
         return new Inquilino
         {
             FirstName = firstName,
             LastName = lastName,
             Cedula = cedula,
-            Telefono = telefono,
+            Telefono = telefono
         };
     }
-    
+
     public void Update(string firstName, string lastName, string cedula, string telefono)
     {
         FirstName = firstName;
@@ -36,12 +36,12 @@ public partial class Inquilino
         Telefono = telefono;
         ModifyDate = DateTime.Now;
     }
-    
+
     public void MarkDeleted()
     {
         if (Deleted)
             return;
-        
+
         Deleted = true;
         DeletedDate = DateTime.Now;
         ModifyDate = DateTime.Now;

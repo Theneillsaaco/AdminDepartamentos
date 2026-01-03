@@ -14,7 +14,7 @@ public partial class Interesado
     {
         if (Deleted)
             return;
-        
+
         Deleted = true;
     }
 }

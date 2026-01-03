@@ -8,23 +8,23 @@ public partial class UnidadHabitacional
         Tipo = tipo;
         LightCode = lightCode;
     }
-    
+
     public void AssignInquilino(int inquilinoId)
     {
         if (Deleted)
             throw new Exception("La unidad habitacional fue eliminada");
-        
+
         if (Occupied)
             throw new Exception("La unidad habitacional ya esta ocupada");
-        
+
         IdInquilinoActual = inquilinoId;
     }
-    
+
     public void Release()
     {
         if (!Occupied)
             return;
-        
+
         IdInquilinoActual = null;
     }
 
@@ -32,7 +32,7 @@ public partial class UnidadHabitacional
     {
         if (Deleted)
             return;
-        
+
         Release();
         Deleted = true;
     }

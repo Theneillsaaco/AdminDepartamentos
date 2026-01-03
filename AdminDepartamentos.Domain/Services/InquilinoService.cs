@@ -1,5 +1,4 @@
 using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Extentions;
 using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
 
@@ -37,7 +36,7 @@ public class InquilinoService
 
     private readonly IInquilinoRepository _inquilinoRepository;
     private readonly IPagoRepository _pagoRepository;
-    
+
     public InquilinoService(IInquilinoRepository inquilinoRepository, IPagoRepository pagoRepository)
     {
         _inquilinoRepository = inquilinoRepository;

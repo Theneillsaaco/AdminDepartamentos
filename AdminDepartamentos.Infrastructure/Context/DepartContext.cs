@@ -7,7 +7,9 @@ namespace AdminDepartamentos.Infrastructure.Context;
 
 public class DepartContext : IdentityDbContext<IdentityUser>
 {
-    public DepartContext(DbContextOptions<DepartContext> options) : base(options) { }
+    public DepartContext(DbContextOptions<DepartContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -16,19 +18,19 @@ public class DepartContext : IdentityDbContext<IdentityUser>
             .WithOne(p => p.Inquilino)
             .HasForeignKey<Pago>(p => p.IdInquilino)
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         builder.Entity<Inquilino>()
             .HasQueryFilter(i => !i.Deleted);
 
         builder.Entity<Pago>()
             .HasQueryFilter(p => !p.Deleted);
-        
+
         builder.Entity<Interesado>()
             .HasQueryFilter(u => !u.Deleted);
-        
+
         builder.Entity<UnidadHabitacional>()
             .HasQueryFilter(u => !u.Deleted);
-        
+
         base.OnModelCreating(builder);
     }
 
@@ -36,9 +38,9 @@ public class DepartContext : IdentityDbContext<IdentityUser>
 
     public DbSet<Inquilino> Inquilinos { get; set; }
     public DbSet<Pago> Pagos { get; set; }
-    
+
     public DbSet<UnidadHabitacional> UnidadHabitacionals { get; set; }
-    
+
     public DbSet<Interesado> Interesados { get; set; }
 
     #endregion
