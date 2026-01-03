@@ -22,12 +22,10 @@ public static class UnidadHabitacionalExtentions
     public static UnidadHabitacional ConvertUnidadHabitacionalDtoToUnidadHabitacionalEntity(
         this UnidadHabitacionalDto unidadHabitacionalDto)
     {
-        return new UnidadHabitacional
-        {
-            Name = unidadHabitacionalDto.Name,
-            Tipo = unidadHabitacionalDto.Tipo,
-            LightCode = unidadHabitacionalDto.LightCode
-        };
+        return new UnidadHabitacional(
+            unidadHabitacionalDto.Name, 
+            unidadHabitacionalDto.Tipo,
+            unidadHabitacionalDto.LightCode
+        );
     }
-    
 }

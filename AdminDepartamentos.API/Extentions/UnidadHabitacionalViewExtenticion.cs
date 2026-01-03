@@ -21,17 +21,6 @@ public static class UnidadHabitacionalViewExtenticion
         };
     }
     
-    public static UnidadHabitacional ConvertUnidadHabitacionalEntityToUnidadHabitacionalUpdateModel(
-        this UnidadHabitacionalUpdateModel unidadHabitacionalUpdateModel)
-    {
-        return new UnidadHabitacional
-        {
-            Name = unidadHabitacionalUpdateModel.Name,
-            Tipo = unidadHabitacionalUpdateModel.Tipo,
-            LightCode = unidadHabitacionalUpdateModel.LightCode
-        };
-    }
-
     public static UnidadHabitacionalOccuppiedModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel(
         this UnidadHabitacional unidadHabitacional)
     {

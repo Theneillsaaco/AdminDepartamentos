@@ -256,9 +256,13 @@ public class UnidadHabitacionalController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var unidad = unidadHabitacionalUpdate.ConvertUnidadHabitacionalEntityToUnidadHabitacionalUpdateModel();
-            unidad.IdUnidadHabitacional = id;
-
+            var unidad = await _unidadHabitacionalRepository.GetById(id);
+            unidad.UpdateInfo(
+                unidadHabitacionalUpdate.Name, 
+                unidadHabitacionalUpdate.Tipo, 
+                unidadHabitacionalUpdate.LightCode
+            );
+            
             await _unidadHabitacionalRepository.Update(unidad);
             await ClearCache();
             

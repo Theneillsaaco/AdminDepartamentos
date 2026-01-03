@@ -2,6 +2,13 @@ namespace AdminDepartamentos.Domain.Entities;
 
 public partial class UnidadHabitacional
 {
+    public void UpdateInfo(string name, string tipo, string lightCode)
+    {
+        Name = name;
+        Tipo = tipo;
+        LightCode = lightCode;
+    }
+    
     public void AssignInquilino(int inquilinoId)
     {
         if (Deleted)
@@ -12,7 +19,7 @@ public partial class UnidadHabitacional
         
         IdInquilinoActual = inquilinoId;
     }
-
+    
     public void Release()
     {
         if (!Occupied)

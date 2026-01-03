@@ -6,6 +6,18 @@ namespace AdminDepartamentos.Domain.Entities;
 
 public partial class UnidadHabitacional
 {
+    protected UnidadHabitacional() {}
+    
+    public UnidadHabitacional(string name, string tipo, string lightCode)
+    {
+        Name = name;
+        Tipo = tipo;
+        LightCode = lightCode;
+
+        Deleted = false;
+        IdInquilinoActual = null;
+    }
+    
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdUnidadHabitacional { get; set; }
