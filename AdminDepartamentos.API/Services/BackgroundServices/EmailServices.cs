@@ -2,9 +2,10 @@
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models;
 using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace AdminDepartamentos.API.Services.BackgroundServices;
@@ -67,7 +68,7 @@ public class EmailServices : BackgroundService
         await SendEmail(emailSender, emailContent);
     }
 
-    private async Task<string> GenerateDelayedPaymentsHtml(IEnumerable<Pago> pagos, IPagoRepository pagoRepository,
+    private async Task<string> GenerateDelayedPaymentsHtml(IEnumerable<PagoEntity> pagos, IPagoRepository pagoRepository,
         IServiceScope scope, CancellationToken stoppingToken)
     {
         var retrasoHtml = new StringBuilder();

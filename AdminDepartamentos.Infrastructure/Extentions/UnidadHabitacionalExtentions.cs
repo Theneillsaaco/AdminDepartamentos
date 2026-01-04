@@ -1,7 +1,7 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
 
-namespace AdminDepartamentos.Domain.Extentions;
+namespace AdminDepartamentos.Infrastucture.Extentions;
 
 public static class UnidadHabitacionalExtentions
 {

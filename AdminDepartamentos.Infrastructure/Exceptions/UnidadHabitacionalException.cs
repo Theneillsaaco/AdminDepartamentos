@@ -1,4 +1,4 @@
-﻿namespace AdminDepartamentos.Infrastructure.Exceptions;
+﻿namespace AdminDepartamentos.Infrastucture.Exceptions;
 
 public class UnidadHabitacionalException : Exception
 {

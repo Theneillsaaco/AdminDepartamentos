@@ -1,8 +1,8 @@
-﻿using AdminDepartamentos.Domain.Core.Interfaces;
-using AdminDepartamentos.Domain.Entities;
+﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastucture.Core.Interfaces;
 
-namespace AdminDepartamentos.Domain.Interfaces;
+namespace AdminDepartamentos.Infrastucture.Interfaces;
 
 public interface IInteresadoRepository : IBaseRepository<Interesado>
 {

@@ -1,9 +1,8 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InquilinoModels;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Interfaces;
-using AdminDepartamentos.Domain.Services;
+using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -29,7 +28,7 @@ public class InquilinoController : ControllerBase
             var inquilinos = await _inquilinoRepository.GetInquilinos();
 
             var inquilinoViewModels =
-                inquilinos.Select(inq => inq.ConvertInquilinoViewModelToInquilinoModel()).ToList();
+                inquilinos.Select(inq => inq.ConvertInquilinoEntityToInquilinoViewModel()).ToList();
 
             _logger.LogInformation("GETAll Inquilinos - Total encontrados: {Count}.", inquilinos.Count());
             responseApi.Success = true;
@@ -53,20 +52,12 @@ public class InquilinoController : ControllerBase
     {
         _logger.LogInformation("GET Inquilino - Start.");
 
-        var responseApi = new ResponseAPI<Inquilino>();
+        var responseApi = new ResponseAPI<InquilinoEntity>();
 
         try
         {
             var inquilino = await _inquilinoRepository.GetById(id);
-
-            if (inquilino is null)
-            {
-                _logger.LogWarning("GET Inquilino - Inquilino with id {id} not found.", id);
-                responseApi.Success = false;
-                responseApi.Message = "Inquilino not found.";
-                return NotFound(responseApi);
-            }
-
+            
             _logger.LogInformation("GET Inquilino - Inquilino with id {id} found.", id);
             responseApi.Success = true;
             responseApi.Data = inquilino;
@@ -99,14 +90,8 @@ public class InquilinoController : ControllerBase
             responseApi.Message = "Datos invalidos.";
             return BadRequest(responseApi);
         }
-
-        var inquilino = _inquilinoService.Save(
-            inquilinoSaveModel.InquilinoDto,
-            inquilinoSaveModel.PagoDto
-        );
-
-        var result = await _inquilinoRepository.Save(inquilino);
-        await ClearCacheAsync();
+        
+        var result = await _inquilinoRepository.Save(inquilinoSaveModel.InquilinoDto, inquilinoSaveModel.PagoDto);
 
         if (!result.Success)
         {
@@ -116,6 +101,7 @@ public class InquilinoController : ControllerBase
             return BadRequest(responseApi);
         }
 
+        await ClearCacheAsync();
         _logger.LogInformation("Save Inquilino - Inquilino saved.");
         responseApi.Success = true;
         responseApi.Message = "El Inquilino se guardo correctamente.";
@@ -142,16 +128,7 @@ public class InquilinoController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var inquilino = await _inquilinoRepository.GetById(id);
-
-            inquilino.Update(
-                model.FirstName,
-                model.LastName,
-                model.Cedula,
-                model.NumTelefono
-            );
-
-            await _inquilinoRepository.Update(inquilino);
+            await _inquilinoRepository.UpdateInquilino(id, model.ConvertInquilinoUpdateModelToInquilinoEntity());
             await ClearCacheAsync();
 
             _logger.LogInformation("Update Inquilino - Inquilino updated.");
@@ -212,15 +189,13 @@ public class InquilinoController : ControllerBase
     #region Fields
 
     private readonly IInquilinoRepository _inquilinoRepository;
-    private readonly InquilinoService _inquilinoService;
     private readonly IOutputCacheStore _outputCacheStore;
     private readonly ILogger<InquilinoController> _logger;
 
-    public InquilinoController(IInquilinoRepository inquilinoRepository, InquilinoService inquilinoService,
+    public InquilinoController(IInquilinoRepository inquilinoRepository,
         IOutputCacheStore outputCacheStore, ILogger<InquilinoController> logger)
     {
         _inquilinoRepository = inquilinoRepository;
-        _inquilinoService = inquilinoService;
         _outputCacheStore = outputCacheStore;
         _logger = logger;
     }

@@ -1,5 +1,5 @@
-﻿using System.Text;
-using AdminDepartamentos.Infrastructure.Context;
+using System.Text;
+using AdminDepartamentos.Infrastucture.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -149,7 +149,7 @@ public static class ServicesDepenfency
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.9.1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "DepartApi", Version = "v0.9.2" });
         });
     }
 }

@@ -1,5 +1,5 @@
-﻿using AdminDepartamentos.Domain.Interfaces;
-using AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

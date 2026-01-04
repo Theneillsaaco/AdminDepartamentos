@@ -2,7 +2,7 @@
 
 public class PagoDto
 {
-    public int? NumDeposito { get; set; }
+    public int NumDeposito { get; set; }
 
     public decimal Monto { get; set; }
 

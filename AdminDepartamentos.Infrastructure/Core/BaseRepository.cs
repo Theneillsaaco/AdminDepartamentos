@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using AdminDepartamentos.Domain.Core.Interfaces;
+using AdminDepartamentos.Infrastucture.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastructure.Core;
+namespace AdminDepartamentos.Infrastucture.Core;
 
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {

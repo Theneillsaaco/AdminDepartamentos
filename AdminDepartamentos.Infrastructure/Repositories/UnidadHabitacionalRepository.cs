@@ -1,13 +1,13 @@
 ﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Extentions;
-using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastructure.Context;
-using AdminDepartamentos.Infrastructure.Core;
-using AdminDepartamentos.Infrastructure.Exceptions;
+using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastucture.Core;
+using AdminDepartamentos.Infrastucture.Exceptions;
+using AdminDepartamentos.Infrastucture.Extentions;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastructure.Repositories;
+namespace AdminDepartamentos.Infrastucture.Repositories;
 
 public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, IUnidadHabitacionalRepository
 {
@@ -30,6 +30,7 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacional>, 
                     .Select(i => i.ConvertInteresadoEntityToInteresadoModel())
                     .ToList()
             })
+            .OrderBy(p => p.IdUnidadHabitacional)
             .ToListAsync();
     }
 

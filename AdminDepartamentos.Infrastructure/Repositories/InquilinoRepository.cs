@@ -1,29 +1,30 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Extentions;
-using AdminDepartamentos.Domain.Interfaces;
+﻿using AdminDepartamentos.Domain.FSharp.Entities;
+using AdminDepartamentos.Domain.FSharp.ValueObjects;
 using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Domain.Services;
-using AdminDepartamentos.Infrastructure.Context;
-using AdminDepartamentos.Infrastructure.Core;
-using AdminDepartamentos.Infrastructure.Exceptions;
+using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastucture.Core;
+using AdminDepartamentos.Infrastucture.Exceptions;
+using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastucture.Mapping;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastructure.Repositories;
+namespace AdminDepartamentos.Infrastucture.Repositories;
 
 /// <summary>
 ///     Clase Predeterminada de Inquilino;
 ///     GetAll, GetById, Save, ...
 /// </summary>
-public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoRepository
+public class InquilinoRepository : BaseRepository<InquilinoEntity>, IInquilinoRepository
 {
-    public async Task<List<InquilinoModel>> GetInquilinos()
+    public async Task<List<InquilinoEntity>> GetInquilinos()
     {
         return await _context.Inquilinos
-            .Select(inq => inq.ConvertInquilinoEntityToInquilinoModel())
+            .OrderBy(i => i.IdInquilino)
             .ToListAsync();
     }
 
-    public override async Task<Inquilino> GetById(int id)
+    public async Task<InquilinoEntity> GetById(int id)
     {
         if (id <= 0)
             throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
@@ -34,20 +35,46 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
         return await base.GetById(id);
     }
 
-    public async Task<(bool Success, string Message)> Save(Inquilino inquilino)
+    public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
 
         try
         {
-            if (await base.Exists(cd => cd.Cedula == inquilino.Cedula))
+            if (await base.Exists(cd => cd.Cedula == inquilinoDto.Cedula))
                 throw new InquilinoException("El inquilino ya existe. Por favor, use otro número de cédula.");
 
-            await _context.Inquilinos.AddAsync(inquilino);
+            var fechaPago = FechaPagoModule
+                .create(pagoDto.FechaPagoInDays)
+                .ResultValue;
+
+            var pagoDomain = PagoModule
+                .create(
+                    pagoDto.NumDeposito,
+                    pagoDto.Monto,
+                    fechaPago
+                ).ResultValue;
+
+            var inquilinoDomain = InquilinoModule
+                .create(
+                    inquilinoDto.FirstName,
+                    inquilinoDto.LastName,
+                    inquilinoDto.Cedula,
+                    inquilinoDto.NumTelefono,
+                    pagoDomain
+                ).ResultValue;
+            
+            var InquilinoEntity = inquilinoDomain.ToEntity();
+            
+            await _context.Inquilinos.AddAsync(InquilinoEntity);
+            await _context.SaveChangesAsync();
+
+            var PagoEntity = pagoDomain.ToEntity(InquilinoEntity.IdInquilino);
+
+            await _context.Pagos.AddAsync(PagoEntity);
             await _context.SaveChangesAsync();
 
             await transaction.CommitAsync();
-
             return (true, "Inquilino y pago creados exitosamente.");
         }
         catch (Exception ex)
@@ -57,12 +84,30 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
         }
     }
 
-    public override async Task Update(Inquilino entity)
+    public async Task UpdateInquilino(int id, InquilinoEntity inquilino)
     {
+        var entity = await _context.Inquilinos
+            .Include(i => i.Pago)
+            .FirstOrDefaultAsync(i => i.IdInquilino == id);
+        
         if (entity is null)
-            throw new ArgumentNullException(nameof(entity), "El Inquilino no puede ser null.");
+            throw new InquilinoException("El inquilino no existe.");
 
-        await base.Update(entity);
+        var domain = entity.ToDomain();
+
+        var updated = InquilinoModule.update(
+            inquilino.FirstName,
+            inquilino.LastName,
+            inquilino.Cedula,
+            inquilino.Telefono,
+            domain
+        );
+
+        if (updated.IsError)
+            throw new Exception("Error al actualizar el inquilino");
+
+        entity.Apply(updated.ResultValue);
+        await _context.SaveChangesAsync();
     }
 
     public async Task MarkDeleted(int id)
@@ -82,7 +127,6 @@ public class InquilinoRepository : BaseRepository<Inquilino>, IInquilinoReposito
     #region Fields
 
     private readonly DepartContext _context;
-    private readonly InquilinoService _domainService;
 
     public InquilinoRepository(DepartContext context) : base(context)
     {

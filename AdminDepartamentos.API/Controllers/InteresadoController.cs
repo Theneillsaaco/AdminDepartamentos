@@ -1,8 +1,8 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Models.InteresadoModels;
 using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Interfaces;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

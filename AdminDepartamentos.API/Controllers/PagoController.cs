@@ -1,7 +1,7 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.PagoModels;
-using AdminDepartamentos.Domain.Interfaces;
+using AdminDepartamentos.Infrastucture.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -93,15 +93,7 @@ public class PagoController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var pago = await _pagoRepository.GetById(id);
-
-            pago.Update(
-                model.NumDeposito,
-                model.Monto,
-                model.FechaPagoInDays
-            );
-
-            await _pagoRepository.Update(pago);
+            await _pagoRepository.UpdatePago(id, model.ConverToPagoEntityToPagoUpdateModel());
             await ClearCacheAsync();
 
             _logger.LogInformation("Update Pago - Pago updated.");

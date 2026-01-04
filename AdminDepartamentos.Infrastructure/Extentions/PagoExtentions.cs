@@ -1,7 +1,8 @@
 ﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastucture.Context.Entities;
 
-namespace AdminDepartamentos.Domain.Extentions;
+namespace AdminDepartamentos.Infrastucture.Extentions;
 
 public static class PagoExtentions
 {
@@ -11,7 +12,7 @@ public static class PagoExtentions
     /// <param name="pago">Pago.</param>
     /// <param name="inquilino">Inquilino.</param>
     /// <returns></returns>
-    public static PagoInquilinoModel ConvertPagoEntityToPagoInquilinoModel(this Pago pago, Inquilino inquilino)
+    public static PagoInquilinoModel ToPagoInquilinoModel(this PagoEntity pago, InquilinoEntity inquilino)
     {
         return new PagoInquilinoModel
         {

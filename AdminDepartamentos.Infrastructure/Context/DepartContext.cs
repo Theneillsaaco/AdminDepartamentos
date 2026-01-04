@@ -1,28 +1,27 @@
 ﻿using AdminDepartamentos.Domain.Entities;
+using AdminDepartamentos.Infrastucture.Context.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastructure.Context;
+namespace AdminDepartamentos.Infrastucture.Context;
 
 public class DepartContext : IdentityDbContext<IdentityUser>
 {
-    public DepartContext(DbContextOptions<DepartContext> options) : base(options)
-    {
-    }
+    public DepartContext(DbContextOptions<DepartContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Inquilino>()
+        builder.Entity<InquilinoEntity>()
             .HasOne(i => i.Pago)
             .WithOne(p => p.Inquilino)
-            .HasForeignKey<Pago>(p => p.IdInquilino)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey<PagoEntity>(p => p.IdInquilino)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<Inquilino>()
+        builder.Entity<InquilinoEntity>()
             .HasQueryFilter(i => !i.Deleted);
 
-        builder.Entity<Pago>()
+        builder.Entity<PagoEntity>()
             .HasQueryFilter(p => !p.Deleted);
 
         builder.Entity<Interesado>()
@@ -36,8 +35,8 @@ public class DepartContext : IdentityDbContext<IdentityUser>
 
     #region "Entities"
 
-    public DbSet<Inquilino> Inquilinos { get; set; }
-    public DbSet<Pago> Pagos { get; set; }
+    public DbSet<InquilinoEntity> Inquilinos { get; set; }
+    public DbSet<PagoEntity> Pagos { get; set; }
 
     public DbSet<UnidadHabitacional> UnidadHabitacionals { get; set; }
 

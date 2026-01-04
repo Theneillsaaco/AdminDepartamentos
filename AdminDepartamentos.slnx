@@ -1,7 +1,8 @@
 <Solution>
-    <Project Path="AdminDepartamentos.API/AdminDepartamentos.API.csproj"/>
-    <Project Path="AdminDepartamentos.Domain/AdminDepartamentos.Domain.csproj"/>
-    <Project Path="AdminDepartamentos.Infrastructure/AdminDepartamentos.Infrastructure.csproj"/>
-    <Project Path="AdminDepartamentos.IOC/AdminDepartamentos.IOC.csproj"/>
-    <Project Path="AdminDepartamentos.Unit.Test/AdminDepartamentos.Unit.Test.csproj"/>
+    <Project Path="AdminDepartamentos.API/AdminDepartamentos.API.csproj" />
+    <Project Path="AdminDepartamentos.Domain.FSharp/AdminDepartamentos.Domain.FSharp.fsproj" />
+    <Project Path="AdminDepartamentos.Domain/AdminDepartamentos.Domain.csproj" />
+    <Project Path="AdminDepartamentos.Infrastructure/AdminDepartamentos.Infrastructure.csproj" />
+    <Project Path="AdminDepartamentos.IOC/AdminDepartamentos.IOC.csproj" />
+    <Project Path="AdminDepartamentos.Unit.Test/AdminDepartamentos.Unit.Test.csproj" />
 </Solution>

@@ -1,6 +1,5 @@
-﻿using AdminDepartamentos.Domain.Interfaces;
-using AdminDepartamentos.Domain.Services;
-using AdminDepartamentos.Infrastructure.Repositories;
+﻿using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastucture.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdminDepartamentos.IOC.Dependencies;
@@ -12,8 +11,7 @@ public static class RepositoryDependency
         services.AddScoped<IInquilinoRepository, InquilinoRepository>()
             .AddScoped<IPagoRepository, PagoRepository>()
             .AddScoped<IInteresadoRepository, InteresadoRepository>()
-            .AddScoped<IUnidadHabitacionalRepository, UnidadHabitacionalRepository>()
-            .AddScoped<InquilinoService>();
+            .AddScoped<IUnidadHabitacionalRepository, UnidadHabitacionalRepository>();
 
         // Services...
     }

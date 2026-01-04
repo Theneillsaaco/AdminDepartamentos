@@ -1,7 +1,9 @@
 ﻿using AdminDepartamentos.API.Extentions;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Interfaces;
-using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Domain.FSharp.Entities;
+using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastucture.Mapping;
 
 namespace AdminDepartamentos.API.Services.BackgroundServices;
 
@@ -43,21 +45,21 @@ public class CheckRetrasosService : BackgroundService
         var pagoRepository = scope.ServiceProvider.GetRequiredService<IPagoRepository>();
         var dbContext = scope.ServiceProvider.GetRequiredService<DepartContext>();
 
-        var pagos = await pagoRepository.GetPago();
+        var pagos = await pagoRepository.GetPagosForRetraso();
 
         _logger.LogInformation("Retrieved {Count} pagos for retraso evaluation.", pagos.Count());
 
         if (!pagos.Any())
             return;
 
-        var pagosUpdate = new List<Pago>();
+        var pagosUpdate = new List<PagoEntity>();
 
-        foreach (var pago in pagos.Select(pagoInquilinoModel => pagoInquilinoModel.ConvertToPagoEntity()))
+        foreach (var pago in pagos)
             using (_logger.BeginScope("PagoId {IdPago}", pago.IdPago))
             {
                 try
                 {
-                    if (!UpdateRetrasoStatus(pago, pagoRepository))
+                    if (!UpdateRetrasoStatus(pago))
                     {
                         _logger.LogDebug("Pago retraso status unchanged.");
                         continue;
@@ -76,14 +78,22 @@ public class CheckRetrasosService : BackgroundService
             await UpdatePagos(pagosUpdate, dbContext, stoppingToken);
     }
 
-    private bool UpdateRetrasoStatus(Pago pago, IPagoRepository pagoRepository)
+    private bool UpdateRetrasoStatus(PagoEntity pago)
     {
-        var originalState = pago.Retrasado;
-        pagoRepository.CheckRetraso(pago);
-        return pago.Retrasado != originalState;
+        var domainPago = pago.ToDomain();
+        
+        var updatedDomainPago = 
+            PagoModule.checkRetraso(DateTime.Now, domainPago);
+        
+        if (Equals(domainPago.Estado, updatedDomainPago.Estado))
+            return false;
+        
+        pago.Apply(updatedDomainPago);
+        
+        return true;
     }
 
-    private async Task UpdatePagos(List<Pago> pagosUpdate, DepartContext dbContext, CancellationToken stoppingToken)
+    private async Task UpdatePagos(List<PagoEntity> pagosUpdate, DepartContext dbContext, CancellationToken stoppingToken)
     {
         using var updateScope = _scopeFactory.CreateScope();
         var pagoRepository = updateScope.ServiceProvider.GetRequiredService<IPagoRepository>();

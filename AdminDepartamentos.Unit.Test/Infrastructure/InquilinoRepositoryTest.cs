@@ -1,8 +1,8 @@
-﻿using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastructure.Context;
-using AdminDepartamentos.Infrastructure.Exceptions;
-using AdminDepartamentos.Infrastructure.Repositories;
+using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastucture.Exceptions;
+using AdminDepartamentos.Infrastucture.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -16,16 +16,16 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
         context.Inquilinos.AddRange(
-            new Inquilino { FirstName = "Pepe", LastName = "Dominges", Cedula = "123", Telefono = "829-000-0000", Deleted = false },
-            new Inquilino { FirstName = "Juan", LastName = "Fernades", Cedula = "1234", Telefono = "829-000-0000", Deleted = true }
+            new InquilinoEntity { FirstName = "Pepe", LastName = "Dominges", Cedula = "123", Telefono = "829-000-0000", Deleted = false },
+            new InquilinoEntity { FirstName = "Juan", LastName = "Fernades", Cedula = "1234", Telefono = "829-000-0000", Deleted = true }
         );
         await context.SaveChangesAsync();
-    
+
         var repo = new InquilinoRepository(context);
 
         // Act
         var result = await repo.GetInquilinos();
-    
+
         // Assert
         Assert.Single(result);
         Assert.Equal("Pepe", result.First().FirstName);
@@ -112,9 +112,9 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
         var repo = new InquilinoRepository(context);
-        
+
         // Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => repo.Update((Inquilino)null));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => repo.Update((InquilinoEntity)null));
     }
     
     [Fact]
@@ -123,10 +123,10 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
 
-        var existing = new Inquilino { IdInquilino = 1, Cedula = "123", FirstName = "Pepe", LastName = "Dominges", Telefono = "829-000-0000"};
+        var existing = new InquilinoEntity { IdInquilino = 1, Cedula = "123", FirstName = "Pepe", LastName = "Dominges", Telefono = "829-000-0000"};
         context.Inquilinos.Add(existing);
         await context.SaveChangesAsync();
-        
+
         var repo = new InquilinoRepository(context);
 
         // Act
@@ -145,8 +145,8 @@ public class InquilinoRepositoryTest
         // Arrange
         await using var context = new DepartContext(_options);
 
-        var inq1 = new Inquilino { IdInquilino = 1, Cedula = "001", FirstName = "Ana", LastName = "Martines", Telefono = "829-000-0000"};
-        var inq2 = new Inquilino { IdInquilino = 2, Cedula = "002", FirstName = "Luis", LastName = "Francisco", Telefono = "829-000-0000"};
+        var inq1 = new InquilinoEntity { IdInquilino = 1, Cedula = "001", FirstName = "Ana", LastName = "Martines", Telefono = "829-000-0000"};
+        var inq2 = new InquilinoEntity { IdInquilino = 2, Cedula = "002", FirstName = "Luis", LastName = "Francisco", Telefono = "829-000-0000"};
         context.Inquilinos.AddRange(inq1, inq2);
         await context.SaveChangesAsync();
 
@@ -156,7 +156,7 @@ public class InquilinoRepositoryTest
         inq1.FirstName = "Andrea";
         inq2.FirstName = "Lucas";
 
-        await repo.Update(new List<Inquilino> { inq1, inq2 }); // Llama al método de base
+        await repo.Update(new List<InquilinoEntity> { inq1, inq2 });
 
         var updated1 = await context.Inquilinos.FindAsync(1);
         var updated2 = await context.Inquilinos.FindAsync(2);

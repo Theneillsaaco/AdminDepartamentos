@@ -1,6 +1,6 @@
 ﻿using AdminDepartamentos.Domain.Models;
 
-namespace AdminDepartamentos.Domain.Interfaces;
+namespace AdminDepartamentos.Infrastucture.Interfaces;
 
 public interface IEmailService
 {

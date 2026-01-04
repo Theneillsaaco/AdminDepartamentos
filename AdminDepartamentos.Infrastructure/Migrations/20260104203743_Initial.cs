@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace AdminDepartament.Infrastucture.Migrations
+namespace AdminDepartamentos.Infrastucture.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -52,7 +52,7 @@ namespace AdminDepartament.Infrastucture.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Inquilinos",
+                name: "Inquilino",
                 columns: table => new
                 {
                     IdInquilino = table.Column<int>(type: "integer", nullable: false)
@@ -70,7 +70,7 @@ namespace AdminDepartament.Infrastucture.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Inquilinos", x => x.IdInquilino);
+                    table.PrimaryKey("PK_Inquilino", x => x.IdInquilino);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,7 +180,7 @@ namespace AdminDepartament.Infrastucture.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pagos",
+                name: "Pago",
                 columns: table => new
                 {
                     IdPago = table.Column<int>(type: "integer", nullable: false)
@@ -196,11 +196,11 @@ namespace AdminDepartament.Infrastucture.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pagos", x => x.IdPago);
+                    table.PrimaryKey("PK_Pago", x => x.IdPago);
                     table.ForeignKey(
-                        name: "FK_Pagos_Inquilinos_IdInquilino",
+                        name: "FK_Pago_Inquilino_IdInquilino",
                         column: x => x.IdInquilino,
-                        principalTable: "Inquilinos",
+                        principalTable: "Inquilino",
                         principalColumn: "IdInquilino",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -212,6 +212,7 @@ namespace AdminDepartament.Infrastucture.Migrations
                     IdUnidadHabitacional = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    LightCode = table.Column<string>(type: "text", nullable: false),
                     Tipo = table.Column<string>(type: "text", nullable: false),
                     IdInquilinoActual = table.Column<int>(type: "integer", nullable: true),
                     Deleted = table.Column<bool>(type: "boolean", nullable: false)
@@ -220,10 +221,38 @@ namespace AdminDepartament.Infrastucture.Migrations
                 {
                     table.PrimaryKey("PK_UnidadHabitacionals", x => x.IdUnidadHabitacional);
                     table.ForeignKey(
-                        name: "FK_UnidadHabitacionals_Inquilinos_IdInquilinoActual",
+                        name: "FK_UnidadHabitacionals_Inquilino_IdInquilinoActual",
                         column: x => x.IdInquilinoActual,
-                        principalTable: "Inquilinos",
+                        principalTable: "Inquilino",
                         principalColumn: "IdInquilino");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inquilinos",
+                columns: table => new
+                {
+                    IdInquilino = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FirstName = table.Column<string>(type: "text", nullable: false),
+                    LastName = table.Column<string>(type: "text", nullable: false),
+                    Cedula = table.Column<string>(type: "text", nullable: false),
+                    Telefono = table.Column<string>(type: "text", nullable: false),
+                    IdUnidadHabitacional = table.Column<int>(type: "integer", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifyDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CreationUser = table.Column<int>(type: "integer", nullable: false),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    UnidadHabitacionalIdUnidadHabitacional = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inquilinos", x => x.IdInquilino);
+                    table.ForeignKey(
+                        name: "FK_Inquilinos_UnidadHabitacionals_UnidadHabitacionalIdUnidadHa~",
+                        column: x => x.UnidadHabitacionalIdUnidadHabitacional,
+                        principalTable: "UnidadHabitacionals",
+                        principalColumn: "IdUnidadHabitacional");
                 });
 
             migrationBuilder.CreateTable(
@@ -248,6 +277,32 @@ namespace AdminDepartament.Infrastucture.Migrations
                         column: x => x.IdUnidadHabitacional,
                         principalTable: "UnidadHabitacionals",
                         principalColumn: "IdUnidadHabitacional");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pagos",
+                columns: table => new
+                {
+                    IdPago = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdInquilino = table.Column<int>(type: "integer", nullable: false),
+                    NumDeposito = table.Column<int>(type: "integer", nullable: true),
+                    Monto = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    FechaPagoInDays = table.Column<int>(type: "integer", nullable: false),
+                    Retrasado = table.Column<bool>(type: "boolean", nullable: false),
+                    RetrasadoDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Email = table.Column<bool>(type: "boolean", nullable: false),
+                    Deleted = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pagos", x => x.IdPago);
+                    table.ForeignKey(
+                        name: "FK_Pagos_Inquilinos_IdInquilino",
+                        column: x => x.IdInquilino,
+                        principalTable: "Inquilinos",
+                        principalColumn: "IdInquilino",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -288,14 +343,26 @@ namespace AdminDepartament.Infrastucture.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Inquilinos_UnidadHabitacionalIdUnidadHabitacional",
+                table: "Inquilinos",
+                column: "UnidadHabitacionalIdUnidadHabitacional");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Interesados_IdUnidadHabitacional",
                 table: "Interesados",
                 column: "IdUnidadHabitacional");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Pago_IdInquilino",
+                table: "Pago",
+                column: "IdInquilino",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Pagos_IdInquilino",
                 table: "Pagos",
-                column: "IdInquilino");
+                column: "IdInquilino",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UnidadHabitacionals_IdInquilinoActual",
@@ -326,6 +393,9 @@ namespace AdminDepartament.Infrastucture.Migrations
                 name: "Interesados");
 
             migrationBuilder.DropTable(
+                name: "Pago");
+
+            migrationBuilder.DropTable(
                 name: "Pagos");
 
             migrationBuilder.DropTable(
@@ -335,10 +405,13 @@ namespace AdminDepartament.Infrastucture.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Inquilinos");
+
+            migrationBuilder.DropTable(
                 name: "UnidadHabitacionals");
 
             migrationBuilder.DropTable(
-                name: "Inquilinos");
+                name: "Inquilino");
         }
     }
 }

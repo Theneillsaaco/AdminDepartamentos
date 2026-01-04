@@ -1,6 +1,7 @@
 ﻿using AdminDepartamentos.API.Models.PagoModels;
 using AdminDepartamentos.Domain.Entities;
 using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastucture.Context.Entities;
 
 namespace AdminDepartamentos.API.Extentions;
 
@@ -24,7 +25,7 @@ public static class PagoViewExtenticion
         };
     }
 
-    public static PagoGetModel ConvertToPagoGetModel(this Pago pago)
+    public static PagoGetModel ConvertToPagoGetModel(this PagoEntity pago)
     {
         return new PagoGetModel
         {
@@ -39,9 +40,9 @@ public static class PagoViewExtenticion
         };
     }
 
-    public static Pago ConverToPagoEntityToPagoUpdateModel(this PagoUpdateModel pagoUpdateModel)
+    public static PagoEntity ConverToPagoEntityToPagoUpdateModel(this PagoUpdateModel pagoUpdateModel)
     {
-        return new Pago
+        return new PagoEntity
         {
             NumDeposito = pagoUpdateModel.NumDeposito,
             Monto = pagoUpdateModel.Monto,
@@ -49,9 +50,9 @@ public static class PagoViewExtenticion
         };
     }
 
-    public static Pago ConvertToPagoEntity(this PagoInquilinoModel pagoInquilinoModel)
+    public static PagoEntity ConvertToPagoEntity(this PagoInquilinoModel pagoInquilinoModel)
     {
-        return new Pago
+        return new PagoEntity
         {
             IdPago = pagoInquilinoModel.IdPago,
             IdInquilino = pagoInquilinoModel.IdInquilino,
@@ -61,7 +62,7 @@ public static class PagoViewExtenticion
         };
     }
 
-    public static PagoWithoutEmail ConvertPagoEntityToPagoWithoutEmail(this Pago pago)
+    public static PagoWithoutEmail ConvertPagoEntityToPagoWithoutEmail(this PagoEntity pago)
     {
         return new PagoWithoutEmail
         {
