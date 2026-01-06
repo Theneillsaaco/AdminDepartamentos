@@ -1,7 +1,7 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.PagoModels;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

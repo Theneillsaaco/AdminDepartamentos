@@ -1,11 +1,11 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
 
-namespace AdminDepartamentos.Infrastucture.Extentions;
+namespace AdminDepartamentos.Infrastructure.Extentions;
 
 public static class InquilinoExtentions
 {
-    public static InquilinoModel ConvertInquilinoEntityToInquilinoModel(this Inquilino inquilino)
+    public static InquilinoModel ConvertInquilinoEntityToInquilinoModel(this InquilinoEntity inquilino)
     {
         return new InquilinoModel
         {

@@ -1,4 +1,4 @@
-﻿namespace AdminDepartamentos.Domain.Models;
+﻿namespace AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 
 public class UnidadHabitacionalDto
 {

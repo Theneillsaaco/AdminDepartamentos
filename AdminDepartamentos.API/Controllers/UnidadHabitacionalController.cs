@@ -1,9 +1,9 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.UnidadHabitacional;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -52,7 +52,7 @@ public class UnidadHabitacionalController : ControllerBase
     {
         _logger.LogInformation("GET UnidadHabitacional - Start.");
 
-        var responseApi = new ResponseAPI<UnidadHabitacional>();
+        var responseApi = new ResponseAPI<UnidadHabitacionalEntity>();
 
         try
         {
@@ -88,7 +88,7 @@ public class UnidadHabitacionalController : ControllerBase
     {
         _logger.LogInformation("GET Available UnidadHabitacional - Start.");
 
-        var responseApi = new ResponseAPI<List<UnidadHabitacional>>();
+        var responseApi = new ResponseAPI<List<UnidadHabitacionalEntity>>();
 
         try
         {
@@ -260,14 +260,13 @@ public class UnidadHabitacionalController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var unidad = await _unidadHabitacionalRepository.GetById(id);
-            unidad.UpdateInfo(
+            await _unidadHabitacionalRepository.UpdateUnidadHabitacional(
+                id,
                 unidadHabitacionalUpdate.Name,
                 unidadHabitacionalUpdate.Tipo,
                 unidadHabitacionalUpdate.LightCode
             );
-
-            await _unidadHabitacionalRepository.Update(unidad);
+            
             await ClearCache();
 
             _logger.LogInformation("Update Unidad Habitacional - Unidad Habitacional updated.");

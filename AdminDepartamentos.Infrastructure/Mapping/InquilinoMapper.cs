@@ -1,7 +1,7 @@
 using AdminDepartamentos.Domain.FSharp.Entities;
-using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastructure.Context.Entities;
 
-namespace AdminDepartamentos.Infrastucture.Mapping;
+namespace AdminDepartamentos.Infrastructure.Mapping;
 
 public static class InquilinoMapper
 {

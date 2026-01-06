@@ -1,12 +1,12 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 
-namespace AdminDepartamentos.Infrastucture.Extentions;
+namespace AdminDepartamentos.Infrastructure.Extentions;
 
 public static class UnidadHabitacionalExtentions
 {
     public static UnidadHabitacionalModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalModel(
-        this UnidadHabitacional unidadHabitacional)
+        this UnidadHabitacionalEntity unidadHabitacional)
     {
         return new UnidadHabitacionalModel
         {
@@ -21,13 +21,14 @@ public static class UnidadHabitacionalExtentions
         };
     }
 
-    public static UnidadHabitacional ConvertUnidadHabitacionalDtoToUnidadHabitacionalEntity(
+    public static UnidadHabitacionalEntity ConvertUnidadHabitacionalDtoToUnidadHabitacionalEntity(
         this UnidadHabitacionalDto unidadHabitacionalDto)
     {
-        return new UnidadHabitacional(
-            unidadHabitacionalDto.Name,
-            unidadHabitacionalDto.Tipo,
-            unidadHabitacionalDto.LightCode
-        );
+        return new UnidadHabitacionalEntity
+        {
+            Name = unidadHabitacionalDto.Name,
+            Tipo = unidadHabitacionalDto.Tipo,
+            LightCode = unidadHabitacionalDto.LightCode
+        };
     }
 }

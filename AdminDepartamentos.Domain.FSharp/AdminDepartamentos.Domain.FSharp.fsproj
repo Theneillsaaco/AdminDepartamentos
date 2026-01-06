@@ -9,13 +9,11 @@
         <Compile Include="Common\DomainError.fs" />
         <Compile Include="Common\ResultExtensions.fs" />
         <Compile Include="ValueObjects\FechaPago.fs" />
+        <Compile Include="ValueObjects\TipoUnidad.fs" />
         <Compile Include="Entities\Pago.fs" />
         <Compile Include="Entities\Inquilino.fs" />
-        <Compile Include="Services\InquilinoFactory.fs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\AdminDepartamentos.Domain\AdminDepartamentos.Domain.csproj" />
+        <Compile Include="Entities\UnidadHabitacional.fs" />
+        <Compile Include="Entities\Interesado.fs" />
     </ItemGroup>
 
     <ItemGroup>

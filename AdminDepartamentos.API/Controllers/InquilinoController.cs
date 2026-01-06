@@ -1,8 +1,8 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models.InquilinoModels;
-using AdminDepartamentos.Infrastucture.Context.Entities;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;

@@ -1,5 +1,6 @@
 ﻿using AdminDepartamentos.API.Models.UnidadHabitacional.Core;
-using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
+using AdminDepartamentos.Infrastructure.Models.InteresadoModels;
 
 namespace AdminDepartamentos.API.Models.UnidadHabitacional;
 

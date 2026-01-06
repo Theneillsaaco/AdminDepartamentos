@@ -1,11 +1,11 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.InteresadoModels;
 
-namespace AdminDepartamentos.Infrastucture.Extentions;
+namespace AdminDepartamentos.Infrastructure.Extentions;
 
 public static class InteresadoExtentions
 {
-    public static InteresadoModel ConvertInteresadoEntityToInteresadoModel(this Interesado interesado)
+    public static InteresadoModel ConvertInteresadoEntityToInteresadoModel(this InteresadoEntity interesado)
     {
         return new InteresadoModel
         {
@@ -18,13 +18,14 @@ public static class InteresadoExtentions
         };
     }
 
-    public static Interesado ConvertInteresadoDtoToInteresadoEntity(this InteresadoDto dto)
+    public static InteresadoEntity ConvertInteresadoDtoToInteresadoEntity(this InteresadoDto dto)
     {
-        return new Interesado(
-            dto.FirstName,
-            dto.LastName,
-            dto.Telefono,
-            dto.TipoUnidadHabitacional
-        );
+        return new InteresadoEntity
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Telefono = dto.Telefono,
+            TipoUnidadHabitacional = dto.TipoUnidadHabitacional
+        };
     }
 }

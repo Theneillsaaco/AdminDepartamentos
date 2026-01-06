@@ -1,9 +1,8 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context.Entities;
-using AdminDepartamentos.Infrastucture.Core.Interfaces;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Core.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.PagoModels;
 
-namespace AdminDepartamentos.Infrastucture.Interfaces;
+namespace AdminDepartamentos.Infrastructure.Interfaces;
 
 public interface IPagoRepository : IBaseRepository<PagoEntity>
 {

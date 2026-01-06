@@ -1,4 +1,5 @@
-﻿using AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
+using AdminDepartamentos.Infrastructure.Models.PagoModels;
 
 namespace AdminDepartamentos.API.Models.InquilinoModels;
 

@@ -1,26 +1,29 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context;
-using AdminDepartamentos.Infrastucture.Core;
-using AdminDepartamentos.Infrastucture.Exceptions;
-using AdminDepartamentos.Infrastucture.Extentions;
-using AdminDepartamentos.Infrastucture.Interfaces;
+﻿using AdminDepartamentos.Domain.FSharp.Entities;
+using AdminDepartamentos.Domain.FSharp.ValueObjects;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Core;
+using AdminDepartamentos.Infrastructure.Exceptions;
+using AdminDepartamentos.Infrastructure.Extentions;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Mapping;
+using AdminDepartamentos.Infrastructure.Models.InteresadoModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastucture.Repositories;
+namespace AdminDepartamentos.Infrastructure.Repositories;
 
-public class InteresadoRepository : BaseRepository<Interesado>, IInteresadoRepository
+public class InteresadoRepository : BaseRepository<InteresadoEntity>, IInteresadoRepository
 {
     public async Task<List<InteresadoModel>> GetByType(string type)
     {
         return await _context.Interesados
             .Where(inte => inte.TipoUnidadHabitacional == type && !inte.Deleted)
-            .Select(inte => inte.ConvertInteresadoEntityToInteresadoModel())
             .OrderBy(p => p.IdInteresado)
+            .Select(inte => inte.ConvertInteresadoEntityToInteresadoModel())
             .ToListAsync();
     }
 
-    public async Task<List<Interesado>> GetPendingInteresado()
+    public async Task<List<InteresadoEntity>> GetPendingInteresado()
     {
         return await _context.Interesados
             .Where(inte => inte.Deleted)
@@ -28,7 +31,7 @@ public class InteresadoRepository : BaseRepository<Interesado>, IInteresadoRepos
             .ToListAsync();
     }
 
-    public override async Task<Interesado> GetById(int id)
+    public override async Task<InteresadoEntity> GetById(int id)
     {
         if (id <= 0)
             throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
@@ -46,7 +49,22 @@ public class InteresadoRepository : BaseRepository<Interesado>, IInteresadoRepos
 
         try
         {
-            await _context.Interesados.AddAsync(interesadoDto.ConvertInteresadoDtoToInteresadoEntity());
+            var tipoDomain = ParseTipo(interesadoDto.TipoUnidadHabitacional);
+            
+            var result = Interesado.create(
+                interesadoDto.FirstName,
+                interesadoDto.LastName,
+                interesadoDto.Telefono,
+                tipoDomain
+            );
+            
+            if (result.IsError)
+                throw new InteresadoExceptions(result.ErrorValue.ToString());
+            
+            var domain = result.ResultValue;
+            var entity = domain.ToEntity();
+            
+            await _context.Interesados.AddAsync(entity);
             await _context.SaveChangesAsync();
             return (true, "Guardado el Interesado correctamente.");
         }
@@ -56,23 +74,53 @@ public class InteresadoRepository : BaseRepository<Interesado>, IInteresadoRepos
         }
     }
 
-    public override async Task Update(Interesado entity)
+    public async Task UpdateInteresado(int id, string firstName, string lastName, string telefono, string tipoUnidadHabitacional)
     {
+        var entity = await GetById(id);
+        
         if (entity is null)
-            throw new ArgumentNullException(nameof(entity), "El Interesado no puede ser null.");
+            throw new InteresadoExceptions("El interesado no Existe.");
 
-        await base.Update(entity);
+        var domain = entity.ToDomain();
+        var tipoDomain = ParseTipo(tipoUnidadHabitacional);
+        
+        var updated = Interesado.update(
+            firstName, 
+            lastName, 
+            telefono,
+            tipoDomain,
+            domain
+        );
+        
+        if (updated.IsError)
+            throw new InteresadoExceptions(updated.ErrorValue.ToString());
+        
+        entity.Apply(updated.ResultValue);
+        await _context.SaveChangesAsync();
     }
 
     public async Task MarkDeleted(int id)
     {
-        var interesado = await GetById(id);
+        var entity = await GetById(id);
 
-        if (interesado is null)
+        if (entity is null)
             throw new InteresadoExceptions("El interesado no Existe.");
 
-        interesado.MarkDeleted();
+        var domain = entity.ToDomain();
+        var deleted = Interesado.markDeleted(domain);
+        
+        entity.Apply(deleted);
         await _context.SaveChangesAsync();
+    }
+    
+    private static TipoUnidad ParseTipo(string tipo)
+    {
+        return tipo switch
+        {
+            "Apartamento" => TipoUnidad.Apartamento,
+            "Local" => TipoUnidad.Local,
+            _ => throw new UnidadHabitacionalException("Tipo de unidad habitacional invalido")
+        };
     }
 
     #region Fields

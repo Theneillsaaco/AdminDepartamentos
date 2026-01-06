@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AdminDepartamentos.Infrastucture.Context.Entities;
+namespace AdminDepartamentos.Infrastructure.Context.Entities;
 
 public class PagoEntity
 {

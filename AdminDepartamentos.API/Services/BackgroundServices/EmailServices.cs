@@ -1,11 +1,10 @@
 ﻿using System.Text;
 using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.API.Models;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context;
-using AdminDepartamentos.Infrastucture.Context.Entities;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.ServiceModels;
 using Microsoft.Extensions.Options;
 
 namespace AdminDepartamentos.API.Services.BackgroundServices;

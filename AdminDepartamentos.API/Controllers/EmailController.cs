@@ -1,5 +1,5 @@
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.ServiceModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,19 +1,21 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Core.Interfaces;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Core.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 
-namespace AdminDepartamentos.Infrastucture.Interfaces;
+namespace AdminDepartamentos.Infrastructure.Interfaces;
 
-public interface IUnidadHabitacionalRepository : IBaseRepository<UnidadHabitacional>
+public interface IUnidadHabitacionalRepository : IBaseRepository<UnidadHabitacionalEntity>
 {
     Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales();
 
-    Task<List<UnidadHabitacional>> GetAvailableUnidadHabitacional();
+    Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional();
 
-    Task<List<UnidadHabitacional>> GetOccupiedUnidadHabitacional();
+    Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional();
 
     Task<(bool Success, string Message)> Save(UnidadHabitacionalDto unidadHabitacionalDto);
 
+    Task UpdateUnidadHabitacional(int id, string name, string tipo, string lightCode);
+    
     Task<bool> AssignInquilino(int idUnidadHabitacional, int idInquilino);
 
     Task<bool> ReleaseUnit(int idUnidadHabitacional);

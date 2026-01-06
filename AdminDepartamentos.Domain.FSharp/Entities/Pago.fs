@@ -9,14 +9,13 @@ type EstadoPago =
     | Retrasado of DateTime
     | Eliminado
     
-type Pago =
-    public {
-        NumDeposito : int option
-        Monto : decimal
-        FechaPago : FechaPago
-        Estado : EstadoPago
-        Email : bool
-    }
+type Pago = {
+    NumDeposito : int option
+    Monto : decimal
+    FechaPago : FechaPago
+    Estado : EstadoPago
+    Email : bool
+}
 
 module Pago =
     let create numDeposito monto fechaPago =

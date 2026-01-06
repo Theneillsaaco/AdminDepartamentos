@@ -1,7 +1,7 @@
 using AdminDepartamentos.API.Models;
 using AdminDepartamentos.API.Services.BackgroundServices;
 using AdminDepartamentos.API.Services.Emails;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
 using AdminDepartamentos.IOC.Dependencies.Configurations;
 using Serilog;

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace AdminDepartamentos.Infrastucture.Core.Interfaces;
+namespace AdminDepartamentos.Infrastructure.Core.Interfaces;
 
 /// <summary>
 ///     Interfaz genérica para el repositorio base que define operaciones comunes de acceso a datos.

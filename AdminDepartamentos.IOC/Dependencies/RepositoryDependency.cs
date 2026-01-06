@@ -1,5 +1,5 @@
-﻿using AdminDepartamentos.Infrastucture.Interfaces;
-using AdminDepartamentos.Infrastucture.Repositories;
+﻿using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AdminDepartamentos.IOC.Dependencies;

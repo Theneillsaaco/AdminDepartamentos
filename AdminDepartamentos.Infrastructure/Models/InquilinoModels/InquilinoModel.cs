@@ -1,4 +1,4 @@
-﻿namespace AdminDepartamentos.Domain.Models;
+﻿namespace AdminDepartamentos.Infrastructure.Models.InquilinoModels;
 
 public class InquilinoModel
 {

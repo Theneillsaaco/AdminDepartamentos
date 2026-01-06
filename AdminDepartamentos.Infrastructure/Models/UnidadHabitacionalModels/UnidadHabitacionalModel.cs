@@ -1,4 +1,7 @@
-﻿namespace AdminDepartamentos.Domain.Models;
+﻿using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
+using AdminDepartamentos.Infrastructure.Models.InteresadoModels;
+
+namespace AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 
 public class UnidadHabitacionalModel
 {

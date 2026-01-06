@@ -3,7 +3,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>AdminDepartamentos.Infrastucture</RootNamespace>
+        <RootNamespace>AdminDepartamentos.Infrastructure</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.1"/>
@@ -16,7 +16,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\AdminDepartamentos.Domain.FSharp\AdminDepartamentos.Domain.FSharp.fsproj" />
-        <ProjectReference Include="..\AdminDepartamentos.Domain\AdminDepartamentos.Domain.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Migrations\"/>

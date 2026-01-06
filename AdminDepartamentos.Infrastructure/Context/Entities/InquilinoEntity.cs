@@ -1,9 +1,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AdminDepartamentos.Domain.Entities;
 
-namespace AdminDepartamentos.Infrastucture.Context.Entities;
+namespace AdminDepartamentos.Infrastructure.Context.Entities;
 
 public class InquilinoEntity
 {
@@ -42,7 +41,7 @@ public class InquilinoEntity
     public DateTime? DeletedDate { get; set; }
 
     public PagoEntity Pago { get; set; }
-    public UnidadHabitacional? UnidadHabitacional { get; set; }
+    public UnidadHabitacionalEntity? UnidadHabitacional { get; set; }
 
     public void MarkDeleted()
     {

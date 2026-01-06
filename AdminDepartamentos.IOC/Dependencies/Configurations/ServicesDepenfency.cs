@@ -1,5 +1,5 @@
 using System.Text;
-using AdminDepartamentos.Infrastucture.Context;
+using AdminDepartamentos.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

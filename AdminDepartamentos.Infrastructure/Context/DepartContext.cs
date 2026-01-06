@@ -1,10 +1,9 @@
-﻿using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Infrastucture.Context.Entities;
+﻿using AdminDepartamentos.Infrastructure.Context.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastucture.Context;
+namespace AdminDepartamentos.Infrastructure.Context;
 
 public class DepartContext : IdentityDbContext<IdentityUser>
 {
@@ -24,10 +23,10 @@ public class DepartContext : IdentityDbContext<IdentityUser>
         builder.Entity<PagoEntity>()
             .HasQueryFilter(p => !p.Deleted);
 
-        builder.Entity<Interesado>()
+        builder.Entity<InteresadoEntity>()
             .HasQueryFilter(u => !u.Deleted);
-
-        builder.Entity<UnidadHabitacional>()
+        
+        builder.Entity<UnidadHabitacionalEntity>()
             .HasQueryFilter(u => !u.Deleted);
 
         base.OnModelCreating(builder);
@@ -38,9 +37,9 @@ public class DepartContext : IdentityDbContext<IdentityUser>
     public DbSet<InquilinoEntity> Inquilinos { get; set; }
     public DbSet<PagoEntity> Pagos { get; set; }
 
-    public DbSet<UnidadHabitacional> UnidadHabitacionals { get; set; }
+    public DbSet<UnidadHabitacionalEntity> UnidadHabitacionals { get; set; }
 
-    public DbSet<Interesado> Interesados { get; set; }
+    public DbSet<InteresadoEntity> Interesados { get; set; }
 
     #endregion
 }

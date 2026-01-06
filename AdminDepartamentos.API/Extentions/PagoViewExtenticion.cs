@@ -1,7 +1,6 @@
 ﻿using AdminDepartamentos.API.Models.PagoModels;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.PagoModels;
 
 namespace AdminDepartamentos.API.Extentions;
 

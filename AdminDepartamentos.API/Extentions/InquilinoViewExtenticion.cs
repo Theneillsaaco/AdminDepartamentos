@@ -1,7 +1,7 @@
 ﻿using AdminDepartamentos.API.Models.InquilinoModels;
 using AdminDepartamentos.Domain.FSharp.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
 
 namespace AdminDepartamentos.API.Extentions;
 

@@ -1,6 +1,6 @@
 ﻿using AdminDepartamentos.API.Models.UnidadHabitacional;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 
 namespace AdminDepartamentos.API.Extentions;
 
@@ -22,7 +22,7 @@ public static class UnidadHabitacionalViewExtenticion
     }
 
     public static UnidadHabitacionalOccuppiedModel ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel(
-        this UnidadHabitacional unidadHabitacional)
+        this UnidadHabitacionalEntity unidadHabitacional)
     {
         return new UnidadHabitacionalOccuppiedModel
         {
@@ -38,7 +38,7 @@ public static class UnidadHabitacionalViewExtenticion
     }
 
     public static UnidadHabitacionalGetByInquilinoModel ConvertInquilinoEntityToUnidadHabitacionalGetByInquilinoModel(
-        this Inquilino inquilino)
+        this InquilinoEntity inquilino)
     {
         return new UnidadHabitacionalGetByInquilinoModel
         {

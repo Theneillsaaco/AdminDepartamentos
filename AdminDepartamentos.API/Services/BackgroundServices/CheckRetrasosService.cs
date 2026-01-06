@@ -1,9 +1,9 @@
 ﻿using AdminDepartamentos.API.Extentions;
 using AdminDepartamentos.Domain.FSharp.Entities;
-using AdminDepartamentos.Infrastucture.Context;
-using AdminDepartamentos.Infrastucture.Context.Entities;
-using AdminDepartamentos.Infrastucture.Interfaces;
-using AdminDepartamentos.Infrastucture.Mapping;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Mapping;
 
 namespace AdminDepartamentos.API.Services.BackgroundServices;
 

@@ -1,9 +1,9 @@
 using AdminDepartamentos.Domain.FSharp.Entities;
 using AdminDepartamentos.Domain.FSharp.ValueObjects;
-using AdminDepartamentos.Infrastucture.Context.Entities;
+using AdminDepartamentos.Infrastructure.Context.Entities;
 using Pago = AdminDepartamentos.Domain.FSharp.Entities.Pago;
 
-namespace AdminDepartamentos.Infrastucture.Mapping;
+namespace AdminDepartamentos.Infrastructure.Mapping;
 
 public static class PagoMapper
 {

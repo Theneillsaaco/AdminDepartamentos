@@ -1,8 +1,8 @@
 using AdminDepartamentos.API.Core;
 using AdminDepartamentos.API.Models.InteresadoModels;
-using AdminDepartamentos.Domain.Entities;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Interfaces;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Models.InteresadoModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -49,7 +49,7 @@ public class InteresadoController : ControllerBase
     {
         _logger.LogInformation("GETPending Interesado - Start.");
 
-        var responseApi = new ResponseAPI<List<Interesado>>();
+        var responseApi = new ResponseAPI<List<InteresadoEntity>>();
 
         try
         {
@@ -77,7 +77,7 @@ public class InteresadoController : ControllerBase
     {
         _logger.LogInformation("GET Interesado - Start.");
 
-        var responseApi = new ResponseAPI<Interesado>();
+        var responseApi = new ResponseAPI<InteresadoEntity>();
 
         try
         {
@@ -150,15 +150,14 @@ public class InteresadoController : ControllerBase
                 return NotFound(responseApi);
             }
 
-            var interesado = await _interesadoRepository.GetById(id);
-            interesado.Update(
+            await _interesadoRepository.UpdateInteresado(
+                id, 
                 model.FirstName,
                 model.LastName,
                 model.Telefono,
                 model.TipoUnidadHabitacional
             );
-
-            await _interesadoRepository.Update(interesado);
+            
             await ClearCache();
 
             _logger.LogInformation("Update Interesado - Interesado updated.");

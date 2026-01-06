@@ -3,15 +3,14 @@ namespace AdminDepartamentos.Domain.FSharp.Entities
 open System
 open AdminDepartamentos.Domain.FSharp.Common
 
-type Inquilino =
-    public {
-        FirstName: string
-        LastName: string
-        Cedula: string
-        Telefono : string
-        Pago : Pago
-        Deleted : bool
-    }
+type Inquilino = {
+    FirstName: string
+    LastName: string
+    Cedula: string
+    Telefono : string
+    Pago : Pago
+    Deleted : bool
+} 
     
 module Inquilino =
     let create first last cedula telefono pago =

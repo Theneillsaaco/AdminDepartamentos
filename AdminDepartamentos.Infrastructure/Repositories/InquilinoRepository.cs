@@ -1,15 +1,16 @@
 ﻿using AdminDepartamentos.Domain.FSharp.Entities;
 using AdminDepartamentos.Domain.FSharp.ValueObjects;
-using AdminDepartamentos.Domain.Models;
-using AdminDepartamentos.Infrastucture.Context;
-using AdminDepartamentos.Infrastucture.Context.Entities;
-using AdminDepartamentos.Infrastucture.Core;
-using AdminDepartamentos.Infrastucture.Exceptions;
-using AdminDepartamentos.Infrastucture.Interfaces;
-using AdminDepartamentos.Infrastucture.Mapping;
+using AdminDepartamentos.Infrastructure.Context;
+using AdminDepartamentos.Infrastructure.Context.Entities;
+using AdminDepartamentos.Infrastructure.Core;
+using AdminDepartamentos.Infrastructure.Exceptions;
+using AdminDepartamentos.Infrastructure.Interfaces;
+using AdminDepartamentos.Infrastructure.Mapping;
+using AdminDepartamentos.Infrastructure.Models.InquilinoModels;
+using AdminDepartamentos.Infrastructure.Models.PagoModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdminDepartamentos.Infrastucture.Repositories;
+namespace AdminDepartamentos.Infrastructure.Repositories;
 
 /// <summary>
 ///     Clase Predeterminada de Inquilino;
