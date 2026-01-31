@@ -32,6 +32,7 @@ public class PagoRepository : BaseRepository<PagoEntity>, IPagoRepository
     public async Task<List<PagoInquilinoModel>> GetPago()
     {
         return await _context.Pagos
+            .AsNoTracking()
             .Include(p => p.Inquilino)
             .OrderBy(p => p.IdPago)
             .Select(p => p.ToPagoInquilinoModel(p.Inquilino))
@@ -41,6 +42,7 @@ public class PagoRepository : BaseRepository<PagoEntity>, IPagoRepository
     public async Task<List<PagoEntity>> GetRetrasosWithoutEmail()
     {
         return await _context.Pagos
+            .AsNoTracking()
             .Where(pa => pa.Retrasado && !pa.Email)
             .Include(pa => pa.Inquilino)
             .ToListAsync();

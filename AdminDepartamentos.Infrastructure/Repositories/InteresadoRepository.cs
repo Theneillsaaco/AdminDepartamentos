@@ -17,7 +17,8 @@ public class InteresadoRepository : BaseRepository<InteresadoEntity>, IInteresad
     public async Task<List<InteresadoModel>> GetByType(string type)
     {
         return await _context.Interesados
-            .Where(inte => inte.TipoUnidadHabitacional == type && !inte.Deleted)
+            .AsNoTracking()
+            .Where(inte => inte.TipoUnidadHabitacional == type)
             .OrderBy(p => p.IdInteresado)
             .Select(inte => inte.ConvertInteresadoEntityToInteresadoModel())
             .ToListAsync();
@@ -26,7 +27,7 @@ public class InteresadoRepository : BaseRepository<InteresadoEntity>, IInteresad
     public async Task<List<InteresadoEntity>> GetPendingInteresado()
     {
         return await _context.Interesados
-            .Where(inte => inte.Deleted)
+            .AsNoTracking()
             .OrderBy(inte => inte.Fecha)
             .ToListAsync();
     }

@@ -29,6 +29,26 @@ public class DepartContext : IdentityDbContext<IdentityUser>
         builder.Entity<UnidadHabitacionalEntity>()
             .HasQueryFilter(u => !u.Deleted);
 
+        #region "Indexes"
+
+        builder.Entity<InquilinoEntity>()
+            .HasIndex(inq => inq.Cedula)
+            .IsUnique();
+
+        builder.Entity<PagoEntity>()
+            .HasIndex(pa => pa.Retrasado)
+            .IsUnique();
+
+        builder.Entity<InteresadoEntity>()
+            .HasIndex(ints => ints.TipoUnidadHabitacional)
+            .IsUnique();
+
+        builder.Entity<UnidadHabitacionalEntity>()
+            .HasIndex(uni => uni.IdInquilinoActual)
+            .IsUnique();
+
+        #endregion
+        
         base.OnModelCreating(builder);
     }
 

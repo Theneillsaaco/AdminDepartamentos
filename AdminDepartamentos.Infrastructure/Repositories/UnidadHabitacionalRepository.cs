@@ -16,35 +16,36 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
 {
     public async Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales()
     {
-        var unidades = await _context.UnidadHabitacionals
+
+        return await _context.UnidadHabitacionals
+            .AsNoTracking()
             .Include(uni => uni.InquilinoActual)
-            .OrderBy(uni => uni.IdUnidadHabitacional)
-            .ToListAsync();
+            .Select(uni => new UnidadHabitacionalModel
+            {
+                IdUnidadHabitacional = uni.IdUnidadHabitacional,
+                Name = uni.Name,
+                Tipo = uni.Tipo,
+                LightCode = uni.LightCode,
+                Occupied = uni.IdInquilinoActual != null,
+                InquilinoActual = uni.InquilinoActual != null 
+                    ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
+                    : null,
 
-        var interesados = await _context.Interesados
-            .Select(i => i.ConvertInteresadoEntityToInteresadoModel())
+                Interesados = _context.Interesados
+                    .AsNoTracking()
+                    .Where(inq => inq.TipoUnidadHabitacional == uni.Tipo)
+                    .Select(inq => inq.ConvertInteresadoEntityToInteresadoModel())
+                    .ToList()
+            })
+            .OrderBy(uni => uni.Name)
             .ToListAsync();
-
-        return unidades.Select(uni => new UnidadHabitacionalModel
-        {
-            IdUnidadHabitacional = uni.IdUnidadHabitacional,
-            Name = uni.Name,
-            Tipo = uni.Tipo,
-            LightCode = uni.LightCode,
-            Occupied = uni.IdInquilinoActual != null,
-            InquilinoActual = uni.InquilinoActual != null
-                ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
-                : null,
-            Interesados = interesados
-                .Where(i => i.TipoUnidadHabitacional == uni.Tipo)
-                .ToList()
-        }).ToList();
     }
 
 
     public async Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional()
     {
         return await _context.UnidadHabitacionals
+            .AsNoTracking()
             .Include(uni => uni.Interesados)
             .Where(uni => uni.IdInquilinoActual == null)
             .ToListAsync();
@@ -53,6 +54,7 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
     public async Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional()
     {
         return await _context.UnidadHabitacionals
+            .AsNoTracking()            
             .Include(uni => uni.InquilinoActual)
             .Where(uni => uni.IdInquilinoActual != null)
             .ToListAsync();

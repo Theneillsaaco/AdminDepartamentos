@@ -21,6 +21,7 @@ public class InquilinoRepository : BaseRepository<InquilinoEntity>, IInquilinoRe
     public async Task<List<InquilinoEntity>> GetInquilinos()
     {
         return await _context.Inquilinos
+            .AsNoTracking()
             .OrderBy(i => i.IdInquilino)
             .ToListAsync();
     }
