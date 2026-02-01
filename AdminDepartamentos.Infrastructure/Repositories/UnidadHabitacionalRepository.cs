@@ -9,7 +9,6 @@ using AdminDepartamentos.Infrastructure.Interfaces;
 using AdminDepartamentos.Infrastructure.Mapping;
 using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AdminDepartamentos.Infrastructure.Repositories;
 
