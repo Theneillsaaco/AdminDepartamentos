@@ -10,6 +10,8 @@ namespace AdminDepartamentos.Unit.Test.Infrastructure;
 
 public class InquilinoRepositoryTest
 {
+    #region GetInquilinos
+
     [Fact]
     public async Task GetInquilinos_Returns_Limited_List()
     {
@@ -60,6 +62,10 @@ public class InquilinoRepositoryTest
         Assert.All(result, i => Assert.True(i.IdInquilino > 1));
     }
 
+    #endregion
+
+    #region GetById
+
     [Fact]
     public async Task GetById_Returns_Inquilino_When_Exists()
     {
@@ -96,6 +102,10 @@ public class InquilinoRepositoryTest
         // Assert
         await Assert.ThrowsAsync<InquilinoException>(act);
     }
+
+    #endregion
+
+    #region Save
 
     [Fact]
     public async Task Save_Creates_Inquilino_And_Pago()
@@ -197,6 +207,10 @@ public class InquilinoRepositoryTest
         Assert.Empty(pagos);
     }
 
+    #endregion
+
+    #region Update
+
     [Fact]
     public async Task Update_Updates_Fields()
     {
@@ -254,6 +268,8 @@ public class InquilinoRepositoryTest
         // Assert
         await Assert.ThrowsAsync<InquilinoException>(act);
     }
+
+    #endregion
 
     [Fact]
     public async Task MarkDeleted_Marks_Inquilino_As_Deleted()
