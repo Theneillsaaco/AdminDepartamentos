@@ -9,6 +9,7 @@ using AdminDepartamentos.Infrastructure.Interfaces;
 using AdminDepartamentos.Infrastructure.Mapping;
 using AdminDepartamentos.Infrastructure.Models.UnidadHabitacionalModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace AdminDepartamentos.Infrastructure.Repositories;
 
@@ -19,35 +20,66 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
 
         var query = _context.UnidadHabitacionals
             .AsNoTracking()
-            .Include(uni => uni.InquilinoActual)
-            .Select(uni => new UnidadHabitacionalModel
-            {
-                IdUnidadHabitacional = uni.IdUnidadHabitacional,
-                Name = uni.Name,
-                Tipo = uni.Tipo,
-                LightCode = uni.LightCode,
-                Occupied = uni.IdInquilinoActual != null,
-                InquilinoActual = uni.InquilinoActual != null 
-                    ? uni.InquilinoActual.ConvertInquilinoEntityToInquilinoModel()
-                    : null,
-
-                Interesados = _context.Interesados
-                    .AsNoTracking()
-                    .Where(inq => inq.TipoUnidadHabitacional == uni.Tipo)
-                    .Select(inq => inq.ConvertInteresadoEntityToInteresadoModel())
-                    .ToList()
-            })
             .OrderBy(uni => uni.Name)
             .AsQueryable();
 
         if (lastId.HasValue)
             query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
 
-        return await query
-            .Take(take)
-            .ToListAsync();
-    }
 
+        var unidades = await query
+            .Take(take)
+            .Select(uni => new
+            {
+                uni.IdUnidadHabitacional,
+                uni.Name,
+                uni.Tipo,
+                uni.LightCode,
+                uni.IdInquilinoActual,
+                Inquilino = uni.InquilinoActual
+            })
+            .ToListAsync();
+
+        if (!unidades.Any())
+            return new();
+
+        var tipos = unidades
+            .Select(u => u.Tipo)
+            .Distinct()
+            .ToList();
+
+        var interesado =  await _context.Interesados
+            .AsNoTracking()
+            .Where(i => tipos.Contains(i.TipoUnidadHabitacional))
+            .Select(i => new
+            {
+                i.TipoUnidadHabitacional, 
+                Model = i.ConvertInteresadoEntityToInteresadoModel()
+            })
+            .ToListAsync();
+
+        var interesadoByTypes = interesado
+            .GroupBy(i => i.TipoUnidadHabitacional)
+            .ToDictionary(
+                g => g.Key, 
+                g => g.Select(i => i.Model).ToList()
+            );
+
+        return unidades.Select(uni => new UnidadHabitacionalModel
+        {
+            IdUnidadHabitacional = uni.IdUnidadHabitacional,
+            Name = uni.Name,
+            Tipo = uni.Tipo,
+            LightCode = uni.LightCode,
+            Occupied = uni.IdInquilinoActual != null,
+            InquilinoActual = uni.Inquilino != null 
+                ? uni.Inquilino.ConvertInquilinoEntityToInquilinoModel() 
+                : null,
+            Interesados = interesadoByTypes.TryGetValue(uni.Tipo, out var lista)
+                ? lista
+                : new()
+        }).ToList();
+    }
 
     public async Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional(int? lastId = null, int take = 20)
     {
