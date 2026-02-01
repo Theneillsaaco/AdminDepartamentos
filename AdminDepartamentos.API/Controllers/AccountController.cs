@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AdminDepartamentos.API.Models.LoginModels;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,7 @@ namespace AdminDepartamentos.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[IgnoreAntiforgeryToken]
 public class AccountController : ControllerBase
 {
     [HttpPost("register")]
@@ -88,7 +90,7 @@ public class AccountController : ControllerBase
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None,
+            SameSite = SameSiteMode.Lax,
             Expires = DateTimeOffset.Now.AddMinutes(30)
         });
 
@@ -127,6 +129,8 @@ public class AccountController : ControllerBase
             _configuration["Jwt:Audience"],
             new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             },
@@ -134,6 +138,15 @@ public class AccountController : ControllerBase
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    [HttpGet("csrf-token")]
+    public IActionResult GetCsrToken([FromServices] IAntiforgery antiforgery)
+    {
+        var tokens = antiforgery.GetAndStoreTokens(HttpContext);
+
+        _logger.LogInformation("GetCsrfToken - CSRF token generated and stored in cookie.");
+        return Ok(new { token = tokens.RequestToken });
     }
 
     #region Fields

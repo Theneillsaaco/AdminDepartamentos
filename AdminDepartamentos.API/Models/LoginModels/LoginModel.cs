@@ -4,7 +4,9 @@ namespace AdminDepartamentos.API.Models.LoginModels;
 
 public class LoginModel
 {
-    [EmailAddress] public string Email { get; set; }
+    [Required, EmailAddress, MaxLength(100)]
+     public string Email { get; set; }
 
+    [Required, MinLength(8), MaxLength(100)]
     public string Password { get; set; }
 }

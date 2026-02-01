@@ -4,6 +4,7 @@ using AdminDepartamentos.API.Services.Emails;
 using AdminDepartamentos.Infrastructure.Interfaces;
 using AdminDepartamentos.IOC.Dependencies;
 using AdminDepartamentos.IOC.Dependencies.Configurations;
+using Microsoft.AspNetCore.Antiforgery;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddRepositoryDependency();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 builder.Host.ConfigureSerilog(builder.Configuration);
+builder.Services.ConfigureAntiforgery();
 
 // Register hosted services.
 builder.Services.AddHostedService<CheckRetrasosService>();
@@ -40,6 +42,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseHsts();
+    app.UseAntiforgery();
 }
 
 app.UseSerilogRequestLogging(options =>
@@ -53,6 +56,17 @@ app.UseSerilogRequestLogging(options =>
 });
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.TryAdd("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.TryAdd("X-Frame-Options", "DENY");
+    context.Response.Headers.TryAdd("Referrer-Policy", "no-referrer");
+    context.Response.Headers.TryAdd("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
+    context.Response.Headers.TryAdd("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none';");
+
+    await next();   
+});
 
 app.UseCors("DefaultCorsPolicy");
 

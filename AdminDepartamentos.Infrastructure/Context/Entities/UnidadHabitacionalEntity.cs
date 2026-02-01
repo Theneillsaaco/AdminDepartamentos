@@ -10,13 +10,13 @@ public class UnidadHabitacionalEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdUnidadHabitacional { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string Name { get; set; }
 
-    [Required]
+    [Required, MaxLength(20)]
     public string LightCode { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string Tipo { get; set; }
 
     public bool Occupied => IdInquilinoActual.HasValue;
@@ -26,8 +26,7 @@ public class UnidadHabitacionalEntity
     [ForeignKey("IdInquilinoActual")]
     public InquilinoEntity? InquilinoActual { get; set; }
 
-    [Required] 
-    [DefaultValue(0)]
+    [Required, DefaultValue(false)] 
     public bool Deleted { get; set; }
 
     [NotMapped]

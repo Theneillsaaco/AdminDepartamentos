@@ -13,13 +13,13 @@ public class PagoEntity
     [Required] 
     public int IdInquilino { get; set; }
 
+    [MaxLength(50)]
     public int? NumDeposito { get; set; }
 
-    [Required]
-    [Column(TypeName = "decimal(18,2)")]
+    [Required, MaxLength(18), Column(TypeName = "decimal(18,2)")]
     public decimal Monto { get; set; }
 
-    [Required] 
+    [Required, MaxLength(3)] 
     public int FechaPagoInDays { get; set; }
 
     [Required]
@@ -28,12 +28,10 @@ public class PagoEntity
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? RetrasadoDate { get; set; }
 
-    [Required] 
-    [DefaultValue(true)] 
+    [Required, DefaultValue(true)] 
     public bool Email { get; set; }
 
-    [Required] 
-    [DefaultValue(false)] 
+    [Required, DefaultValue(false)] 
     public bool Deleted { get; set; }
 
     [ForeignKey("IdInquilino")] 

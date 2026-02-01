@@ -35,17 +35,11 @@ public class DepartContext : IdentityDbContext<IdentityUser>
             .HasIndex(inq => inq.Cedula)
             .IsUnique();
 
-        builder.Entity<PagoEntity>()
-            .HasIndex(pa => pa.Retrasado)
-            .IsUnique();
-
         builder.Entity<InteresadoEntity>()
-            .HasIndex(ints => ints.TipoUnidadHabitacional)
-            .IsUnique();
+            .HasIndex(ints => ints.TipoUnidadHabitacional);
 
         builder.Entity<UnidadHabitacionalEntity>()
-            .HasIndex(uni => uni.IdInquilinoActual)
-            .IsUnique();
+            .HasIndex(uni => uni.IdInquilinoActual);
 
         #endregion
         

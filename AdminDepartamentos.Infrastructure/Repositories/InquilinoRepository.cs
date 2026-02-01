@@ -18,23 +18,34 @@ namespace AdminDepartamentos.Infrastructure.Repositories;
 /// </summary>
 public class InquilinoRepository : BaseRepository<InquilinoEntity>, IInquilinoRepository
 {
-    public async Task<List<InquilinoEntity>> GetInquilinos()
+    public async Task<List<InquilinoEntity>> GetInquilinos(int? lastId = null, int take = 20)
     {
-        return await _context.Inquilinos
+        var query = _context.Inquilinos
             .AsNoTracking()
             .OrderBy(i => i.IdInquilino)
+            .AsQueryable();
+
+        if (lastId.HasValue)
+            query = query.Where(i => i.IdInquilino > lastId.Value);
+
+        return await query
+            .Take(take)
             .ToListAsync();
     }
 
     public async Task<InquilinoEntity> GetById(int id)
     {
         if (id <= 0)
-            throw new ArgumentException("El Id no puede ser menor o igual a cero.", nameof(id));
+            throw new InquilinoException("El Id del inquilino no es válido.");
+            
+        var entity = await _context.Inquilinos
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.IdInquilino == id);
 
-        if (!await base.Exists(cd => cd.IdInquilino == id))
+        if (entity is null)
             throw new InquilinoException("El inquilino no existe.");
 
-        return await base.GetById(id);
+        return entity;
     }
 
     public async Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto)

@@ -7,7 +7,7 @@ namespace AdminDepartamentos.Infrastructure.Interfaces;
 
 public interface IInquilinoRepository : IBaseRepository<InquilinoEntity>    
 {
-    Task<List<InquilinoEntity>> GetInquilinos();
+    Task<List<InquilinoEntity>> GetInquilinos(int? lastId = null, int take = 20);
 
     Task<(bool Success, string Message)> Save(InquilinoDto inquilinoDto, PagoDto pagoDto);
 

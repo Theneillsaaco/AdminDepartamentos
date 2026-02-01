@@ -16,8 +16,11 @@ public class InquilinoController : ControllerBase
 {
     // GET: api/InquilinoController/GetAll
     [HttpGet("GetAll")]
-    [OutputCache(PolicyName = "InquilinosCache")]
-    public async Task<IActionResult> GetAll()
+    [OutputCache(
+        PolicyName = "InquilinosCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }
+    )]
+    public async Task<IActionResult> GetAll(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETAll Inquilinos - Start.");
 
@@ -25,7 +28,7 @@ public class InquilinoController : ControllerBase
 
         try
         {
-            var inquilinos = await _inquilinoRepository.GetInquilinos();
+            var inquilinos = await _inquilinoRepository.GetInquilinos(lastId, take);
 
             var inquilinoViewModels =
                 inquilinos.Select(inq => inq.ConvertInquilinoEntityToInquilinoViewModel()).ToList();

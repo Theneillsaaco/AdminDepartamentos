@@ -10,16 +10,16 @@ public class InquilinoEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdInquilino { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string FirstName { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string LastName { get; set; }
 
-    [Required]
+    [Required, MaxLength(20)]
     public string Cedula { get; set; }
 
-    [Required]
+    [Required, Phone, MaxLength(20)]
     public string Telefono { get; set; }
 
     public int? IdUnidadHabitacional { get; set; }
@@ -31,10 +31,10 @@ public class InquilinoEntity
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifyDate { get; set; }
 
-    [DefaultValue(1)]
+    [DefaultValue(true)]
     public int CreationUser { get; set; }
 
-    [Required] [DefaultValue(0)] 
+    [Required] [DefaultValue(false)] 
     public bool Deleted { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]

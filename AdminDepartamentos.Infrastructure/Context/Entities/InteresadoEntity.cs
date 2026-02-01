@@ -10,14 +10,13 @@ public class InteresadoEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int IdInteresado { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string FirstName { get; set; }
 
-    [Required]
+    [Required, MaxLength(50)]
     public string LastName { get; set; }
 
-    [Required] 
-    [Phone] 
+    [Required, Phone, MaxLength(20)]
     public string Telefono { get; set; }
 
     [Required]
