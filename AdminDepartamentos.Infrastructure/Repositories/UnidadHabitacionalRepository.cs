@@ -52,24 +52,8 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
     public async Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional(int? lastId = null, int take = 20)
     {
         var query = _context.UnidadHabitacionals
-            .AsNoTracking()
-            .Where(uni => uni.IdInquilinoActual == null)
-            .OrderBy(uni => uni.IdUnidadHabitacional)
-            .AsQueryable();
-        
-        if (lastId.HasValue)
-            query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
-
-        return await query
-            .Take(take)
-            .ToListAsync();
-    }
-
-    public async Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional(int? lastId = null, int take = 20)
-    {
-        var query = _context.UnidadHabitacionals
             .AsNoTracking()            
-            .Where(uni => uni.IdInquilinoActual != null)
+            .Where(uni => uni.IdInquilinoActual == null)
             .OrderBy(uni => uni.IdUnidadHabitacional)
             .AsQueryable();
         
@@ -98,6 +82,23 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
         }
 
         return unidades;
+    }
+
+    public async Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional(int? lastId = null, int take = 20)
+    {
+        var query = _context.UnidadHabitacionals
+            .AsNoTracking()            
+            .Include(uni => uni.InquilinoActual)
+            .Where(uni => uni.IdInquilinoActual != null)
+            .OrderBy(uni => uni.IdUnidadHabitacional)
+            .AsQueryable();
+        
+        if (lastId.HasValue)
+            query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
+
+        return await query
+            .Take(take)
+            .ToListAsync();
     }
 
     public override async Task<UnidadHabitacionalEntity> GetById(int id)
