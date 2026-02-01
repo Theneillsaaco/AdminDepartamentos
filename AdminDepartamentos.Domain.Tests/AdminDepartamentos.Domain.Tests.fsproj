@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Compile Include="Domain/PagoDomainTest.fs" />
+    <Compile Include="Domain/InquilinoDomainTest.fs" />
   </ItemGroup>
 
   <ItemGroup>
