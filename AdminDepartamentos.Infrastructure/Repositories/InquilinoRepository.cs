@@ -90,10 +90,15 @@ public class InquilinoRepository : BaseRepository<InquilinoEntity>, IInquilinoRe
             await transaction.CommitAsync();
             return (true, "Inquilino y pago creados exitosamente.");
         }
-        catch (Exception ex)
+        catch (InquilinoException ex)
         {
             await transaction.RollbackAsync();
-            return (false, $"Ocurrio un error al crear el inquilino y el pago. Error: {ex.Message}");
+            return (false, ex.Message);
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            return (false, "Ocurrio un error al crear el inquilino y el pago.");
         }
     }
 
