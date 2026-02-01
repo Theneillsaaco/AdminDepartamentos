@@ -64,6 +64,9 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
             .Take(take)
             .ToListAsync();
 
+        if (!unidades.Any())
+            return unidades;
+
         var tipos = unidades
             .Select(u => u.Tipo)
             .Distinct()
@@ -74,11 +77,17 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
             .Where(i => tipos.Contains(i.TipoUnidadHabitacional))
             .ToListAsync();
 
+        var interesadoByTypes = interesado
+            .GroupBy(i => i.TipoUnidadHabitacional)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
         foreach (var unidad in unidades)        
         {
-            unidad.Interesados = interesado
-                .Where(i => i.TipoUnidadHabitacional == unidad.Tipo)
-                .ToList();
+            unidad.Interesados = interesadoByTypes.TryGetValue(
+                unidad.Tipo,
+                out var lista)
+                ? lista
+                : new List<InteresadoEntity>();
         }
 
         return unidades;
