@@ -29,12 +29,19 @@ public class PagoRepository : BaseRepository<PagoEntity>, IPagoRepository
         return await base.GetById(id);
     }
 
-    public async Task<List<PagoInquilinoModel>> GetPago()
+    public async Task<List<PagoInquilinoModel>> GetPago(int? lastId = null, int take = 20)
     {
-        return await _context.Pagos
+        var query = _context.Pagos
             .AsNoTracking()
             .Include(p => p.Inquilino)
             .OrderBy(p => p.IdPago)
+            .AsQueryable();
+        
+        if (lastId.HasValue)
+            query = query.Where(p => p.IdPago > lastId.Value);
+
+        return await query
+            .Take(take)
             .Select(p => p.ToPagoInquilinoModel(p.Inquilino))
             .ToListAsync();
     }

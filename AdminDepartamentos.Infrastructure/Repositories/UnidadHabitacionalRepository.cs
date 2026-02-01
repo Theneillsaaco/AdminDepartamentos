@@ -14,10 +14,10 @@ namespace AdminDepartamentos.Infrastructure.Repositories;
 
 public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEntity>, IUnidadHabitacionalRepository
 {
-    public async Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales()
+    public async Task<List<UnidadHabitacionalModel>> GetUnidadHabitacionales(int? lastId = null, int take = 20)
     {
 
-        return await _context.UnidadHabitacionals
+        var query = _context.UnidadHabitacionals
             .AsNoTracking()
             .Include(uni => uni.InquilinoActual)
             .Select(uni => new UnidadHabitacionalModel
@@ -38,26 +38,66 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
                     .ToList()
             })
             .OrderBy(uni => uni.Name)
+            .AsQueryable();
+
+        if (lastId.HasValue)
+            query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
+
+        return await query
+            .Take(take)
             .ToListAsync();
     }
 
 
-    public async Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional()
+    public async Task<List<UnidadHabitacionalEntity>> GetAvailableUnidadHabitacional(int? lastId = null, int take = 20)
     {
-        return await _context.UnidadHabitacionals
+        var query = _context.UnidadHabitacionals
             .AsNoTracking()
-            .Include(uni => uni.Interesados)
             .Where(uni => uni.IdInquilinoActual == null)
+            .OrderBy(uni => uni.IdUnidadHabitacional)
+            .AsQueryable();
+        
+        if (lastId.HasValue)
+            query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
+
+        return await query
+            .Take(take)
             .ToListAsync();
     }
 
-    public async Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional()
+    public async Task<List<UnidadHabitacionalEntity>> GetOccupiedUnidadHabitacional(int? lastId = null, int take = 20)
     {
-        return await _context.UnidadHabitacionals
+        var query = _context.UnidadHabitacionals
             .AsNoTracking()            
-            .Include(uni => uni.InquilinoActual)
             .Where(uni => uni.IdInquilinoActual != null)
+            .OrderBy(uni => uni.IdUnidadHabitacional)
+            .AsQueryable();
+        
+        if (lastId.HasValue)
+            query = query.Where(uni => uni.IdUnidadHabitacional > lastId.Value);
+
+        var unidades = await query
+            .Take(take)
             .ToListAsync();
+
+        var tipos = unidades
+            .Select(u => u.Tipo)
+            .Distinct()
+            .ToList();
+
+        var interesado = await _context.Interesados
+            .AsNoTracking()
+            .Where(i => tipos.Contains(i.TipoUnidadHabitacional))
+            .ToListAsync();
+
+        foreach (var unidad in unidades)        
+        {
+            unidad.Interesados = interesado
+                .Where(i => i.TipoUnidadHabitacional == unidad.Tipo)
+                .ToList();
+        }
+
+        return unidades;
     }
 
     public override async Task<UnidadHabitacionalEntity> GetById(int id)
@@ -90,7 +130,7 @@ public class UnidadHabitacionalRepository : BaseRepository<UnidadHabitacionalEnt
             await _context.SaveChangesAsync();
             return (true, "Unidad Habitacional creada exitosamente.");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return (false, "Ocurrio un error al crear la Unidad Habitacional.");
         }

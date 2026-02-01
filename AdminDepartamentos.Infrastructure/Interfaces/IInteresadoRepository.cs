@@ -6,9 +6,9 @@ namespace AdminDepartamentos.Infrastructure.Interfaces;
 
 public interface IInteresadoRepository : IBaseRepository<InteresadoEntity>
 {
-    Task<List<InteresadoModel>> GetByType(string type);
+    Task<List<InteresadoModel>> GetByType(string type, int? lastId = null, int take = 20);
 
-    Task<List<InteresadoEntity>> GetPendingInteresado();
+    Task<List<InteresadoEntity>> GetPendingInteresado(int? lastId = null, int take = 20);
 
     Task<(bool Success, string Message)> Save(InteresadoDto interesadoDto);
 

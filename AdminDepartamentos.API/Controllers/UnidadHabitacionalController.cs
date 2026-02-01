@@ -18,7 +18,7 @@ public class UnidadHabitacionalController : ControllerBase
     // GET: api/UnidadHabitacionalController/GetAll
     [HttpGet("GetAll")]
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETAll UnidadHabitacional - Start.");
 
@@ -26,7 +26,7 @@ public class UnidadHabitacionalController : ControllerBase
 
         try
         {
-            var unidad = await _unidadHabitacionalRepository.GetUnidadHabitacionales();
+            var unidad = await _unidadHabitacionalRepository.GetUnidadHabitacionales(lastId, take);
             var unidadViewModels =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalViewModelToUnidadHabitacionalModel()).ToList();
 
@@ -84,7 +84,7 @@ public class UnidadHabitacionalController : ControllerBase
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Available")]
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
-    public async Task<IActionResult> GetAvailable()
+    public async Task<IActionResult> GetAvailable(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GET Available UnidadHabitacional - Start.");
 
@@ -92,7 +92,7 @@ public class UnidadHabitacionalController : ControllerBase
 
         try
         {
-            var availableUnits = await _unidadHabitacionalRepository.GetAvailableUnidadHabitacional();
+            var availableUnits = await _unidadHabitacionalRepository.GetAvailableUnidadHabitacional(lastId, take);
 
             _logger.LogInformation("GET Available UnidadHabitacional - Total encontrados: {Count}.",
                 availableUnits.Count());
@@ -113,7 +113,7 @@ public class UnidadHabitacionalController : ControllerBase
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Occupied")]
     [OutputCache(PolicyName = "UnidadHabitacionalCache")]
-    public async Task<IActionResult> GetOccupied()
+    public async Task<IActionResult> GetOccupied(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GET Occupied UnidadHabitacional - Start.");
 
@@ -121,7 +121,7 @@ public class UnidadHabitacionalController : ControllerBase
 
         try
         {
-            var unidad = await _unidadHabitacionalRepository.GetOccupiedUnidadHabitacional();
+            var unidad = await _unidadHabitacionalRepository.GetOccupiedUnidadHabitacional(lastId, take);
             var occupiedUnits =
                 unidad.Select(uni => uni.ConvertUnidadHabitacionalEntityToUnidadHabitacionalOccuppiedModel()).ToList();
 

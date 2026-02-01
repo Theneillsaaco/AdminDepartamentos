@@ -17,7 +17,7 @@ public class InteresadoController : ControllerBase
     // GET: api/Intersado/GetByType/{type}
     [HttpGet("GetByType/{type}")]
     [OutputCache(PolicyName = "InteresadoCache")]
-    public async Task<IActionResult> GetByType(string type)
+    public async Task<IActionResult> GetByType(string type, int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETByType Interesado - Start.");
 
@@ -25,7 +25,7 @@ public class InteresadoController : ControllerBase
 
         try
         {
-            var interesados = await _interesadoRepository.GetByType(type);
+            var interesados = await _interesadoRepository.GetByType(type, lastId, take);
 
             _logger.LogInformation("GETByType Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;
@@ -45,7 +45,7 @@ public class InteresadoController : ControllerBase
     // GET: api/Intersado/GetPending
     [HttpGet("GetPending")]
     [OutputCache(PolicyName = "InteresadoCache")]
-    public async Task<IActionResult> GetPending()
+    public async Task<IActionResult> GetPending(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETPending Interesado - Start.");
 
@@ -53,7 +53,7 @@ public class InteresadoController : ControllerBase
 
         try
         {
-            var interesados = await _interesadoRepository.GetPendingInteresado();
+            var interesados = await _interesadoRepository.GetPendingInteresado(lastId, take);
 
             _logger.LogInformation("GETPending Interesado - Total encontrados: {Count}.", interesados.Count());
             responseApi.Success = true;

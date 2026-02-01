@@ -14,20 +14,32 @@ namespace AdminDepartamentos.Infrastructure.Repositories;
 
 public class InteresadoRepository : BaseRepository<InteresadoEntity>, IInteresadoRepository
 {
-    public async Task<List<InteresadoModel>> GetByType(string type)
+    public async Task<List<InteresadoModel>> GetByType(string type, int? lastId = null, int take = 20)
     {
-        return await _context.Interesados
+        var query = _context.Interesados
             .AsNoTracking()
-            .Where(inte => inte.TipoUnidadHabitacional == type)
+            .Where(inte => inte.TipoUnidadHabitacional == type);
+
+        if (lastId.HasValue)
+            query = query.Where(inte => inte.IdInteresado < lastId.Value);
+        
+        return await query
             .OrderBy(p => p.IdInteresado)
             .Select(inte => inte.ConvertInteresadoEntityToInteresadoModel())
+            .Take(take)
             .ToListAsync();
     }
 
-    public async Task<List<InteresadoEntity>> GetPendingInteresado()
+    public async Task<List<InteresadoEntity>> GetPendingInteresado(int? lastId = null, int take = 20)
     {
-        return await _context.Interesados
-            .AsNoTracking()
+        var query = _context.Interesados
+            .AsNoTracking();
+
+        if (lastId.HasValue)
+            query = query.Where(inte => inte.IdInteresado > lastId.Value);
+
+        return await query
+            .Take(take)
             .OrderBy(inte => inte.Fecha)
             .ToListAsync();
     }

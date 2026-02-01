@@ -16,7 +16,7 @@ public class PagoController : ControllerBase
     // GET: api/<PagoController>
     [HttpGet("GetPago")]
     [OutputCache(PolicyName = "PagosCache")]
-    public async Task<IActionResult> GetPago()
+    public async Task<IActionResult> GetPago(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETAll Pago - Start.");
 
@@ -24,7 +24,7 @@ public class PagoController : ControllerBase
 
         try
         {
-            var pagos = await _pagoRepository.GetPago();
+            var pagos = await _pagoRepository.GetPago(lastId, take);
 
             _logger.LogInformation("GETAll Pago - Total encontrados: {Count}.", pagos.Count());
             responseApi.Success = true;

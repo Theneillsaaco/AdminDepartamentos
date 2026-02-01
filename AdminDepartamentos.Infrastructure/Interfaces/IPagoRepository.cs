@@ -6,7 +6,7 @@ namespace AdminDepartamentos.Infrastructure.Interfaces;
 
 public interface IPagoRepository : IBaseRepository<PagoEntity>
 {
-    Task<List<PagoInquilinoModel>> GetPago();
+    Task<List<PagoInquilinoModel>> GetPago(int? lastId = null, int take = 20);
 
     Task<bool> UpdatePago(int id, PagoEntity pago);
     
