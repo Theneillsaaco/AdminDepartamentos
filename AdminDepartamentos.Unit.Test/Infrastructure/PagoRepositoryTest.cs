@@ -1,4 +1,3 @@
-
 using AdminDepartamentos.Domain.FSharp.Entities;
 using AdminDepartamentos.Infrastructure.Context;
 using AdminDepartamentos.Infrastructure.Context.Entities;
@@ -217,7 +216,6 @@ public class PagoRepositoryTest
         // Assert
         Assert.False(result);
     }
-
 
     #endregion
 

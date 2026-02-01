@@ -21,7 +21,7 @@ public class InteresadoRepository : BaseRepository<InteresadoEntity>, IInteresad
             .Where(inte => inte.TipoUnidadHabitacional == type);
 
         if (lastId.HasValue)
-            query = query.Where(inte => inte.IdInteresado < lastId.Value);
+            query = query.Where(inte => inte.IdInteresado > lastId.Value);
         
         return await query
             .OrderBy(p => p.IdInteresado)
