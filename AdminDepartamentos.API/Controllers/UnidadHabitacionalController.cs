@@ -17,7 +17,10 @@ public class UnidadHabitacionalController : ControllerBase
 {
     // GET: api/UnidadHabitacionalController/GetAll
     [HttpGet("GetAll")]
-    [OutputCache(PolicyName = "UnidadHabitacionalCache")]
+    [OutputCache(
+        PolicyName = "UnidadHabitacionalCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }    
+    )]
     public async Task<IActionResult> GetAll(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETAll UnidadHabitacional - Start.");
@@ -83,7 +86,10 @@ public class UnidadHabitacionalController : ControllerBase
 
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Available")]
-    [OutputCache(PolicyName = "UnidadHabitacionalCache")]
+    [OutputCache(
+        PolicyName = "UnidadHabitacionalCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }    
+    )]
     public async Task<IActionResult> GetAvailable(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GET Available UnidadHabitacional - Start.");
@@ -112,7 +118,10 @@ public class UnidadHabitacionalController : ControllerBase
 
     // GET: api/UnidadHabitacionalController/Available
     [HttpGet("Occupied")]
-    [OutputCache(PolicyName = "UnidadHabitacionalCache")]
+    [OutputCache(
+        PolicyName = "UnidadHabitacionalCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }    
+    )]
     public async Task<IActionResult> GetOccupied(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GET Occupied UnidadHabitacional - Start.");

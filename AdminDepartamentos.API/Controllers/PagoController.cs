@@ -15,7 +15,10 @@ public class PagoController : ControllerBase
 {
     // GET: api/<PagoController>
     [HttpGet("GetPago")]
-    [OutputCache(PolicyName = "PagosCache")]
+    [OutputCache(
+        PolicyName = "PagosCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }    
+    )]
     public async Task<IActionResult> GetPago(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETAll Pago - Start.");

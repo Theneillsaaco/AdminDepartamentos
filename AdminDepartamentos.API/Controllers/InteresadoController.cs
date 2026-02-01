@@ -16,7 +16,10 @@ public class InteresadoController : ControllerBase
 {
     // GET: api/Intersado/GetByType/{type}
     [HttpGet("GetByType/{type}")]
-    [OutputCache(PolicyName = "InteresadoCache")]
+    [OutputCache(
+        PolicyName = "InteresadoCache", 
+        VaryByQueryKeys = new[] { "lastId", "take" }
+    )]
     public async Task<IActionResult> GetByType(string type, int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETByType Interesado - Start.");
@@ -44,7 +47,10 @@ public class InteresadoController : ControllerBase
 
     // GET: api/Intersado/GetPending
     [HttpGet("GetPending")]
-    [OutputCache(PolicyName = "InteresadoCache")]
+    [OutputCache(
+        PolicyName = "InteresadoCache",
+        VaryByQueryKeys = new[] { "lastId", "take" }
+    )]
     public async Task<IActionResult> GetPending(int? lastId = null, int take = 20)
     {
         _logger.LogInformation("GETPending Interesado - Start.");
