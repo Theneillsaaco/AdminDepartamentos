@@ -1,6 +1,4 @@
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Theneillsaaco/AdminDepartamentos)
-
-![CI](https://github.com/Theneillsaaco/AdminDepartamentos/actions/workflows/dotnet-tests.yml/badge.svg)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Theneillsaaco/AdminDepartamentos) ![CI](https://github.com/Theneillsaaco/AdminDepartamentos/actions/workflows/dotnet-tests.yml/badge.svg)
 
 
 # AdminDepartamento
