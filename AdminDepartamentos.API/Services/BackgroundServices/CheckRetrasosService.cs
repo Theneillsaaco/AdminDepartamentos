@@ -1,5 +1,4 @@
-﻿using AdminDepartamentos.API.Extentions;
-using AdminDepartamentos.Domain.FSharp.Entities;
+﻿using AdminDepartamentos.Domain.FSharp.Entities;
 using AdminDepartamentos.Infrastructure.Context;
 using AdminDepartamentos.Infrastructure.Context.Entities;
 using AdminDepartamentos.Infrastructure.Interfaces;
