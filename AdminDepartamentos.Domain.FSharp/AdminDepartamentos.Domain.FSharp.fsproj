@@ -16,8 +16,4 @@
         <Compile Include="Entities\Interesado.fs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Update="FSharp.Core" Version="10.0.101" />
-    </ItemGroup>
-
 </Project>
