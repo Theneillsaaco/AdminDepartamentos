@@ -1,6 +1,5 @@
 namespace AdminDepartamentos.Unit.Test.Domain
 
-open System
 open Xunit
 open AdminDepartamentos.Domain.FSharp.Entities
 open AdminDepartamentos.Domain.FSharp.ValueObjects

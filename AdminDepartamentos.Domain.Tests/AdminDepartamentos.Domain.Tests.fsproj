@@ -10,6 +10,7 @@
     <Compile Include="Domain/PagoDomainTest.fs" />
     <Compile Include="Domain/InquilinoDomainTest.fs" />
     <Compile Include="Domain/UnidadHabitacionalDomainTest.fs" />
+    <Compile Include="Domain/InteresadoDomainTest.fs" />
   </ItemGroup>
 
   <ItemGroup>

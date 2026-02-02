@@ -1,10 +1,8 @@
 namespace AdminDepartamentos.Domain.Tests.Domain
 
-open System
 open Xunit
 open AdminDepartamentos.Domain.FSharp.Entities
 open AdminDepartamentos.Domain.FSharp.ValueObjects
-open AdminDepartamentos.Domain.FSharp.Common
 
 module UnidadHabitacionalDomainTest =
 
